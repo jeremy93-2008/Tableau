@@ -1,11 +1,15 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import Image from "next/image";
+import { GetServerSideProps } from "next/types";
+import { Inter } from "@next/font/google";
+import prisma from "../lib/prisma";
 
-const inter = Inter({ subsets: ['latin'] })
+import styles from "../styles/Home.module.css";
 
-export default function Home() {
+const inter = Inter({ subsets: ["latin"] });
+
+export default function Home(props: any) {
+  console.log(props, "Hola");
   return (
     <>
       <Head>
@@ -26,7 +30,7 @@ export default function Home() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              By{' '}
+              By{" "}
               <Image
                 src="/vercel.svg"
                 alt="Vercel Logo"
@@ -119,5 +123,19 @@ export default function Home() {
         </div>
       </main>
     </>
-  )
+  );
 }
+
+export const getServerSideProps: any = async ({ params }: any) => {
+  const feed = await prisma.post.findMany({
+    where: { published: true },
+    include: {
+      author: {
+        select: { name: true },
+      },
+    },
+  });
+  return {
+    props: { feed },
+  };
+};
