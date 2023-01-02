@@ -126,7 +126,7 @@ export default function Home(props: any) {
   );
 }
 
-export const getServerSideProps: any = async ({ params }: any) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const feed = await prisma.post.findMany({
     where: { published: true },
     include: {
