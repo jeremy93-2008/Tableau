@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   postegres:
-    image: postgres
+    build: ./prisma
     container_name: postegres
     hostname: postegres
     restart: unless-stopped
@@ -13,6 +13,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+      POSTGRES_DB: tableau
     volumes:
       - postgres-data:/var/lib/postgresql/data
   web-tableau:

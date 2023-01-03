@@ -8,7 +8,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:password@localhost:5432/tableau"
+  url      = "postgresql://postgres:password@postegres:5432/tableau"
 }
 
 model Task {

@@ -6,8 +6,8 @@ COPY prisma ./prisma/
 COPY . .
 RUN npm install
 RUN npm install @prisma/client
+RUN npx prisma generate --schema=prisma/docker.schema.prisma
 RUN npm run build
-RUN npx prisma generate --schema=prisma/schema.docker.prisma 
 EXPOSE 3000
 EXPOSE 9229
 CMD ["npm", "run", "dev"]
