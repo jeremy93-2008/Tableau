@@ -1,7 +1,7 @@
 CREATE TABLE public."Task" (
     "id" text   NOT NULL,
     "name" text   NOT NULL,
-    "description" text   NOT NULL,
+    "description" text  NULL,
     "statusId" text   NOT NULL,
     "boardId" text   NOT NULL,
     "userId" text   NOT NULL,
@@ -33,8 +33,9 @@ CREATE TABLE public."StatusTask" (
 CREATE TABLE public."Board" (
     "id" text   NOT NULL,
     "name" text   NOT NULL,
-    "description" text   NOT NULL,
+    "description" text NULL,
     "userId" text   NOT NULL,
+    "backgroundUrl" text NULL,
     CONSTRAINT "pk_Board" PRIMARY KEY (
         "id"
      )
@@ -44,7 +45,8 @@ CREATE TABLE public."Board" (
 CREATE TABLE public."User" (
     "id" text   NOT NULL,
     "name" text   NOT NULL,
-    "email" text   NOT NULL,
+    "email" text   NULL,
+    "avatarUrl" text NULL,
     CONSTRAINT "pk_User" PRIMARY KEY (
         "id"
      )
@@ -73,12 +75,12 @@ ON "Task" ("name");
 
 
 INSERT INTO public."User"(
-	id, name, email)
-	VALUES ('1', 'Jeremy Auvray', 'jeremy@gmail.com');
+	id, name, email, "avatarUrl")
+	VALUES ('1', 'Jeremy Auvray', 'jeremy@gmail.com', 'https://www.gravatar.com/avatar/test?d=identicon');
 
 INSERT INTO public."Board"(
-	id, name, description, "userId")
-	VALUES ('1', 'Board 1', 'This is a description', '1');
+	id, name, description, "userId", "backgroundUrl")
+	VALUES ('1', 'Board 1', 'This is a description', '1', 'https://images.unsplash.com/photo-1672026231903-cc8a1d49e5a8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2071&q=80');
 
 INSERT INTO public."Status"(
 	id, name, "isDefault")
