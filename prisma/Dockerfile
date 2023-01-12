@@ -1,4 +1,5 @@
 FROM postgres
 WORKDIR /app
 COPY ./seed.sh /docker-entrypoint-initdb.d
-COPY ./dump.sql ./scripts/db/dump.sql
+COPY ./schemadb.sql ./scripts/db/schemadb.sql
+COPY ./datadb.sql ./scripts/db/datadb.sql
