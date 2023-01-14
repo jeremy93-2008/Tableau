@@ -1,4 +1,5 @@
 import { Container, Text, Heading } from '@chakra-ui/react'
+import { Profile } from './components/profile'
 
 export function Header() {
     return (
@@ -13,6 +14,7 @@ export function Header() {
             <Heading as="h1" fontSize="1.5rem">
                 Tableau
             </Heading>
+            <Profile />
         </Container>
     )
 }

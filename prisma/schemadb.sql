@@ -54,44 +54,6 @@ CREATE TABLE "User" (
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "Account" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
-    "provider" TEXT NOT NULL,
-    "providerAccountId" TEXT NOT NULL,
-    "refresh_token" TEXT,
-    "access_token" TEXT,
-    "expires_at" INTEGER,
-    "token_type" TEXT,
-    "scope" TEXT,
-    "id_token" TEXT,
-    "session_state" TEXT,
-    "oauth_token_secret" TEXT,
-    "oauth_token" TEXT,
-
-    CONSTRAINT "Account_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Session" (
-    "id" TEXT NOT NULL,
-    "sessionToken" TEXT NOT NULL,
-    "accessToken" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "expires" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "VerificationToken" (
-    "identifier" TEXT NOT NULL,
-    "token" TEXT NOT NULL,
-    "expires" TIMESTAMP(3) NOT NULL
-);
-
 -- CreateIndex
 CREATE INDEX "Task_statusId_key" ON "Task"("statusId");
 
@@ -113,24 +75,6 @@ CREATE INDEX "StatusTask_boardId_key" ON "StatusTask"("boardId");
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
-CREATE UNIQUE INDEX IF NOT EXISTS "Session.session_token_unique" ON "Session" (
-	"sessionToken"
-);
-CREATE UNIQUE INDEX IF NOT EXISTS "Session.access_token_unique" ON "Account" (
-	"access_token"
-);
-
-CREATE UNIQUE INDEX IF NOT EXISTS "VerificationToken.token_unique" ON "VerificationToken" (
-	"identifier","token"
-);
-CREATE INDEX IF NOT EXISTS "providerAccountId" ON "Account" (
-	"providerAccountId"
-);
-
-CREATE INDEX IF NOT EXISTS "Account_userId" ON "Account" (
-	"userId"
-);
-
 -- AddForeignKey
 ALTER TABLE "Task" ADD CONSTRAINT "Task_statusId_fkey" FOREIGN KEY ("statusId") REFERENCES "StatusTask"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -148,9 +92,3 @@ ALTER TABLE "StatusTask" ADD CONSTRAINT "StatusTask_statusId_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "StatusTask" ADD CONSTRAINT "StatusTask_boardId_fkey" FOREIGN KEY ("boardId") REFERENCES "Board"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

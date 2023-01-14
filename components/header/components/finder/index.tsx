@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react'
 
-export function Profile() {
+export function Finder() {
     return <Box></Box>
 }

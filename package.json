@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:studio": "npx prisma studio --schema=prisma/local.schema.prisma"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.4.6",
