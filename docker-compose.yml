@@ -1,37 +1,36 @@
 version: "3.7"
 
 services:
-  postegres:
-    build: ./prisma
-    container_name: postegres
-    hostname: postegres
-    restart: unless-stopped
+  web-tableau:
+    build: .
+    container_name: web-tableau
+    volumes:
+      - .:/usr/src/app
+      - ./node_modules:/usr/src/app/node_modules
+      - ./.next:/usr/src/app/.next
+    depends_on:
+      postgres:
+        condition: service_healthy
+    links:
+      - postgres
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+  postgres:
+    image: postgres
     ports:
       - "5432:5432"
-    networks:
-      - api
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: tableau
     volumes:
       - postgres-data:/var/lib/postgresql/data
-  web-tableau:
-    build: .
-    container_name: web-tableau
-    stdin_open: true
-    volumes:
-      - .:/usr/src/app
-      - ./node_modules:/usr/src/app/node_modules
-      - ./.next:/usr/src/app/.next
-    depends_on:
-      - postegres
-    networks:
-      - api
-    ports:
-      - "3000:3000"
-      - "9229:9229"
-networks:
-  api:
+
 volumes:
   postgres-data:

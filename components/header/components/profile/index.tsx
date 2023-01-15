@@ -13,9 +13,7 @@ export function Profile() {
     return (
         <>
             Not signed in <br />
-            <button
-                onClick={() => signIn('auth0', { callbackUrl: '/callback' })}
-            >
+            <button onClick={() => signIn('auth0', { callbackUrl: '/' })}>
                 Sign in
             </button>
         </>

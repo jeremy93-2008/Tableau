@@ -1,9 +1,14 @@
 import React from 'react'
+import { QueryClient } from '@tanstack/query-core'
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import { SessionProvider } from 'next-auth/react'
 import { ChakraProvider } from '@chakra-ui/react'
+import { SessionProvider } from 'next-auth/react'
+import { QueryClientProvider } from '@tanstack/react-query'
 import theme from '../theme/extends'
+
+// Create a client
+const queryClient = new QueryClient()
 
 export default function App({
     Component,
@@ -12,7 +17,9 @@ export default function App({
     return (
         <ChakraProvider theme={theme}>
             <SessionProvider session={session}>
-                <Component {...pageProps} />
+                <QueryClientProvider client={queryClient}>
+                    <Component {...pageProps} />
+                </QueryClientProvider>
             </SessionProvider>
         </ChakraProvider>
     )

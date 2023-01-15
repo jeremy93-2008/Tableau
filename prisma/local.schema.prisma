@@ -8,7 +8,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:password@localhost:5432/tableau"
+  url      = env("DATABASE_LOCAL_URL")
 }
 
 model Task {
@@ -19,8 +19,8 @@ model Task {
   statusId      String     @unique
   board         Board      @relation(fields: [boardId], references: [id])
   boardId       String     @unique
-  user          User       @relation(fields: [userId], references: [id])
   userId        String     @unique
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   estimatedTime Int?
   elapsedTime   Int?
 }
@@ -30,8 +30,8 @@ model Board {
   name          String
   backgroundUrl String
   description   String?
-  user          User        @relation(fields: [userId], references: [id])
   userId        String      @unique
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   Task          Task?
   StatusTask    StatusTask?
 }
@@ -52,13 +52,49 @@ model Status {
   StatusTask StatusTask?
 }
 
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model User {
   id            String    @id @default(cuid())
-  name          String
-  email         String    @unique
+  name          String?
+  email         String?   @unique
   emailVerified DateTime?
-  password      String
   image         String?
+  accounts      Account[]
+  sessions      Session[]
   Task          Task?
   Board         Board?
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
