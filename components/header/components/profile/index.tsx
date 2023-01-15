@@ -1,21 +1,9 @@
-import { signIn, signOut, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
+import { User } from './components/user'
+import { Signin } from './components/signin'
 
 export function Profile() {
     const { data: session } = useSession()
-    if (session) {
-        return (
-            <>
-                Signed in as {session.user?.name} <br />
-                <button onClick={() => signOut()}>Sign out</button>
-            </>
-        )
-    }
-    return (
-        <>
-            Not signed in <br />
-            <button onClick={() => signIn('auth0', { callbackUrl: '/' })}>
-                Sign in
-            </button>
-        </>
-    )
+    if (session) return <User session={session} />
+    return <Signin />
 }

@@ -1,10 +1,12 @@
-import { Container, Text, Heading } from '@chakra-ui/react'
+import { Container, Heading } from '@chakra-ui/react'
 import { Profile } from './components/profile'
 
 export function Header() {
     return (
         <Container
             display="flex"
+            alignItems="center"
+            justifyContent="space-between"
             bg="teal.500"
             color="white"
             maxW="100vw"
