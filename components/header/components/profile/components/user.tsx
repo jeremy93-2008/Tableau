@@ -1,12 +1,8 @@
-import { Button, Container, Text, Image } from '@chakra-ui/react'
-import { signOut } from 'next-auth/react'
+import { Button, Image } from '@chakra-ui/react'
 import { Session } from 'next-auth'
-import {
-    ChevronDownIcon,
-    ChevronUpIcon,
-    ExternalLinkIcon,
-} from '@chakra-ui/icons'
-import { useState } from 'react'
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
+import { useCallback, useEffect, useState } from 'react'
+import { UserModal } from './userModal'
 
 interface IUserProps {
     session: Session
@@ -15,10 +11,25 @@ interface IUserProps {
 export function User(props: IUserProps) {
     const { session } = props
     const [isUserOpen, setUserOpen] = useState(false)
+
+    const onClickPortal = useCallback(() => {
+        setUserOpen(false)
+    }, [])
+
+    useEffect(() => {
+        document.body.addEventListener('click', onClickPortal)
+        return () => {
+            document.body.removeEventListener('click', onClickPortal)
+        }
+    }, [])
+
     return (
         <>
             <Button
-                onClick={() => setUserOpen(!isUserOpen)}
+                onClick={(evt) => {
+                    setUserOpen(!isUserOpen)
+                    evt.stopPropagation()
+                }}
                 colorScheme="teal"
                 leftIcon={
                     <Image
@@ -26,6 +37,7 @@ export function User(props: IUserProps) {
                         boxSize="30px"
                         objectFit="cover"
                         src={session.user?.image as string}
+                        referrerPolicy="no-referrer"
                         alt="Profile image"
                     />
                 }
@@ -33,43 +45,7 @@ export function User(props: IUserProps) {
             >
                 {session.user?.name}
             </Button>
-            {isUserOpen && (
-                <Container
-                    display="flex"
-                    flexDir="column"
-                    alignItems="center"
-                    position="absolute"
-                    top={'72px'}
-                    right={4}
-                    pt={2}
-                    bg="teal.500"
-                    borderRadius={'0 0 5px 5px'}
-                    w="280px"
-                    h="250px"
-                >
-                    <Image
-                        borderRadius="full"
-                        boxSize="100px"
-                        objectFit="cover"
-                        src={session.user?.image as string}
-                        alt="Profile image"
-                    />
-                    <Text pt="5px" fontWeight="bold">
-                        {session.user?.name}
-                    </Text>
-                    <Text fontSize="13px" pt="8px">
-                        {session.user?.email}
-                    </Text>
-                    <Button
-                        mt="16px"
-                        colorScheme="teal"
-                        rightIcon={<ExternalLinkIcon />}
-                        onClick={() => signOut()}
-                    >
-                        Sign Out
-                    </Button>
-                </Container>
-            )}
+            {isUserOpen && <UserModal session={session} />}
         </>
     )
 }

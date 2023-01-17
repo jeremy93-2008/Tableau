@@ -6,9 +6,15 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { SessionProvider } from 'next-auth/react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import theme from '../theme/extends'
+import { defaultQueryFn } from '../utils/defaulltQueryFn'
+import { defaultMutationFn } from '../utils/defaulltMutationFn'
 
 // Create a client
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: { queryFn: defaultQueryFn },
+    },
+})
 
 export default function App({
     Component,

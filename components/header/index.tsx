@@ -1,15 +1,13 @@
-import { Container, Heading } from '@chakra-ui/react'
+import { Flex, Heading } from '@chakra-ui/react'
 import { Profile } from './components/profile'
 
 export function Header() {
     return (
-        <Container
-            display="flex"
+        <Flex
             alignItems="center"
             justifyContent="space-between"
             bg="teal.500"
             color="white"
-            maxW="100vw"
             py="4"
             px="8"
         >
@@ -17,6 +15,6 @@ export function Header() {
                 Tableau
             </Heading>
             <Profile />
-        </Container>
+        </Flex>
     )
 }
