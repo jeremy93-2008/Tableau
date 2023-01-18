@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useCallback } from 'react'
+import { FormikHelpers } from 'formik'
 import {
     Box,
-    Button,
-    ButtonGroup,
     IconButton,
     Popover,
     PopoverArrow,
@@ -16,27 +15,43 @@ import {
     useDisclosure,
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
-import { TextInput } from '../../../../textInput'
 
 import { useSession } from 'next-auth/react'
 import { useMutation } from '@tanstack/react-query'
 
+import { BoardNewForm, IBoardNewFormikValues } from './boardNewForm'
+
+import { createFetchOptions } from '../../../../../utils/createFetchOptions'
 import { API_URL } from '../../../../../constants/url'
 
 export function BoardNew() {
     const { data: session } = useSession()
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const { data } = useMutation(() => {
-        return fetch(`${API_URL}/board/create`, {
-            method: 'POST',
-            body: JSON.stringify({
-                name: '',
-                description: '',
-                backgroundUrl: '',
-            }),
-        }).then((res) => res.json())
+    const { mutateAsync } = useMutation((values: IBoardNewFormikValues) => {
+        return fetch(
+            `${API_URL}/board/create`,
+            createFetchOptions('POST', {
+                name: values.name,
+                description: values.description,
+                backgroundUrl: values.backgroundUrl,
+            })
+        ).then((res) => res.json())
     })
+
+    const onSubmit = useCallback(
+        (
+            values: IBoardNewFormikValues,
+            actions: FormikHelpers<IBoardNewFormikValues>
+        ) => {
+            mutateAsync(values).then((json) => {
+                console.log(json)
+                actions.setSubmitting(false)
+                onClose()
+            })
+        },
+        [mutateAsync]
+    )
 
     return (
         <>
@@ -52,7 +67,7 @@ export function BoardNew() {
                         </PopoverTrigger>
                     </Box>
                 </Tooltip>
-                <PopoverContent p={5}>
+                <PopoverContent bg="gray.50" p={5}>
                     <PopoverHeader fontWeight="semibold">
                         Create a new Board
                     </PopoverHeader>
@@ -60,25 +75,10 @@ export function BoardNew() {
                     <PopoverCloseButton />
                     <PopoverBody>
                         <Stack spacing={4}>
-                            <TextInput
-                                label="Name"
-                                id="name"
-                                defaultValue="Board 1"
+                            <BoardNewForm
+                                onClose={onClose}
+                                onSubmit={onSubmit}
                             />
-                            <TextInput
-                                label="Description"
-                                id="description"
-                                placeholder="Description"
-                            />
-                            <ButtonGroup
-                                display="flex"
-                                justifyContent="flex-end"
-                            >
-                                <Button variant="outline" onClick={onClose}>
-                                    Cancel
-                                </Button>
-                                <Button colorScheme="teal">Save</Button>
-                            </ButtonGroup>
                         </Stack>
                     </PopoverBody>
                 </PopoverContent>

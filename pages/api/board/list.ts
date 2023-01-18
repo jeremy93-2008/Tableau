@@ -18,7 +18,7 @@ export default async function handler(
 
     const result = await prisma.board.findMany({
         where: {
-            userId: { equals: userEntry.id },
+            user: { email: { equals: userEntry.email } },
         },
     })
 

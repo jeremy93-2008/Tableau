@@ -28,8 +28,9 @@ export default async function handler(
             name,
             description,
             backgroundUrl,
-            // @ts-ignore
-            userId: { connect: { id: userEntry.id } },
+            user: {
+                connect: { id: userEntry.id },
+            },
         },
     })
 

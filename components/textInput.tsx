@@ -1,23 +1,29 @@
-import React, { forwardRef, RefObject } from 'react'
+import React, { ChangeEventHandler, FocusEventHandler } from 'react'
 import { FormControl, FormLabel, Input } from '@chakra-ui/react'
 
-export const TextInput = forwardRef(
-    (
-        props: {
-            id: string
-            label: string
-            defaultValue?: string
-            placeholder?: string
-        },
-        ref
-    ) => {
-        return (
-            <FormControl>
-                <FormLabel htmlFor={props.id}>{props.label}</FormLabel>
-                <Input ref={ref as RefObject<HTMLInputElement>} {...props} />
-            </FormControl>
-        )
-    }
-)
+interface ITextInputProps {
+    name: string
+    label: string
+    value: string
+    onChange: ChangeEventHandler<HTMLInputElement>
+    onBlur: FocusEventHandler<HTMLInputElement>
+    placeholder?: string
+    style?: React.CSSProperties
+}
 
-TextInput.displayName = 'TextInput'
+export function TextInput(props: ITextInputProps) {
+    const { name, label, placeholder, value, onBlur, onChange, style } = props
+    return (
+        <FormControl>
+            <FormLabel htmlFor={name}>{label}</FormLabel>
+            <Input
+                value={value}
+                placeholder={placeholder}
+                onChange={onChange}
+                onBlur={onBlur}
+                name={name}
+                style={style}
+            />
+        </FormControl>
+    )
+}

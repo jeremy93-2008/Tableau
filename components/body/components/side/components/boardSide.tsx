@@ -5,7 +5,7 @@ import { BoardNew } from './boardNew'
 
 export function BoardSide() {
     return (
-        <Flex width="100%">
+        <Flex flexDirection="column" width="100%">
             <Flex
                 width="100%"
                 alignItems="center"

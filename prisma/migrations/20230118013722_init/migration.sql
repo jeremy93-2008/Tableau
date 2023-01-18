@@ -91,21 +91,6 @@ CREATE TABLE "VerificationToken" (
 CREATE UNIQUE INDEX "Task_statusId_key" ON "Task"("statusId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Task_boardId_key" ON "Task"("boardId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Task_userId_key" ON "Task"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Board_userId_key" ON "Board"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "StatusTask_statusId_key" ON "StatusTask"("statusId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "StatusTask_boardId_key" ON "StatusTask"("boardId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provider", "providerAccountId");
 
 -- CreateIndex
