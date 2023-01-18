@@ -3,13 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npx prisma migrate deploy && next dev",
+    "dev": "npm run prisma:docker:deploy && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:studio": "npx prisma studio --schema=prisma/local.schema.prisma",
-    "prisma:generate": "npx prisma generate --schema=prisma/local.schema.prisma",
-    "prisma:migrate": "npx prisma migrate dev --schema=prisma/local.schema.prisma"
+    "prisma:studio": "dotenv -e .env.local -- npx prisma studio",
+    "prisma:generate": "dotenv -e .env.local -- npx prisma generate",
+    "prisma:migrate": "dotenv -e .env.local -- npx prisma migrate dev",
+    "prisma:docker:studio": "dotenv -e .env.dev -- npx prisma studio",
+    "prisma:docker:generate": "dotenv -e .env.dev -- npx prisma generate",
+    "prisma:docker:migrate": "dotenv -e .env.dev -- npx prisma migrate dev",
+    "prisma:docker:deploy": "dotenv -e .env.dev -- npx prisma migrate deploy"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.16",
@@ -25,6 +29,7 @@
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.10",
     "axios": "^1.2.3",
+    "dotenv-cli": "^6.0.0",
     "eslint": "8.31.0",
     "eslint-config-next": "13.1.1",
     "formik": "^2.2.9",

@@ -8,7 +8,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:password@postgres:5432/tableau"
+  url      = env("DATABASE_URL")
 }
 
 model Task {
