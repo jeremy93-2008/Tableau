@@ -31,6 +31,24 @@ export default async function handler(
             user: {
                 connect: { id: userEntry.id },
             },
+            Status: {
+                connectOrCreate: [
+                    { name: 'To Do', isDefault: true },
+                    { name: 'In Progress', isDefault: true },
+                    {
+                        name: 'Done',
+                        isDefault: true,
+                    },
+                ].map((status) => {
+                    return {
+                        where: { name: status.name },
+                        create: {
+                            name: status.name,
+                            isDefault: status.isDefault,
+                        },
+                    }
+                }),
+            },
         },
     })
 

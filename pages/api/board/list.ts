@@ -20,6 +20,7 @@ export default async function handler(
         where: {
             user: { email: { equals: userEntry.email } },
         },
+        include: { Status: true, user: true, Task: true },
     })
 
     res.json(result)

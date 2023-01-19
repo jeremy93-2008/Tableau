@@ -1,9 +1,24 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Flex, Text } from '@chakra-ui/react'
 import { BoardList } from './boardList'
 import { BoardNew } from './boardNew'
+import { useSession } from 'next-auth/react'
+import { useQuery } from '@tanstack/react-query'
+import { IBoardWithAllRelation } from '../../../../../types/types'
 
 export function BoardSide() {
+    const { data: session } = useSession()
+    const { data, refetch } = useQuery<IBoardWithAllRelation[]>(
+        ['/board/list'],
+        {
+            enabled: !!session,
+        }
+    )
+
+    const onAfterSubmit = useCallback(() => {
+        refetch().then()
+    }, [refetch])
+
     return (
         <Flex flexDirection="column" width="100%">
             <Flex
@@ -19,10 +34,10 @@ export function BoardSide() {
                     </Text>
                 </Flex>
                 <Flex>
-                    <BoardNew />
+                    <BoardNew onAfterSubmit={onAfterSubmit} />
                 </Flex>
             </Flex>
-            <BoardList />
+            <BoardList listOfBoards={data} />
         </Flex>
     )
 }

@@ -1,10 +1,35 @@
 import React from 'react'
-import { Flex } from '@chakra-ui/react'
-import { useQuery } from '@tanstack/react-query'
-import { useSession } from 'next-auth/react'
+import { Avatar, Button, Flex, Text } from '@chakra-ui/react'
+import { IBoardWithAllRelation } from '../../../../../types/types'
 
-export function BoardList() {
-    const { data: session } = useSession()
-    const { data } = useQuery(['/board/list'], { enabled: !!session })
-    return <Flex>{JSON.stringify(data)}</Flex>
+interface IBoardListProps {
+    listOfBoards?: IBoardWithAllRelation[]
+}
+
+export function BoardList(props: IBoardListProps) {
+    const { listOfBoards } = props
+    return (
+        <Flex flexDirection="column" pt={2}>
+            {listOfBoards &&
+                listOfBoards.map((board) => {
+                    return (
+                        <Button
+                            key={board.id}
+                            leftIcon={
+                                <Avatar
+                                    name={board.name}
+                                    src="https://bit.ly/broken-link"
+                                    borderRadius="10px"
+                                />
+                            }
+                            display="flex"
+                            justifyContent="left"
+                            p={'34px 18px'}
+                        >
+                            <Text pl={1}>{board.name}</Text>
+                        </Button>
+                    )
+                })}
+        </Flex>
+    )
 }

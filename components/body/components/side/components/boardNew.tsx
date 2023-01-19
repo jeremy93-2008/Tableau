@@ -24,7 +24,12 @@ import { BoardNewForm, IBoardNewFormikValues } from './boardNewForm'
 import { createFetchOptions } from '../../../../../utils/createFetchOptions'
 import { API_URL } from '../../../../../constants/url'
 
-export function BoardNew() {
+interface IBoardNewProps {
+    onAfterSubmit: () => void
+}
+
+export function BoardNew(props: IBoardNewProps) {
+    const { onAfterSubmit } = props
     const { data: session } = useSession()
     const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -45,8 +50,8 @@ export function BoardNew() {
             actions: FormikHelpers<IBoardNewFormikValues>
         ) => {
             mutateAsync(values).then((json) => {
-                console.log(json)
                 actions.setSubmitting(false)
+                onAfterSubmit()
                 onClose()
             })
         },
