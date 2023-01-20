@@ -19,6 +19,7 @@ export function UserModal(props: IUserModalProps) {
             flexDir="column"
             alignItems="center"
             position="absolute"
+            zIndex={15}
             top={'72px'}
             right={4}
             pt={2}

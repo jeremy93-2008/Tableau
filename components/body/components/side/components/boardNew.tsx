@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { FormikHelpers } from 'formik'
 import {
     Box,
@@ -55,7 +55,7 @@ export function BoardNew(props: IBoardNewProps) {
                 onClose()
             })
         },
-        [mutateAsync]
+        [mutateAsync, onAfterSubmit, onClose]
     )
 
     return (
