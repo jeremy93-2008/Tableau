@@ -56,7 +56,7 @@ export function ColumnNew(props: IColumnNewProps) {
     )
 
     return (
-        <Popover isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
+        <Popover isLazy isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
             <Tooltip label="Add new status column">
                 <Box>
                     <PopoverTrigger>

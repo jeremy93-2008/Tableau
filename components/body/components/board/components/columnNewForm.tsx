@@ -27,10 +27,10 @@ export function ColumnNewForm(props: IColumnNewProps) {
     const initialValues = useMemo(
         () => ({
             id: selectedBoard?.id,
-            statusName: '',
+            statusName: 'Status',
             isDefault: false,
         }),
-        []
+        [selectedBoard]
     )
 
     const validationSchema = useMemo(
@@ -62,6 +62,7 @@ export function ColumnNewForm(props: IColumnNewProps) {
         >
             {(props) => (
                 <form onSubmit={props.handleSubmit}>
+                    <input type="hidden" value={props.values.id} />
                     <TextInput
                         label="Status Name"
                         name="statusName"
