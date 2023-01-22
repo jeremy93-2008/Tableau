@@ -14,7 +14,7 @@ export function Columns(props: IBoardColumnsProps) {
         const container = document.getElementById('columns-container')
         const deltaMove =
             (event.nativeEvent as any).wheelDeltaX == -3
-                ? event.deltaX
+                ? (event.nativeEvent as any).wheelDeltaX
                 : event.deltaY
         if (!container) return
         container.scrollTo({
