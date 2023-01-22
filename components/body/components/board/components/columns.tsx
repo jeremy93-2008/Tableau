@@ -12,7 +12,10 @@ export function Columns(props: IBoardColumnsProps) {
 
     const onHScroll = useCallback((event: WheelEvent<HTMLDivElement>) => {
         const container = document.getElementById('columns-container')
-        const deltaMove = event.deltaY || event.deltaX
+        const deltaMove =
+            (event.nativeEvent as any).wheelDeltaX == -3
+                ? event.deltaX
+                : event.deltaY
         if (!container) return
         container.scrollTo({
             top: 0,
