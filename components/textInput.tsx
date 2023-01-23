@@ -1,29 +1,71 @@
 import React, { ChangeEventHandler, FocusEventHandler } from 'react'
-import { FormControl, FormLabel, Input } from '@chakra-ui/react'
+import { FormControl, FormLabel, Input, Textarea } from '@chakra-ui/react'
 
-interface ITextInputProps {
+interface ITextInputProps<TValue> {
     name: string
     label: string
-    value: string
-    onChange: ChangeEventHandler<HTMLInputElement>
-    onBlur: FocusEventHandler<HTMLInputElement>
+    value: TValue
+    onChange: ChangeEventHandler<HTMLElement>
+    onBlur: FocusEventHandler<HTMLElement>
+    min?: number
+    max?: number
+    type?: 'text' | 'textarea' | 'number'
     placeholder?: string
     style?: React.CSSProperties
 }
 
-export function TextInput(props: ITextInputProps) {
-    const { name, label, placeholder, value, onBlur, onChange, style } = props
+export function TextInput<TValue>(props: ITextInputProps<TValue>) {
+    const {
+        name,
+        label,
+        placeholder,
+        min,
+        max,
+        value,
+        onBlur,
+        onChange,
+        type,
+        style,
+    } = props
     return (
         <FormControl>
             <FormLabel htmlFor={name}>{label}</FormLabel>
-            <Input
-                value={value}
-                placeholder={placeholder}
-                onChange={onChange}
-                onBlur={onBlur}
-                name={name}
-                style={style}
-            />
+            {(!type || type === 'text') && (
+                <Input
+                    colorScheme="teal"
+                    value={value as string}
+                    placeholder={placeholder}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    name={name}
+                    style={style}
+                />
+            )}
+            {type && type === 'textarea' && (
+                <Textarea
+                    colorScheme="teal"
+                    value={value as string}
+                    placeholder={placeholder}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    name={name}
+                    style={style}
+                />
+            )}
+            {type && type === 'number' && (
+                <Input
+                    colorScheme="teal"
+                    type="number"
+                    min={min}
+                    max={max}
+                    value={value as string}
+                    placeholder={placeholder}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    name={name}
+                    style={style}
+                />
+            )}
         </FormControl>
     )
 }
