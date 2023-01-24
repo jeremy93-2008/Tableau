@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react'
+import { useDrag } from 'react-dnd'
 import {
     Flex,
     IconButton,
@@ -9,6 +10,7 @@ import {
 import { BsClock, BsClockHistory, BsFillPencilFill } from 'react-icons/bs'
 import { Status, Task } from '.prisma/client'
 import { TaskEdit } from './taskEdit'
+import { TaskItemType } from '../../../../../constants/dragType'
 
 interface ITaskItemProps {
     task: Task
@@ -19,6 +21,15 @@ export function TaskItem(props: ITaskItemProps) {
     const { task, status } = props
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [isHoveringTask, setHoveringTask] = useState(false)
+
+    const [{ isDragging }, drag] = useDrag(() => ({
+        type: TaskItemType,
+        item: { task },
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+            handlerId: monitor.getHandlerId(),
+        }),
+    }))
 
     const onMouseEnterTask = useCallback(() => {
         if (isHoveringTask) return
@@ -32,6 +43,7 @@ export function TaskItem(props: ITaskItemProps) {
 
     return (
         <Flex
+            ref={drag}
             className="board-item-container"
             bgColor="teal.600"
             pl={4}
@@ -39,6 +51,8 @@ export function TaskItem(props: ITaskItemProps) {
             width="100%"
             onMouseEnter={onMouseEnterTask}
             onMouseLeave={onMouseLeaveTask}
+            cursor="move"
+            style={{ opacity: isDragging ? 0.5 : 1 }}
         >
             <Flex
                 className="board-item-info"
