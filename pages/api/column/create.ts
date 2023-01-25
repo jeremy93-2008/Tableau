@@ -8,31 +8,23 @@ export default async function handler(
     const id = req.body.id
     const statusName = req.body.statusName
     const isDefault = req.body.isDefault
+    const order = req.body.order
 
     if (req.method !== 'POST')
         return res.status(405).send('Method not allowed. Use Post instead')
 
-    const result = await prisma.status.upsert({
-        create: {
-            name: statusName,
-            isDefault,
-            Board: {
-                connect: {
-                    id,
+    const result = await prisma.statusBoard.create({
+        data: {
+            order,
+            status: {
+                connectOrCreate: {
+                    where: { name: statusName },
+                    create: { name: statusName, isDefault },
                 },
             },
-        },
-        update: {
-            name: statusName,
-            isDefault,
-            Board: {
-                connect: {
-                    id,
-                },
+            board: {
+                connect: { id },
             },
-        },
-        where: {
-            name: statusName,
         },
     })
 

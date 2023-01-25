@@ -1,10 +1,11 @@
 import React from 'react'
-import { Status, Task } from '.prisma/client'
+import { Task } from '.prisma/client'
 import { TaskItem } from './taskItem'
+import { IFullStatus } from '../../../../../types/types'
 
 interface ITaskListProps {
     tasks: Task[]
-    status: Status
+    status: IFullStatus
 }
 
 export function TaskList(props: ITaskListProps) {

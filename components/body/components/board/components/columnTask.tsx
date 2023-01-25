@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
+import axios from 'axios'
 import { Container, Flex, Text, useDisclosure, VStack } from '@chakra-ui/react'
-import { Status, Task } from '.prisma/client'
+import { Task } from '.prisma/client'
 import { ColumnNew } from './columnNew'
 import { ColumnTaskNew } from './columnTaskNew'
 import { useAtom } from 'jotai'
@@ -9,18 +10,19 @@ import { TaskList } from './taskList'
 import { useDrop } from 'react-dnd'
 import { TaskItemType } from '../../../../../constants/dragType'
 import { useMutation } from '@tanstack/react-query'
-import axios from 'axios'
 import { API_URL } from '../../../../../constants/url'
 import { ITaskEditFormikValues } from './taskEdit'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
+import { IFullStatus } from '../../../../../types/types'
+import { ColumnTaskMove } from './columnTaskMove'
 
 interface IColumnTaskProps {
-    status?: Status
+    statusBoard?: IFullStatus
     newColumn?: boolean
 }
 
 export function ColumnTask(props: IColumnTaskProps) {
-    const { status, newColumn } = props
+    const { statusBoard, newColumn } = props
     const [selectedBoard] = useAtom(BoardAtom)
     const [refetchBoards] = useAtom(RefetchBoardAtom)
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -37,7 +39,7 @@ export function ColumnTask(props: IColumnTaskProps) {
 
     const onDropTaskItem = useCallback(
         ({ task }: { task: Task }) => {
-            if (!status || !status.name) return
+            if (!statusBoard || !statusBoard.status.name) return
             mutateAsync({
                 id: task.id,
                 name: task.name,
@@ -45,12 +47,12 @@ export function ColumnTask(props: IColumnTaskProps) {
                 boardId: task.boardId,
                 estimatedTime: task.estimatedTime || 0,
                 elapsedTime: task.elapsedTime || 0,
-                statusName: status.name,
+                statusId: statusBoard.id,
             }).then(() => {
                 refetchBoards.fetch()
             })
         },
-        [status, mutateAsync, refetchBoards]
+        [statusBoard, mutateAsync, refetchBoards]
     )
 
     const [{ isOver }, drop] = useDrop(() => ({
@@ -64,9 +66,9 @@ export function ColumnTask(props: IColumnTaskProps) {
 
     const tasks = useMemo(() => {
         return selectedBoard?.Task.filter(
-            (task) => task.statusId === status?.id
+            (task) => task.statusId === statusBoard?.id
         )
-    }, [selectedBoard, status])
+    }, [selectedBoard, statusBoard])
 
     const onMouseEnterColumn = useCallback(() => {
         if (isHoveringColumn) return
@@ -94,19 +96,26 @@ export function ColumnTask(props: IColumnTaskProps) {
             onMouseLeave={onMouseLeaveColumn}
             filter={`hue-rotate(${isOver ? '250deg' : '0deg'})`}
         >
-            {!newColumn && status && (
+            {!newColumn && statusBoard && (
                 <>
-                    <Text mt={3} mb={4} fontSize="16px" fontWeight="bold">
-                        {status?.name}
-                    </Text>
+                    <Flex justifyContent="space-between" mt={3} mb={4}>
+                        <Text fontSize="16px" fontWeight="bold">
+                            {statusBoard?.status.name}
+                        </Text>
+                        <Flex height={8}>
+                            {isHoveringColumn && (
+                                <ColumnTaskMove statusBoard={statusBoard} />
+                            )}
+                        </Flex>
+                    </Flex>
                     {tasks && tasks.length > 0 && (
                         <VStack my={4}>
-                            <TaskList tasks={tasks} status={status} />
+                            <TaskList tasks={tasks} status={statusBoard} />
                         </VStack>
                     )}
                     <ColumnTaskNew
                         isVisible={isHoveringColumn}
-                        status={status}
+                        status={statusBoard}
                     />
                 </>
             )}

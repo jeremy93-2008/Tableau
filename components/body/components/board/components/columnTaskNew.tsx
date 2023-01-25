@@ -17,15 +17,15 @@ import {
     useDisclosure,
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
-import { Status } from '.prisma/client'
 import { ColumnTaskNewForm, ITaskNewFormikValues } from './columnTaskNewForm'
 import { API_URL } from '../../../../../constants/url'
 import { FormikHelpers } from 'formik'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
+import { IFullStatus } from '../../../../../types/types'
 
 interface IColumnTaskNewProps {
     isVisible: boolean
-    status: Status
+    status: IFullStatus
 }
 
 export function ColumnTaskNew(props: IColumnTaskNewProps) {
@@ -53,7 +53,7 @@ export function ColumnTaskNew(props: IColumnTaskNewProps) {
                 refetchBoards.fetch()
             })
         },
-        [mutateAsync]
+        [mutateAsync, onClose, refetchBoards]
     )
 
     return (
@@ -84,7 +84,7 @@ export function ColumnTaskNew(props: IColumnTaskNewProps) {
                 <PopoverBody>
                     <Stack spacing={4}>
                         <ColumnTaskNewForm
-                            status={status}
+                            statusBoard={status}
                             onClose={onClose}
                             onSubmit={onSubmit}
                         />

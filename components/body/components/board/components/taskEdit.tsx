@@ -8,27 +8,28 @@ import {
     ModalOverlay,
 } from '@chakra-ui/react'
 import { FormikHelpers } from 'formik'
-import { Status, Task } from '.prisma/client'
+import { Task } from '.prisma/client'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { API_URL } from '../../../../../constants/url'
 import { useAtom } from 'jotai'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 import { TaskEditForm } from './taskEditForm'
+import { IFullStatus } from '../../../../../types/types'
 
 export type ITaskEditFormikValues = {
     id: string
     name: string
     description: string
     boardId: string
-    statusName: string
+    statusId: string
     elapsedTime: number
     estimatedTime: number
 }
 
 interface ITaskEditProps {
     task: Task
-    status: Status
+    status: IFullStatus
     isOpen: boolean
     onClose: () => void
 }

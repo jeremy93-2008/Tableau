@@ -9,7 +9,7 @@ export default async function handler(
     const name = req.body.name
     const description = req.body.description
     const boardId = req.body.boardId
-    const statusName = req.body.statusName
+    const statusId = req.body.statusId
 
     const session = await getSession({ req })
     const email = session?.user?.email ?? ''
@@ -35,7 +35,7 @@ export default async function handler(
             },
             status: {
                 connect: {
-                    name: statusName,
+                    id: statusId,
                 },
             },
             user: {

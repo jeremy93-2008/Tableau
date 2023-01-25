@@ -8,7 +8,7 @@ export default async function handler(
     const id = req.body.id
     const name = req.body.name
     const description = req.body.description
-    const statusName = req.body.statusName
+    const statusId = req.body.statusId
     const elapsedTime = req.body.elapsedTime
     const estimatedTime = req.body.estimatedTime
 
@@ -26,7 +26,7 @@ export default async function handler(
             estimatedTime: estimatedTime,
             status: {
                 connect: {
-                    name: statusName,
+                    id: statusId,
                 },
             },
         },

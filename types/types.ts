@@ -1,7 +1,11 @@
-import { Board, Task, Status, User } from '.prisma/client'
+import { Board, Status, StatusBoard, Task, User } from '.prisma/client'
 
 export type IBoardWithAllRelation = Board & {
     Task: Task[]
-    Status: Status[]
+    Status: IFullStatus[]
     user: User
+}
+
+export type IFullStatus = StatusBoard & {
+    status: Status
 }

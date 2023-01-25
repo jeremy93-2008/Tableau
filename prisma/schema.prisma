@@ -12,36 +12,45 @@ datasource db {
 }
 
 model Task {
-  id            String  @id @default(cuid())
+  id            String      @id @default(cuid())
   name          String
   description   String?
-  status        Status  @relation(fields: [statusId], references: [id])
+  status        StatusBoard @relation(fields: [statusId], references: [id])
   statusId      String
-  board         Board   @relation(fields: [boardId], references: [id])
+  board         Board       @relation(fields: [boardId], references: [id])
   boardId       String
-  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
   estimatedTime Int?
   elapsedTime   Int?
 }
 
 model Board {
-  id            String   @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String
   backgroundUrl String
   description   String?
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
   Task          Task[]
-  Status        Status[]
+  Status        StatusBoard[]
+}
+
+model StatusBoard {
+  id       String @id @default(cuid())
+  order    String
+  statusId String
+  status   Status @relation(fields: [statusId], references: [id], onDelete: Cascade)
+  boardId  String
+  board    Board  @relation(fields: [boardId], references: [id])
+  task     Task[]
 }
 
 model Status {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  isDefault Boolean?
-  Board     Board[]
-  Task      Task[]
+  id          String        @id @default(cuid())
+  name        String        @unique
+  isDefault   Boolean?
+  statusBoard StatusBoard[]
 }
 
 model Account {

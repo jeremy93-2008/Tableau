@@ -6,17 +6,17 @@ import { Formik, FormikHelpers } from 'formik'
 import { TextInput } from '../../../../textInput'
 import { Button, ButtonGroup, Flex, Text } from '@chakra-ui/react'
 import { WarningIcon } from '@chakra-ui/icons'
-import { Status } from '.prisma/client'
+import { IFullStatus } from '../../../../../types/types'
 
 export type ITaskNewFormikValues = {
     name: string
     description: string
     boardId: string
-    statusName: string
+    statusId: string
 }
 
 interface IColumnTaskNewProps {
-    status: Status
+    statusBoard: IFullStatus
     onClose: () => void
     onSubmit: (
         values: ITaskNewFormikValues,
@@ -25,16 +25,16 @@ interface IColumnTaskNewProps {
 }
 
 export function ColumnTaskNewForm(props: IColumnTaskNewProps) {
-    const { status, onClose, onSubmit: onTaskSubmit } = props
+    const { statusBoard, onClose, onSubmit: onTaskSubmit } = props
     const [selectedBoard] = useAtom(BoardAtom)
     const initialValues: ITaskNewFormikValues = useMemo(
         () => ({
             name: 'Task 1',
             description: '',
             boardId: selectedBoard?.id || '',
-            statusName: status.name,
+            statusId: statusBoard.id,
         }),
-        [selectedBoard]
+        [selectedBoard, statusBoard]
     )
 
     const validationSchema = useMemo(
@@ -43,7 +43,7 @@ export function ColumnTaskNewForm(props: IColumnTaskNewProps) {
                 name: Yup.string().required('Task Name is required'),
                 description: Yup.string(),
                 boardId: Yup.string().required('Board Id is required'),
-                statusName: Yup.string().required('Status Name is required'),
+                statusId: Yup.string().required('Status Id is required'),
             }),
         []
     )
