@@ -9,11 +9,11 @@ import { BoardAtom } from '../../../../../atoms/boardAtom'
 import { TaskList } from './taskList'
 import { useDrop } from 'react-dnd'
 import { TaskItemType } from '../../../../../constants/dragType'
-import { useMutation } from '@tanstack/react-query'
 import { ITaskEditFormikValues } from './taskEdit'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 import { IFullStatus } from '../../../../../types/types'
 import { ColumnTaskMove } from './columnTaskMove'
+import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
 
 interface IColumnTaskProps {
     statusBoard?: IFullStatus
@@ -27,14 +27,16 @@ export function ColumnTask(props: IColumnTaskProps) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [isHoveringColumn, setHoveringColumn] = useState(false)
 
-    const { mutateAsync } = useMutation((values: ITaskEditFormikValues) => {
-        return axios.post(`api/task/edit`, values, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        })
-    })
+    const { mutateAsync } = useTableauMutation(
+        (values: ITaskEditFormikValues) => {
+            return axios.post(`api/task/edit`, values, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            })
+        }
+    )
 
     const onDropTaskItem = useCallback(
         ({ task }: { task: Task }) => {

@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+import axios from 'axios'
 import { FormikHelpers } from 'formik'
 import {
     Box,
@@ -17,11 +18,9 @@ import {
 import { AddIcon } from '@chakra-ui/icons'
 
 import { useSession } from 'next-auth/react'
-import { useMutation } from '@tanstack/react-query'
 
 import { BoardNewForm, IBoardNewFormikValues } from './boardNewForm'
-
-import { createFetchOptions } from '../../../../../utils/createFetchOptions'
+import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
 
 interface IBoardNewProps {
     onAfterSubmit: () => void
@@ -32,16 +31,16 @@ export function BoardNew(props: IBoardNewProps) {
     const { data: session } = useSession()
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const { mutateAsync } = useMutation((values: IBoardNewFormikValues) => {
-        return fetch(
-            `api/board/create`,
-            createFetchOptions('POST', {
-                name: values.name,
-                description: values.description,
-                backgroundUrl: values.backgroundUrl,
+    const { mutateAsync } = useTableauMutation(
+        (values: IBoardNewFormikValues) => {
+            return axios.post(`api/board/create`, values, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
             })
-        ).then((res) => res.json())
-    })
+        }
+    )
 
     const onSubmit = useCallback(
         (
