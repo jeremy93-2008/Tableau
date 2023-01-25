@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
 import axios from 'axios'
 import { useAtom } from 'jotai'
-import { useMutation } from '@tanstack/react-query'
 import {
     Box,
     Button,
@@ -21,6 +20,7 @@ import { ColumnTaskNewForm, ITaskNewFormikValues } from './columnTaskNewForm'
 import { FormikHelpers } from 'formik'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 import { IFullStatus } from '../../../../../types/types'
+import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
 
 interface IColumnTaskNewProps {
     isVisible: boolean
@@ -32,14 +32,16 @@ export function ColumnTaskNew(props: IColumnTaskNewProps) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
-    const { mutateAsync } = useMutation((values: ITaskNewFormikValues) => {
-        return axios.post(`api/task/create`, values, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        })
-    })
+    const { mutateAsync } = useTableauMutation(
+        (values: ITaskNewFormikValues) => {
+            return axios.post(`api/task/create`, values, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            })
+        }
+    )
 
     const onSubmit = useCallback(
         (

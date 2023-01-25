@@ -5,8 +5,8 @@ import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import { IFullStatus } from '../../../../../types/types'
 import { useAtom } from 'jotai'
 import { BoardAtom } from '../../../../../atoms/boardAtom'
-import { useMutation } from '@tanstack/react-query'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
+import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
 
 interface IColumnMoveValues {
     currentColumn: IFullStatus
@@ -22,7 +22,7 @@ export function ColumnTaskMove(props: IColumnTaskMoveProps) {
     const [selectedBoard] = useAtom(BoardAtom)
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
-    const { mutateAsync } = useMutation((values: IColumnMoveValues) => {
+    const { mutateAsync } = useTableauMutation((values: IColumnMoveValues) => {
         return axios.post(`api/column/move`, values, {
             headers: {
                 'Content-Type': 'application/json',

@@ -17,12 +17,12 @@ import {
 } from '@chakra-ui/react'
 
 import { useSession } from 'next-auth/react'
-import { useMutation } from '@tanstack/react-query'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { BsFillPencilFill } from 'react-icons/bs'
 import { BoardEditForm, IBoardEditFormikValues } from './boardEditForm'
 import { useAtom } from 'jotai'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
+import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
 
 interface IBoardEditProps {
     isVisible: boolean
@@ -35,14 +35,16 @@ export function BoardEdit(props: IBoardEditProps) {
     const { data: session } = useSession()
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const { mutateAsync } = useMutation((values: IBoardEditFormikValues) => {
-        return axios.post(`api/board/edit`, values, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        })
-    })
+    const { mutateAsync } = useTableauMutation(
+        (values: IBoardEditFormikValues) => {
+            return axios.post(`api/board/edit`, values, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            })
+        }
+    )
 
     const onSubmit = useCallback(
         (

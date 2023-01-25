@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
-import { useQuery } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 import { Flex, Text } from '@chakra-ui/react'
 import { BoardList } from './boardList'
@@ -8,17 +7,20 @@ import { BoardNew } from './boardNew'
 import { BoardAtom } from '../../../../../atoms/boardAtom'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
+import { useTableauQuery } from '../../../../../hooks/useTableauQuery'
 
 export function BoardSide() {
     const { data: session } = useSession()
     const [selectedBoard, setBoard] = useAtom(BoardAtom)
+
     const [_refetchBoards, setRefetchBoard] = useAtom(RefetchBoardAtom)
-    const { data, refetch } = useQuery<IBoardWithAllRelation[]>(
-        ['api/board/list'],
-        {
-            enabled: !!session,
-        }
-    )
+
+    const { data, refetch, isFetching } = useTableauQuery<
+        IBoardWithAllRelation[]
+    >(['api/board/list'], {
+        enabled: !!session,
+        refetchOnWindowFocus: false,
+    })
 
     const onAfterSubmit = useCallback(() => {
         refetch().then()
@@ -40,7 +42,7 @@ export function BoardSide() {
         )
         if (!updatedSelectedBoard) return
         setBoard(updatedSelectedBoard)
-    }, [data])
+    }, [data, selectedBoard, setBoard])
 
     return (
         <Flex flexDirection="column" width="100%">

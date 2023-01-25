@@ -14,12 +14,12 @@ import {
     Text,
     Tooltip,
 } from '@chakra-ui/react'
-import { useMutation } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 import { AddIcon } from '@chakra-ui/icons'
 import { FormikHelpers } from 'formik'
 import { ColumnNewForm, IColumnNewFormikValues } from './columnNewForm'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
+import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
 
 interface IColumnNewProps {
     isOpen: boolean
@@ -31,14 +31,16 @@ export function ColumnNew(props: IColumnNewProps) {
     const { isOpen, onOpen, onClose } = props
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
-    const { mutateAsync } = useMutation((values: IColumnNewFormikValues) => {
-        return axios.post(`api/column/create`, values, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        })
-    })
+    const { mutateAsync } = useTableauMutation(
+        (values: IColumnNewFormikValues) => {
+            return axios.post(`api/column/create`, values, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            })
+        }
+    )
 
     const onSubmit = useCallback(
         (
