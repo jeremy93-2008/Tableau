@@ -18,7 +18,6 @@ import {
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { ColumnTaskNewForm, ITaskNewFormikValues } from './columnTaskNewForm'
-import { API_URL } from '../../../../../constants/url'
 import { FormikHelpers } from 'formik'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 import { IFullStatus } from '../../../../../types/types'
@@ -34,7 +33,7 @@ export function ColumnTaskNew(props: IColumnTaskNewProps) {
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
     const { mutateAsync } = useMutation((values: ITaskNewFormikValues) => {
-        return axios.post(`${API_URL}/task/create`, values, {
+        return axios.post(`api/task/create`, values, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',

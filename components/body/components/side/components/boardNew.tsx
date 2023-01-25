@@ -22,7 +22,6 @@ import { useMutation } from '@tanstack/react-query'
 import { BoardNewForm, IBoardNewFormikValues } from './boardNewForm'
 
 import { createFetchOptions } from '../../../../../utils/createFetchOptions'
-import { API_URL } from '../../../../../constants/url'
 
 interface IBoardNewProps {
     onAfterSubmit: () => void
@@ -35,7 +34,7 @@ export function BoardNew(props: IBoardNewProps) {
 
     const { mutateAsync } = useMutation((values: IBoardNewFormikValues) => {
         return fetch(
-            `${API_URL}/board/create`,
+            `api/board/create`,
             createFetchOptions('POST', {
                 name: values.name,
                 description: values.description,

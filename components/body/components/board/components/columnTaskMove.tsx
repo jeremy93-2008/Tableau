@@ -6,7 +6,6 @@ import { IFullStatus } from '../../../../../types/types'
 import { useAtom } from 'jotai'
 import { BoardAtom } from '../../../../../atoms/boardAtom'
 import { useMutation } from '@tanstack/react-query'
-import { API_URL } from '../../../../../constants/url'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 
 interface IColumnMoveValues {
@@ -24,7 +23,7 @@ export function ColumnTaskMove(props: IColumnTaskMoveProps) {
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
     const { mutateAsync } = useMutation((values: IColumnMoveValues) => {
-        return axios.post(`${API_URL}/column/move`, values, {
+        return axios.post(`api/column/move`, values, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',

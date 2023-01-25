@@ -11,7 +11,6 @@ import { FormikHelpers } from 'formik'
 import { Task } from '.prisma/client'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
-import { API_URL } from '../../../../../constants/url'
 import { useAtom } from 'jotai'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 import { TaskEditForm } from './taskEditForm'
@@ -39,7 +38,7 @@ export function TaskEdit(props: ITaskEditProps) {
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
     const { mutateAsync } = useMutation((values: ITaskEditFormikValues) => {
-        return axios.post(`${API_URL}/task/edit`, values, {
+        return axios.post(`api/task/edit`, values, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',

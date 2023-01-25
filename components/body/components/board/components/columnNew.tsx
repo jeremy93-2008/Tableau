@@ -19,7 +19,6 @@ import { useAtom } from 'jotai'
 import { AddIcon } from '@chakra-ui/icons'
 import { FormikHelpers } from 'formik'
 import { ColumnNewForm, IColumnNewFormikValues } from './columnNewForm'
-import { API_URL } from '../../../../../constants/url'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 
 interface IColumnNewProps {
@@ -33,7 +32,7 @@ export function ColumnNew(props: IColumnNewProps) {
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
     const { mutateAsync } = useMutation((values: IColumnNewFormikValues) => {
-        return axios.post(`${API_URL}/column/create`, values, {
+        return axios.post(`api/column/create`, values, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',

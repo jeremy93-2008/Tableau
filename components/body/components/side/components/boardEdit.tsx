@@ -18,8 +18,6 @@ import {
 
 import { useSession } from 'next-auth/react'
 import { useMutation } from '@tanstack/react-query'
-
-import { API_URL } from '../../../../../constants/url'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { BsFillPencilFill } from 'react-icons/bs'
 import { BoardEditForm, IBoardEditFormikValues } from './boardEditForm'
@@ -38,7 +36,7 @@ export function BoardEdit(props: IBoardEditProps) {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const { mutateAsync } = useMutation((values: IBoardEditFormikValues) => {
-        return axios.post(`${API_URL}/board/edit`, values, {
+        return axios.post(`api/board/edit`, values, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
