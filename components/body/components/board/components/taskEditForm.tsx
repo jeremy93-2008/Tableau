@@ -5,11 +5,12 @@ import { WarningIcon } from '@chakra-ui/icons'
 import React, { useCallback, useMemo } from 'react'
 import * as Yup from 'yup'
 import { ITaskEditFormikValues } from './taskEdit'
-import { Status, Task } from '.prisma/client'
+import { Task } from '.prisma/client'
+import { IFullStatus } from '../../../../../types/types'
 
 interface ITaskEditForm {
     task: Task
-    status: Status
+    status: IFullStatus
     onTaskSubmit: (
         values: ITaskEditFormikValues,
         actions: FormikHelpers<ITaskEditFormikValues>
@@ -26,7 +27,7 @@ export function TaskEditForm(props: ITaskEditForm) {
             name: task.name || '',
             description: task.description || '',
             boardId: task.boardId || '',
-            statusName: status.name,
+            statusId: status.id,
             elapsedTime: task.elapsedTime || 0,
             estimatedTime: task.estimatedTime || 0,
         }),
@@ -40,7 +41,7 @@ export function TaskEditForm(props: ITaskEditForm) {
                 name: Yup.string().required('Task Name is required'),
                 description: Yup.string(),
                 boardId: Yup.string().required('Board Id is required'),
-                statusName: Yup.string().required('Status Name is required'),
+                statusId: Yup.string().required('Status Id is required'),
                 elapsedTime: Yup.number(),
                 estimatedTime: Yup.number(),
             }),

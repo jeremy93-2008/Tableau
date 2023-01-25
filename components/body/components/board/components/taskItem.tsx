@@ -8,13 +8,14 @@ import {
     useDisclosure,
 } from '@chakra-ui/react'
 import { BsClock, BsClockHistory, BsFillPencilFill } from 'react-icons/bs'
-import { Status, Task } from '.prisma/client'
+import { Task } from '.prisma/client'
 import { TaskEdit } from './taskEdit'
 import { TaskItemType } from '../../../../../constants/dragType'
+import { IFullStatus } from '../../../../../types/types'
 
 interface ITaskItemProps {
     task: Task
-    status: Status
+    status: IFullStatus
 }
 
 export function TaskItem(props: ITaskItemProps) {
@@ -66,12 +67,12 @@ export function TaskItem(props: ITaskItemProps) {
                 </Text>
                 <Flex className="board-item-clock" mt={2} justifyContent="left">
                     <Flex alignItems="center">
-                        <BsClock size={13} />
-                        <Text ml={1}>{task.estimatedTime}</Text>
-                    </Flex>
-                    <Flex ml={3} alignItems="center">
                         <BsClockHistory size={13} />
                         <Text ml={1}>{task.elapsedTime}</Text>
+                    </Flex>
+                    <Flex ml={3} alignItems="center">
+                        <BsClock size={13} />
+                        <Text ml={1}>{task.estimatedTime}</Text>
                     </Flex>
                 </Flex>
             </Flex>

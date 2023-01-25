@@ -11,6 +11,7 @@ export type IColumnNewFormikValues = {
     id: string | undefined
     statusName: string
     isDefault: boolean
+    order: string
 }
 
 interface IColumnNewProps {
@@ -29,6 +30,7 @@ export function ColumnNewForm(props: IColumnNewProps) {
             id: selectedBoard?.id,
             statusName: 'Status',
             isDefault: false,
+            order: selectedBoard?.Status.length.toString() || '0',
         }),
         [selectedBoard]
     )
@@ -39,6 +41,7 @@ export function ColumnNewForm(props: IColumnNewProps) {
                 id: Yup.string().required(),
                 statusName: Yup.string().required('Name Required'),
                 isDefault: Yup.boolean().required(),
+                order: Yup.string().required(),
             }),
         []
     )

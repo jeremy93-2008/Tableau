@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { FormikHelpers } from 'formik'
 import {
     Box,
@@ -60,7 +60,7 @@ export function BoardNew(props: IBoardNewProps) {
 
     return (
         <>
-            <Popover isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
+            <Popover isLazy isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
                 <Tooltip label="Add new board" isDisabled={!session}>
                     <Box>
                         <PopoverTrigger>
