@@ -1,7 +1,7 @@
+import React, { useCallback, useMemo } from 'react'
 import axios from 'axios'
 import { IconButton, Tooltip } from '@chakra-ui/react'
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
-import React, { useCallback } from 'react'
 import { IFullStatus } from '../../../../../types/types'
 import { useAtom } from 'jotai'
 import { BoardAtom } from '../../../../../atoms/boardAtom'
@@ -10,9 +10,8 @@ import { API_URL } from '../../../../../constants/url'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 
 interface IColumnMoveValues {
-    id: string
-    prevOrder: string
-    nextOrder: string
+    currentColumn: IFullStatus
+    affectedColumn: IFullStatus
 }
 
 interface IColumnTaskMoveProps {
@@ -33,16 +32,31 @@ export function ColumnTaskMove(props: IColumnTaskMoveProps) {
         })
     })
 
+    const sortedColumns = useMemo(() => {
+        return selectedBoard?.Status.sort(
+            (a, b) => Number(a.order) - Number(b.order)
+        )
+    }, [selectedBoard])
+
+    const getAffectedColumn = useCallback(
+        (type: 'add' | 'substract') => {
+            if (!sortedColumns) return
+            const currentColumnIndex = sortedColumns.findIndex(
+                (col) => col.order === statusBoard.order
+            )
+            if (!currentColumnIndex) return
+            if (type === 'add') return sortedColumns[currentColumnIndex + 1]
+            return sortedColumns[currentColumnIndex - 1]
+        },
+        [sortedColumns, statusBoard]
+    )
+
     const handleColumnMove = useCallback(
         (type: 'add' | 'substract') => () => {
-            const statusLength = Number(selectedBoard?.Status.length ?? 4)
+            const affectedColumn = getAffectedColumn(type) ?? statusBoard
             mutateAsync({
-                id: statusBoard.id,
-                prevOrder: statusBoard.order,
-                nextOrder: (type === 'add'
-                    ? statusLength
-                    : statusLength - 2
-                ).toString(),
+                currentColumn: statusBoard,
+                affectedColumn,
             }).then(() => {
                 refetchBoards.fetch()
             })
