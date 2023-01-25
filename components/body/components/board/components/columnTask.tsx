@@ -10,7 +10,6 @@ import { TaskList } from './taskList'
 import { useDrop } from 'react-dnd'
 import { TaskItemType } from '../../../../../constants/dragType'
 import { useMutation } from '@tanstack/react-query'
-import { API_URL } from '../../../../../constants/url'
 import { ITaskEditFormikValues } from './taskEdit'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 import { IFullStatus } from '../../../../../types/types'
@@ -29,7 +28,7 @@ export function ColumnTask(props: IColumnTaskProps) {
     const [isHoveringColumn, setHoveringColumn] = useState(false)
 
     const { mutateAsync } = useMutation((values: ITaskEditFormikValues) => {
-        return axios.post(`${API_URL}/task/edit`, values, {
+        return axios.post(`api/task/edit`, values, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
