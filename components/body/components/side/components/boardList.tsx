@@ -1,9 +1,10 @@
 import React from 'react'
-import { Avatar, Button, Flex, Text } from '@chakra-ui/react'
+import { Avatar, Flex, Text } from '@chakra-ui/react'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { noop } from '@chakra-ui/utils'
 import { useAtom } from 'jotai'
 import { BoardAtom } from '../../../../../atoms/boardAtom'
+import { BoardEdit } from './boardEdit'
 
 interface IBoardListProps {
     listOfBoards?: IBoardWithAllRelation[]
@@ -18,7 +19,7 @@ export function BoardList(props: IBoardListProps) {
             {listOfBoards &&
                 listOfBoards.map((board) => {
                     return (
-                        <Button
+                        <Flex
                             key={board.id}
                             color={
                                 board.id === selectedBoard?.id
@@ -36,23 +37,32 @@ export function BoardList(props: IBoardListProps) {
                                         ? 'teal.500'
                                         : 'gray.200',
                             }}
-                            leftIcon={
-                                <Avatar
-                                    name={board.name}
-                                    src="https://bit.ly/broken-link"
-                                    borderRadius="10px"
-                                />
-                            }
                             onClick={
                                 onItemClick ? () => onItemClick(board) : noop
                             }
                             display="flex"
-                            justifyContent="left"
+                            justifyContent="space-between"
+                            alignItems="center"
                             borderRadius={0}
-                            p={'34px 18px'}
+                            cursor="pointer"
+                            userSelect="none"
+                            px={4}
+                            py={4}
                         >
-                            <Text pl={1}>{board.name}</Text>
-                        </Button>
+                            <Flex alignItems="center">
+                                <Avatar
+                                    name={board.name}
+                                    src="https://bit.ly/broken-link"
+                                    borderRadius="10px"
+                                    mr={2}
+                                />
+                                <Text pl={1}>{board.name}</Text>
+                            </Flex>
+                            <BoardEdit
+                                isVisible={selectedBoard?.id === board.id}
+                                singleBoard={board}
+                            />
+                        </Flex>
                     )
                 })}
         </Flex>
