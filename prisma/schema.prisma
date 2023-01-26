@@ -21,6 +21,7 @@ model Task {
   boardId       String
   user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
+  order         Int         @default(1)
   estimatedTime Int?
   elapsedTime   Int?
 }
@@ -38,7 +39,7 @@ model Board {
 
 model StatusBoard {
   id       String @id @default(cuid())
-  order    String
+  order    Int    @default(1)
   statusId String
   status   Status @relation(fields: [statusId], references: [id], onDelete: Cascade)
   boardId  String

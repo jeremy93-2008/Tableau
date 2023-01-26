@@ -46,11 +46,11 @@ export function Columns(props: IBoardColumnsProps) {
                 overflowY="hidden"
                 onWheel={onHScroll}
             >
-                {selectedBoard.Status.sort(
-                    (a, b) => Number(a.order) - Number(b.order)
-                ).map((status) => (
-                    <ColumnTask key={status.id} statusBoard={status} />
-                ))}
+                {selectedBoard.Status.sort((a, b) => a.order - b.order).map(
+                    (status) => (
+                        <ColumnTask key={status.id} statusBoard={status} />
+                    )
+                )}
                 <ColumnTask newColumn />
             </Flex>
         </Flex>
