@@ -23,7 +23,7 @@ export function useTableauQuery<TData>(
         if (!session) return
         if (isFetching || isLoading || isRefetching) return setLoading(true)
         setLoading(false)
-    }, [isFetching, isLoading, isRefetching, setLoading])
+    }, [session, isFetching, isLoading, isRefetching, setLoading])
 
     return query
 }

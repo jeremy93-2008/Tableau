@@ -34,7 +34,7 @@ export default async function handler(
             Status: {
                 create: [
                     {
-                        order: '0',
+                        order: 0,
                         status: {
                             connectOrCreate: {
                                 where: { name: 'To Do' },
@@ -43,7 +43,7 @@ export default async function handler(
                         },
                     },
                     {
-                        order: '1',
+                        order: 1,
                         status: {
                             connectOrCreate: {
                                 where: { name: 'In Progress' },
@@ -55,7 +55,7 @@ export default async function handler(
                         },
                     },
                     {
-                        order: '2',
+                        order: 2,
                         status: {
                             connectOrCreate: {
                                 where: { name: 'Done' },

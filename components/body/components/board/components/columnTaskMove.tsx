@@ -32,9 +32,7 @@ export function ColumnTaskMove(props: IColumnTaskMoveProps) {
     })
 
     const sortedColumns = useMemo(() => {
-        return selectedBoard?.Status.sort(
-            (a, b) => Number(a.order) - Number(b.order)
-        )
+        return selectedBoard?.Status.sort((a, b) => a.order - b.order)
     }, [selectedBoard])
 
     const getAffectedColumn = useCallback(
@@ -65,7 +63,7 @@ export function ColumnTaskMove(props: IColumnTaskMoveProps) {
 
     return (
         <>
-            {Number(statusBoard.order) > 0 && (
+            {statusBoard.order > 0 && (
                 <Tooltip label="Move Column to the Left">
                     <IconButton
                         onClick={handleColumnMove('substract')}
@@ -76,8 +74,7 @@ export function ColumnTaskMove(props: IColumnTaskMoveProps) {
                     />
                 </Tooltip>
             )}
-            {Number(statusBoard.order) <
-                Number(selectedBoard?.Status.length ?? 4) - 1 && (
+            {statusBoard.order < (selectedBoard?.Status.length ?? 4) - 1 && (
                 <Tooltip label="Move Column to the Right">
                     <IconButton
                         onClick={handleColumnMove('add')}

@@ -6,6 +6,7 @@ CREATE TABLE "Task" (
     "statusId" TEXT NOT NULL,
     "boardId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "order" INTEGER NOT NULL DEFAULT 1,
     "estimatedTime" INTEGER,
     "elapsedTime" INTEGER,
 
@@ -26,7 +27,7 @@ CREATE TABLE "Board" (
 -- CreateTable
 CREATE TABLE "StatusBoard" (
     "id" TEXT NOT NULL,
-    "order" TEXT NOT NULL,
+    "order" INTEGER NOT NULL DEFAULT 1,
     "statusId" TEXT NOT NULL,
     "boardId" TEXT NOT NULL,
 
