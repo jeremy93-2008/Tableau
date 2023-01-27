@@ -15,7 +15,7 @@ export function BoardSide() {
 
     const [_refetchBoards, setRefetchBoard] = useAtom(RefetchBoardAtom)
 
-    const { data, refetch, isFetching } = useTableauQuery<
+    const { data, refetch, isRefetching } = useTableauQuery<
         IBoardWithAllRelation[]
     >(['api/board/list'], {
         enabled: !!session,
@@ -42,7 +42,7 @@ export function BoardSide() {
         )
         if (!updatedSelectedBoard) return
         setBoard(updatedSelectedBoard)
-    }, [data, selectedBoard, setBoard])
+    }, [selectedBoard, data, setBoard])
 
     return (
         <Flex flexDirection="column" width="100%">

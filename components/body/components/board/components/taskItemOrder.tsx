@@ -40,37 +40,38 @@ export function TaskItemOrder(props: ITaskItemWithOrderingProps) {
 
     const { reorderTasks } = useReorderTasks(orderedTasks, currentTask)
 
-    const onDropTaskItem = useCallback(
-        ({ task: nextTask }: { task: Task }) => {
-            if (nextTask.statusId !== status.id) return
-            const newOrderedTasks = reorderTasks(nextTask)
-            if (!newOrderedTasks) return
-            mutateAsync(newOrderedTasks).then(() => {
-                setIsCurrentColumnDropped(false)
-                refetchBoard.fetch()
-            })
-        },
-        [reorderTasks, mutateAsync, refetchBoard, status]
-    )
+    const onDropTaskItem = ({ task: nextTask }: { task: Task }) => {
+        if (nextTask.statusId !== status.id || nextTask.id === currentTask?.id)
+            return
+        const newOrderedTasks = reorderTasks(nextTask)
+        if (!newOrderedTasks) return
+        mutateAsync(newOrderedTasks).then(() => {
+            setIsCurrentColumnDropped(false)
+            refetchBoard.fetch()
+        })
+    }
 
     const onDropHoverItem = useCallback(
         ({ task }: { task: Task }) => {
-            if (task.statusId === status.id)
+            if (task.statusId === status.id && task.id !== currentTask?.id)
                 return setIsCurrentColumnDropped(true)
             setIsCurrentColumnDropped(false)
         },
-        [status, setIsCurrentColumnDropped]
+        [status, currentTask, setIsCurrentColumnDropped]
     )
 
-    const [{ isOver }, drop] = useDrop(() => ({
-        accept: TaskItemType,
-        hover: onDropHoverItem,
-        drop: onDropTaskItem,
-        collect: (monitor) => ({
-            isOver: monitor.isOver(),
-            canDrop: monitor.canDrop(),
+    const [{ isOver }, drop] = useDrop(
+        () => ({
+            accept: TaskItemType,
+            hover: onDropHoverItem,
+            drop: onDropTaskItem,
+            collect: (monitor) => ({
+                isOver: monitor.isOver(),
+                canDrop: monitor.canDrop(),
+            }),
         }),
-    }))
+        [orderedTasks, selectedBoard]
+    )
 
     return (
         <Flex
