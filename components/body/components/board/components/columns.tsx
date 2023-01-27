@@ -48,10 +48,14 @@ export function Columns(props: IBoardColumnsProps) {
             >
                 {selectedBoard.Status.sort((a, b) => a.order - b.order).map(
                     (status) => (
-                        <ColumnTask key={status.id} statusBoard={status} />
+                        <ColumnTask
+                            key={status.id}
+                            selectedBoard={selectedBoard}
+                            statusBoard={status}
+                        />
                     )
                 )}
-                <ColumnTask newColumn />
+                <ColumnTask selectedBoard={selectedBoard} newColumn />
             </Flex>
         </Flex>
     )

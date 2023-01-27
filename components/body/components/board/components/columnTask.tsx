@@ -5,28 +5,32 @@ import { Task } from '.prisma/client'
 import { ColumnNew } from './columnNew'
 import { ColumnTaskNew } from './columnTaskNew'
 import { useAtom } from 'jotai'
-import { BoardAtom } from '../../../../../atoms/boardAtom'
 import { TaskList } from './taskList'
 import { useDrop } from 'react-dnd'
 import { TaskItemType } from '../../../../../constants/dragType'
 import { ITaskEditFormikValues } from './taskEdit'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
-import { IFullStatus } from '../../../../../types/types'
+import { IBoardWithAllRelation, IFullStatus } from '../../../../../types/types'
 import { ColumnTaskMove } from './columnTaskMove'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
 
 interface IColumnTaskProps {
+    selectedBoard: IBoardWithAllRelation
     statusBoard?: IFullStatus
     newColumn?: boolean
 }
 
 export function ColumnTask(props: IColumnTaskProps) {
-    const { statusBoard, newColumn } = props
-    const [selectedBoard] = useAtom(BoardAtom)
+    const { selectedBoard, statusBoard, newColumn } = props
     const [refetchBoards] = useAtom(RefetchBoardAtom)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [isHoveringColumn, setHoveringColumn] = useState(false)
     const [isDropColumnAllowed, setDropColumnAllowed] = useState(false)
+
+    const taskLength = useMemo(() => {
+        return selectedBoard?.Task.filter((t) => t.statusId === statusBoard?.id)
+            .length
+    }, [selectedBoard, statusBoard])
 
     const { mutateAsync } = useTableauMutation(
         (values: ITaskEditFormikValues) => {
@@ -51,13 +55,13 @@ export function ColumnTask(props: IColumnTaskProps) {
                 estimatedTime: task.estimatedTime || 0,
                 elapsedTime: task.elapsedTime || 0,
                 statusId: statusBoard.id,
-                order: task.order,
+                order: (taskLength ?? 998) + 1,
             }).then(() => {
                 setDropColumnAllowed(false)
                 refetchBoards.fetch()
             })
         },
-        [statusBoard, mutateAsync, refetchBoards]
+        [statusBoard, mutateAsync, refetchBoards, taskLength]
     )
 
     const onDropHoverItem = useCallback(

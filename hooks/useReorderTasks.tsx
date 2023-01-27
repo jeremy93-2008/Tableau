@@ -4,19 +4,26 @@ import { structuredClone } from 'next/dist/compiled/@edge-runtime/primitives/str
 
 export function useReorderTasks(orderedTasks?: Task[], currentTask?: Task) {
     const reorderTasks = useCallback(
-        (nextTask: Task) => {
+        (originalTask: Task) => {
             if (!orderedTasks) return
             const cloneOrderedTasks = structuredClone(orderedTasks)
             const currentIndex = cloneOrderedTasks.findIndex(
-                (task) => task.id === nextTask.id
+                (task) => task.id === originalTask.id
             )
             cloneOrderedTasks.splice(currentIndex, 1)
+
             const nextIndex = currentTask
                 ? cloneOrderedTasks.findIndex(
                       (task) => task.order === currentTask.order
                   )
                 : orderedTasks.length
-            cloneOrderedTasks.splice(nextIndex, 0, nextTask)
+
+            if (currentTask)
+                cloneOrderedTasks.splice(
+                    nextIndex,
+                    0,
+                    structuredClone(originalTask)
+                )
 
             cloneOrderedTasks.forEach((task, idx) => {
                 task.order = idx
