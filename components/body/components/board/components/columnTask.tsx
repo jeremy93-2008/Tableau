@@ -51,6 +51,7 @@ export function ColumnTask(props: IColumnTaskProps) {
                 estimatedTime: task.estimatedTime || 0,
                 elapsedTime: task.elapsedTime || 0,
                 statusId: statusBoard.id,
+                order: task.order,
             }).then(() => {
                 setDropColumnAllowed(false)
                 refetchBoards.fetch()
