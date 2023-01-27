@@ -24,6 +24,7 @@ export type ITaskEditFormikValues = {
     statusId: string
     elapsedTime: number
     estimatedTime: number
+    order: number
 }
 
 interface ITaskEditProps {
