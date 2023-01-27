@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { useDrag } from 'react-dnd'
 import {
+    Box,
     Flex,
     IconButton,
     Text,
@@ -61,10 +62,10 @@ export function TaskItem(props: ITaskItemProps) {
                 flexDirection="column"
                 py={2}
             >
-                <Text minHeight="65px">
+                <Box minHeight="65px">
                     <Text fontWeight="bold">{task.name}</Text>
                     <Text fontSize="13px">{task.description}</Text>
-                </Text>
+                </Box>
                 <Flex className="board-item-clock" mt={2} justifyContent="left">
                     <Flex alignItems="center">
                         <BsClockHistory size={13} />

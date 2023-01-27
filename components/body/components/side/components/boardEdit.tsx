@@ -65,18 +65,16 @@ export function BoardEdit(props: IBoardEditProps) {
             <Popover isLazy isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
                 <Tooltip label="Edit current board" isDisabled={!session}>
                     <Box>
-                        <Tooltip label="Edit current board">
-                            <PopoverTrigger>
-                                <IconButton
-                                    onClick={(evt) => evt.stopPropagation()}
-                                    colorScheme="teal"
-                                    variant={isVisible ? 'solid' : 'ghost'}
-                                    aria-label="Edit Board"
-                                    icon={<BsFillPencilFill />}
-                                    size="sm"
-                                />
-                            </PopoverTrigger>
-                        </Tooltip>
+                        <PopoverTrigger>
+                            <IconButton
+                                onClick={(evt) => evt.stopPropagation()}
+                                colorScheme="teal"
+                                variant={isVisible ? 'solid' : 'ghost'}
+                                aria-label="Edit Board"
+                                icon={<BsFillPencilFill />}
+                                size="sm"
+                            />
+                        </PopoverTrigger>
                     </Box>
                 </Tooltip>
                 <PopoverContent bg="gray.50" p={5}>
