@@ -26,6 +26,7 @@ export function ColumnTask(props: IColumnTaskProps) {
     const [refetchBoards] = useAtom(RefetchBoardAtom)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [isHoveringColumn, setHoveringColumn] = useState(false)
+    const [isDropColumnAllowed, setDropColumnAllowed] = useState(false)
 
     const { mutateAsync } = useTableauMutation(
         (values: ITaskEditFormikValues) => {
@@ -41,6 +42,7 @@ export function ColumnTask(props: IColumnTaskProps) {
     const onDropTaskItem = useCallback(
         ({ task }: { task: Task }) => {
             if (!statusBoard || !statusBoard.status.name) return
+            if (statusBoard.id === task.statusId) return
             mutateAsync({
                 id: task.id,
                 name: task.name,
@@ -50,14 +52,25 @@ export function ColumnTask(props: IColumnTaskProps) {
                 elapsedTime: task.elapsedTime || 0,
                 statusId: statusBoard.id,
             }).then(() => {
+                setDropColumnAllowed(false)
                 refetchBoards.fetch()
             })
         },
         [statusBoard, mutateAsync, refetchBoards]
     )
 
+    const onDropHoverItem = useCallback(
+        ({ task }: { task: Task }) => {
+            if (!statusBoard || !statusBoard.status.name) return
+            if (statusBoard.id === task.statusId) return
+            setDropColumnAllowed(true)
+        },
+        [statusBoard]
+    )
+
     const [{ isOver }, drop] = useDrop(() => ({
         accept: TaskItemType,
+        hover: onDropHoverItem,
         drop: onDropTaskItem,
         collect: (monitor) => ({
             isOver: monitor.isOver(),
@@ -68,7 +81,7 @@ export function ColumnTask(props: IColumnTaskProps) {
     const tasks = useMemo(() => {
         return selectedBoard?.Task.filter(
             (task) => task.statusId === statusBoard?.id
-        )
+        ).sort((a, b) => a.order - b.order)
     }, [selectedBoard, statusBoard])
 
     const onMouseEnterColumn = useCallback(() => {
@@ -95,7 +108,9 @@ export function ColumnTask(props: IColumnTaskProps) {
             ml={2}
             onMouseEnter={onMouseEnterColumn}
             onMouseLeave={onMouseLeaveColumn}
-            filter={`hue-rotate(${isOver ? '250deg' : '0deg'})`}
+            filter={`hue-rotate(${
+                isDropColumnAllowed && isOver ? '250deg' : '0deg'
+            })`}
         >
             {!newColumn && statusBoard && (
                 <>
@@ -110,7 +125,7 @@ export function ColumnTask(props: IColumnTaskProps) {
                         </Flex>
                     </Flex>
                     {tasks && tasks.length > 0 && (
-                        <VStack my={4}>
+                        <VStack mt={4}>
                             <TaskList tasks={tasks} status={statusBoard} />
                         </VStack>
                     )}

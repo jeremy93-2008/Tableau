@@ -30,6 +30,7 @@ export function TaskEditForm(props: ITaskEditForm) {
             statusId: status.id,
             elapsedTime: task.elapsedTime || 0,
             estimatedTime: task.estimatedTime || 0,
+            order: task.order || 999,
         }),
         [task, status]
     )

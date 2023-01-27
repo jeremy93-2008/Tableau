@@ -1,7 +1,7 @@
 import React from 'react'
 import { Task } from '.prisma/client'
-import { TaskItem } from './taskItem'
 import { IFullStatus } from '../../../../../types/types'
+import { TaskItemOrder } from './taskItemOrder'
 
 interface ITaskListProps {
     tasks: Task[]
@@ -10,10 +10,17 @@ interface ITaskListProps {
 
 export function TaskList(props: ITaskListProps) {
     const { tasks, status } = props
+
     return (
         <>
-            {tasks.map((task) => {
-                return <TaskItem key={task.id} status={status} task={task} />
+            {[...tasks, undefined].map((task, idx) => {
+                return (
+                    <TaskItemOrder
+                        key={task?.id ?? idx}
+                        status={status}
+                        task={task}
+                    />
+                )
             })}
         </>
     )
