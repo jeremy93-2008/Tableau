@@ -38,7 +38,7 @@ export function TaskEdit(props: ITaskEditProps) {
     const { isOpen, onClose, status, task } = props
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
-    const { mutateAsync } = useTableauMutation(
+    const { mutateAsync: mutateEditAsync } = useTableauMutation(
         (values: ITaskEditFormikValues) => {
             return axios.post(`api/task/edit`, values, {
                 headers: {
@@ -49,18 +49,43 @@ export function TaskEdit(props: ITaskEditProps) {
         }
     )
 
-    const onSubmit = useCallback(
+    const { mutateAsync: mutateDeleteAsync } = useTableauMutation(
+        (value: Task) => {
+            return axios.post(
+                `api/task/delete`,
+                { id: value.id },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                    },
+                }
+            )
+        }
+    )
+
+    const onEdit = useCallback(
         (
             values: ITaskEditFormikValues,
             actions: FormikHelpers<ITaskEditFormikValues>
         ) => {
-            mutateAsync(values).then(() => {
+            mutateEditAsync(values).then(() => {
                 actions.setSubmitting(false)
                 onClose()
                 refetchBoards.fetch()
             })
         },
-        [mutateAsync, onClose, refetchBoards]
+        [mutateEditAsync, onClose, refetchBoards]
+    )
+
+    const onDelete = useCallback(
+        (task: Task) => {
+            mutateDeleteAsync(task).then(() => {
+                onClose()
+                refetchBoards.fetch()
+            })
+        },
+        [mutateDeleteAsync, onClose, refetchBoards]
     )
 
     return (
@@ -74,7 +99,8 @@ export function TaskEdit(props: ITaskEditProps) {
                         task={task}
                         status={status}
                         onClose={onClose}
-                        onTaskSubmit={onSubmit}
+                        onTaskEditSubmit={onEdit}
+                        onTaskDelete={onDelete}
                     />
                 </ModalBody>
             </ModalContent>
