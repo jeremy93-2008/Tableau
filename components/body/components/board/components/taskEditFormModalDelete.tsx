@@ -38,6 +38,13 @@ export function TaskEditFormModalDelete(props: ITaskEditFormModalDeleteProps) {
 
                     <AlertDialogFooter>
                         <Button
+                            colorScheme="red"
+                            onClick={() => onSubmit()}
+                            mr={3}
+                        >
+                            Delete
+                        </Button>
+                        <Button
                             ref={
                                 cancelRef as
                                     | LegacyRef<HTMLButtonElement>
@@ -46,13 +53,6 @@ export function TaskEditFormModalDelete(props: ITaskEditFormModalDeleteProps) {
                             onClick={onClose}
                         >
                             Cancel
-                        </Button>
-                        <Button
-                            colorScheme="red"
-                            onClick={() => onSubmit()}
-                            ml={3}
-                        >
-                            Delete
                         </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>

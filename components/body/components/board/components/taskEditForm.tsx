@@ -14,7 +14,7 @@ import * as Yup from 'yup'
 import { ITaskEditFormikValues } from './taskEdit'
 import { Task } from '.prisma/client'
 import { IFullStatus } from '../../../../../types/types'
-import { BsCheck2, BsTrashFill } from 'react-icons/bs'
+import { BsTrashFill } from 'react-icons/bs'
 import { TaskEditFormModalDelete } from './taskEditFormModalDelete'
 
 interface ITaskEditForm {
@@ -157,15 +157,10 @@ export function TaskEditForm(props: ITaskEditForm) {
                                 display="flex"
                                 justifyContent="flex-end"
                             >
-                                <Button
-                                    leftIcon={<BsCheck2 />}
-                                    type="submit"
-                                    colorScheme="teal"
-                                    mr={1}
-                                >
+                                <Button onClick={onClose}>Cancel</Button>
+                                <Button type="submit" colorScheme="teal" mr={1}>
                                     Save
                                 </Button>
-                                <Button onClick={onClose}>Cancel</Button>
                             </ButtonGroup>
                         </ButtonGroup>
                     </form>
