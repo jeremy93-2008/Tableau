@@ -45,6 +45,9 @@ export function Columns(props: IBoardColumnsProps) {
                 overflowX="auto"
                 overflowY="hidden"
                 onWheel={onHScroll}
+                style={{
+                    scrollbarGutter: 'stable',
+                }}
             >
                 {selectedBoard.Status.sort((a, b) => a.order - b.order).map(
                     (status) => (

@@ -1,4 +1,11 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, {
+    MutableRefObject,
+    useCallback,
+    useMemo,
+    useRef,
+    useState,
+    WheelEvent,
+} from 'react'
 import axios from 'axios'
 import {
     Container,
@@ -32,6 +39,7 @@ interface IColumnTaskProps {
 
 export function ColumnTask(props: IColumnTaskProps) {
     const { selectedBoard, statusBoard, newColumn } = props
+    const refColumnStack = useRef<HTMLDivElement>()
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
     const {
@@ -145,6 +153,19 @@ export function ColumnTask(props: IColumnTaskProps) {
         setHoveringColumn(false)
     }, [isHoveringColumn, setHoveringColumn])
 
+    const handleWheelColumnScroll = useCallback(
+        (evt: WheelEvent<HTMLDivElement>) => {
+            if (!refColumnStack.current) return
+            if (
+                refColumnStack.current?.clientHeight ===
+                refColumnStack.current?.scrollHeight
+            )
+                return
+            evt.stopPropagation()
+        },
+        [refColumnStack]
+    )
+
     return (
         <Container
             ref={drop}
@@ -205,7 +226,37 @@ export function ColumnTask(props: IColumnTaskProps) {
                         </Flex>
                     </Flex>
                     {tasks && tasks.length > 0 && (
-                        <VStack mt={4}>
+                        <VStack
+                            ref={
+                                refColumnStack as MutableRefObject<HTMLDivElement>
+                            }
+                            onWheel={handleWheelColumnScroll}
+                            maxHeight="calc(100vh - 340px)"
+                            overflowY="hidden"
+                            overflowX="hidden"
+                            pt={'10px'}
+                            px={'8px'}
+                            mt={4}
+                            _hover={{
+                                overflowY: 'auto',
+                            }}
+                            sx={{
+                                '&::-webkit-scrollbar': {
+                                    width: '6px',
+                                    borderRadius: '8px',
+                                    backgroundColor: 'transparent',
+                                },
+                                '&::-webkit-scrollbar-thumb': {
+                                    borderRadius: '10px',
+                                    backgroundColor: `rgba(0, 0, 0, 0.3)`,
+                                },
+                            }}
+                            style={{
+                                scrollbarGutter: 'stable',
+                                scrollbarWidth: 'thin',
+                                scrollbarColor: 'rgb(44, 122, 123) transparent',
+                            }}
+                        >
                             <TaskList tasks={tasks} status={statusBoard} />
                         </VStack>
                     )}

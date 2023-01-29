@@ -67,6 +67,7 @@ export function ColumnTaskNew(props: IColumnTaskNewProps) {
                             bgColor="teal.600"
                             _hover={{ bgColor: 'teal.700' }}
                             width="100%"
+                            mt={2}
                             style={{
                                 opacity: isVisible ? '1' : '0',
                             }}
