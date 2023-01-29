@@ -5,6 +5,7 @@ import { noop } from '@chakra-ui/utils'
 import { useAtom } from 'jotai'
 import { BoardAtom } from '../../../../../atoms/boardAtom'
 import { BoardEdit } from './boardEdit'
+import { BoardDelete } from './boardDelete'
 
 interface IBoardListProps {
     listOfBoards?: IBoardWithAllRelation[]
@@ -58,10 +59,16 @@ export function BoardList(props: IBoardListProps) {
                                 />
                                 <Text pl={1}>{board.name}</Text>
                             </Flex>
-                            <BoardEdit
-                                isVisible={selectedBoard?.id === board.id}
-                                singleBoard={board}
-                            />
+                            <Flex>
+                                <BoardEdit
+                                    isVisible={selectedBoard?.id === board.id}
+                                    singleBoard={board}
+                                />
+                                <BoardDelete
+                                    isVisible={selectedBoard?.id === board.id}
+                                    singleBoard={board}
+                                />
+                            </Flex>
                         </Flex>
                     )
                 })}
