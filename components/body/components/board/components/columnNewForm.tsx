@@ -30,7 +30,7 @@ export function ColumnNewForm(props: IColumnNewProps) {
             id: selectedBoard?.id,
             statusName: 'Status',
             isDefault: false,
-            order: selectedBoard?.Status.length || 0,
+            order: selectedBoard?.Status.length ?? 999,
         }),
         [selectedBoard]
     )
