@@ -1,6 +1,14 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import axios from 'axios'
-import { Container, Flex, Text, useDisclosure, VStack } from '@chakra-ui/react'
+import {
+    Container,
+    Flex,
+    IconButton,
+    Text,
+    Tooltip,
+    useDisclosure,
+    VStack,
+} from '@chakra-ui/react'
 import { Task } from '.prisma/client'
 import { ColumnNew } from './columnNew'
 import { ColumnTaskNew } from './columnTaskNew'
@@ -13,6 +21,8 @@ import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 import { IBoardWithAllRelation, IFullStatus } from '../../../../../types/types'
 import { ColumnTaskMove } from './columnTaskMove'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
+import { BsTrashFill } from 'react-icons/bs'
+import { DeleteModal } from '../../modal/deleteModal'
 
 interface IColumnTaskProps {
     selectedBoard: IBoardWithAllRelation
@@ -23,16 +33,58 @@ interface IColumnTaskProps {
 export function ColumnTask(props: IColumnTaskProps) {
     const { selectedBoard, statusBoard, newColumn } = props
     const [refetchBoards] = useAtom(RefetchBoardAtom)
-    const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const {
+        isOpen: isColumnNewOpen,
+        onOpen: onOpenColumnNew,
+        onClose: onCloseColumnNew,
+    } = useDisclosure()
+
+    const {
+        isOpen: isColumnDeleteOpen,
+        onOpen: onOpenColumnDelete,
+        onClose: onCloseColumnDelete,
+    } = useDisclosure()
+
     const [isHoveringColumn, setHoveringColumn] = useState(false)
     const [isDropColumnAllowed, setDropColumnAllowed] = useState(false)
 
-    const taskLength = useMemo(() => {
-        return selectedBoard?.Task.filter((t) => t.statusId === statusBoard?.id)
-            .length
+    const tasks = useMemo(() => {
+        return selectedBoard?.Task.filter(
+            (task) => task.statusId === statusBoard?.id
+        ).sort((a, b) => a.order - b.order)
     }, [selectedBoard, statusBoard])
 
-    const { mutateAsync } = useTableauMutation(
+    const taskLength = useMemo(() => {
+        return tasks?.length
+    }, [tasks])
+
+    const { mutateAsync: mutateColumnDeleteAsync } = useTableauMutation(
+        (values: IFullStatus) => {
+            return axios.post(
+                `api/column/delete`,
+                { id: values.id },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                    },
+                }
+            )
+        }
+    )
+
+    const onDeleteColumn = useCallback(
+        (column: IFullStatus) => {
+            mutateColumnDeleteAsync(column).then(() => {
+                onCloseColumnDelete()
+                refetchBoards.fetch()
+            })
+        },
+        [mutateColumnDeleteAsync, onCloseColumnDelete, refetchBoards]
+    )
+
+    const { mutateAsync: mutateTaskEditAsync } = useTableauMutation(
         (values: ITaskEditFormikValues) => {
             return axios.post(`api/task/edit`, values, {
                 headers: {
@@ -47,7 +99,7 @@ export function ColumnTask(props: IColumnTaskProps) {
         ({ task }: { task: Task }) => {
             if (!statusBoard || !statusBoard.status.name) return
             if (statusBoard.id === task.statusId) return
-            mutateAsync({
+            mutateTaskEditAsync({
                 id: task.id,
                 name: task.name,
                 description: task.description || '',
@@ -61,7 +113,7 @@ export function ColumnTask(props: IColumnTaskProps) {
                 refetchBoards.fetch()
             })
         },
-        [statusBoard, mutateAsync, refetchBoards, taskLength]
+        [statusBoard, mutateTaskEditAsync, refetchBoards, taskLength]
     )
 
     const onDropHoverItem = useCallback(
@@ -82,12 +134,6 @@ export function ColumnTask(props: IColumnTaskProps) {
             canDrop: monitor.canDrop(),
         }),
     }))
-
-    const tasks = useMemo(() => {
-        return selectedBoard?.Task.filter(
-            (task) => task.statusId === statusBoard?.id
-        ).sort((a, b) => a.order - b.order)
-    }, [selectedBoard, statusBoard])
 
     const onMouseEnterColumn = useCallback(() => {
         if (isHoveringColumn) return
@@ -119,10 +165,39 @@ export function ColumnTask(props: IColumnTaskProps) {
         >
             {!newColumn && statusBoard && (
                 <>
+                    <DeleteModal
+                        title="Delete Column"
+                        isOpen={isColumnDeleteOpen}
+                        onClose={onCloseColumnDelete}
+                        onSubmit={() => {
+                            onDeleteColumn(statusBoard)
+                        }}
+                    />
                     <Flex justifyContent="space-between" mt={3} mb={4}>
-                        <Text fontSize="16px" fontWeight="bold">
-                            {statusBoard?.status.name}
-                        </Text>
+                        <Flex flex={1} alignItems="center">
+                            {isHoveringColumn && (
+                                <Tooltip label="Delete this column">
+                                    <IconButton
+                                        onClick={() => onOpenColumnDelete()}
+                                        aria-label={'Delete this column'}
+                                        colorScheme="teal"
+                                        _hover={{
+                                            bgColor: 'red.500',
+                                        }}
+                                        size="sm"
+                                        icon={<BsTrashFill />}
+                                    />
+                                </Tooltip>
+                            )}
+                            <Text
+                                justifySelf="center"
+                                fontSize="16px"
+                                fontWeight="bold"
+                                ml={3}
+                            >
+                                {statusBoard?.status.name}
+                            </Text>
+                        </Flex>
                         <Flex height={8}>
                             {isHoveringColumn && (
                                 <ColumnTaskMove statusBoard={statusBoard} />
@@ -148,9 +223,9 @@ export function ColumnTask(props: IColumnTaskProps) {
                     h="100%"
                 >
                     <ColumnNew
-                        isOpen={isOpen}
-                        onOpen={onOpen}
-                        onClose={onClose}
+                        isOpen={isColumnNewOpen}
+                        onOpen={onOpenColumnNew}
+                        onClose={onCloseColumnNew}
                     />
                 </Flex>
             )}

@@ -15,7 +15,7 @@ import { ITaskEditFormikValues } from './taskEdit'
 import { Task } from '.prisma/client'
 import { IFullStatus } from '../../../../../types/types'
 import { BsTrashFill } from 'react-icons/bs'
-import { TaskEditFormModalDelete } from './taskEditFormModalDelete'
+import { DeleteModal } from '../../modal/deleteModal'
 
 interface ITaskEditForm {
     task: Task
@@ -166,7 +166,8 @@ export function TaskEditForm(props: ITaskEditForm) {
                     </form>
                 )}
             </Formik>
-            <TaskEditFormModalDelete
+            <DeleteModal
+                title="Delete Task"
                 isOpen={isOpenModal}
                 onClose={onCloseModal}
                 onSubmit={() => {
