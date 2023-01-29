@@ -16,14 +16,13 @@ export function useReorderTasks(orderedTasks?: Task[], currentTask?: Task) {
                 ? cloneOrderedTasks.findIndex(
                       (task) => task.order === currentTask.order
                   )
-                : orderedTasks.length
+                : 999
 
-            if (currentTask)
-                cloneOrderedTasks.splice(
-                    nextIndex,
-                    0,
-                    structuredClone(originalTask)
-                )
+            cloneOrderedTasks.splice(
+                nextIndex,
+                0,
+                structuredClone(originalTask)
+            )
 
             cloneOrderedTasks.forEach((task, idx) => {
                 task.order = idx
