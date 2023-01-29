@@ -58,7 +58,7 @@ export function ColumnTaskMove(props: IColumnTaskMoveProps) {
                 refetchBoards.fetch()
             })
         },
-        [mutateAsync, statusBoard, selectedBoard, refetchBoards]
+        [mutateAsync, statusBoard, getAffectedColumn, refetchBoards]
     )
 
     return (
@@ -74,7 +74,7 @@ export function ColumnTaskMove(props: IColumnTaskMoveProps) {
                     />
                 </Tooltip>
             )}
-            {statusBoard.order < (selectedBoard?.Status.length ?? 4) - 1 && (
+            {statusBoard.order < (selectedBoard?.Status.length ?? 999) - 1 && (
                 <Tooltip label="Move Column to the Right">
                     <IconButton
                         onClick={handleColumnMove('add')}
