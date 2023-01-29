@@ -63,8 +63,16 @@ export function TaskItem(props: ITaskItemProps) {
                 py={2}
             >
                 <Box minHeight="65px">
-                    <Text fontWeight="bold">{task.name}</Text>
-                    <Text fontSize="13px">{task.description}</Text>
+                    <Tooltip label={task.name}>
+                        <Text noOfLines={1} fontWeight="bold">
+                            {task.name}
+                        </Text>
+                    </Tooltip>
+                    <Tooltip label={task.description}>
+                        <Text noOfLines={2} fontSize="13px">
+                            {task.description}
+                        </Text>
+                    </Tooltip>
                 </Box>
                 <Flex className="board-item-clock" mt={2} justifyContent="left">
                     <Flex alignItems="center">
