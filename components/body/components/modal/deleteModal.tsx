@@ -11,13 +11,14 @@ import {
 import { FocusableElement } from '@chakra-ui/utils'
 
 interface ITaskEditFormModalDeleteProps {
+    title: string
     isOpen: boolean
     onClose: () => void
     onSubmit: () => void
 }
 
-export function TaskEditFormModalDelete(props: ITaskEditFormModalDeleteProps) {
-    const { isOpen, onClose, onSubmit } = props
+export function DeleteModal(props: ITaskEditFormModalDeleteProps) {
+    const { title, isOpen, onClose, onSubmit } = props
     const cancelRef = React.useRef<FocusableElement | null>(null)
     return (
         <AlertDialog
@@ -28,7 +29,7 @@ export function TaskEditFormModalDelete(props: ITaskEditFormModalDeleteProps) {
             <AlertDialogOverlay>
                 <AlertDialogContent>
                     <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                        Delete Task
+                        {title}
                     </AlertDialogHeader>
 
                     <AlertDialogBody>
@@ -38,13 +39,6 @@ export function TaskEditFormModalDelete(props: ITaskEditFormModalDeleteProps) {
 
                     <AlertDialogFooter>
                         <Button
-                            colorScheme="red"
-                            onClick={() => onSubmit()}
-                            mr={3}
-                        >
-                            Delete
-                        </Button>
-                        <Button
                             ref={
                                 cancelRef as
                                     | LegacyRef<HTMLButtonElement>
@@ -53,6 +47,13 @@ export function TaskEditFormModalDelete(props: ITaskEditFormModalDeleteProps) {
                             onClick={onClose}
                         >
                             Cancel
+                        </Button>
+                        <Button
+                            colorScheme="red"
+                            onClick={() => onSubmit()}
+                            ml={3}
+                        >
+                            Delete
                         </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>
