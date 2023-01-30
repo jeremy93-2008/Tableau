@@ -16,17 +16,20 @@ import { IFullStatus } from '../../../../../types/types'
 
 interface ITaskItemProps {
     task: Task
-    status: IFullStatus
+    status?: IFullStatus
+    readonly?: boolean
+    style?: React.CSSProperties
 }
 
 export function TaskItem(props: ITaskItemProps) {
-    const { task, status } = props
+    const { task, status, readonly, style } = props
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [isHoveringTask, setHoveringTask] = useState(false)
 
     const [{ isDragging }, drag] = useDrag(() => ({
         type: TaskItemType,
         item: { task },
+        canDrag: !readonly,
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
             handlerId: monitor.getHandlerId(),
@@ -53,8 +56,8 @@ export function TaskItem(props: ITaskItemProps) {
             width="100%"
             onMouseEnter={onMouseEnterTask}
             onMouseLeave={onMouseLeaveTask}
-            cursor="move"
-            style={{ opacity: isDragging ? 0.5 : 1 }}
+            cursor={readonly ? 'inherit' : 'move'}
+            style={{ opacity: isDragging ? 0.5 : 1, ...style }}
         >
             <Flex
                 className="board-item-info"
@@ -91,28 +94,32 @@ export function TaskItem(props: ITaskItemProps) {
                 justifyContent="right"
                 className="board-item-actions"
             >
-                <Tooltip label="Edit current Task">
-                    <IconButton
-                        onClick={() => onOpen()}
-                        colorScheme="teal"
-                        bgColor="teal.600"
-                        _hover={{
-                            bgColor: 'teal.500',
-                        }}
-                        borderRadius="100%"
-                        aria-label="Edit current Task"
-                        icon={<BsFillPencilFill />}
-                        style={{
-                            opacity: isHoveringTask ? '1' : '0',
-                        }}
-                    />
-                </Tooltip>
+                {!readonly && (
+                    <Tooltip label="Edit current Task">
+                        {
+                            <IconButton
+                                onClick={() => onOpen()}
+                                colorScheme="teal"
+                                bgColor="teal.600"
+                                _hover={{
+                                    bgColor: 'teal.500',
+                                }}
+                                borderRadius="100%"
+                                aria-label="Edit current Task"
+                                icon={<BsFillPencilFill />}
+                                style={{
+                                    opacity: isHoveringTask ? '1' : '0',
+                                }}
+                            />
+                        }
+                    </Tooltip>
+                )}
                 {isOpen && (
                     <TaskEdit
                         isOpen={isOpen}
                         onClose={onClose}
                         task={task}
-                        status={status}
+                        status={status!}
                     />
                 )}
             </Flex>

@@ -30,6 +30,7 @@ import { ColumnTaskMove } from './columnTaskMove'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
 import { BsTrashFill } from 'react-icons/bs'
 import { DeleteModal } from '../../modal/deleteModal'
+import { getScrollbarStyle } from '../../../../../utils/getScrollbarStyle'
 
 interface IColumnTaskProps {
     selectedBoard: IBoardWithAllRelation
@@ -240,22 +241,7 @@ export function ColumnTask(props: IColumnTaskProps) {
                             _hover={{
                                 overflowY: 'auto',
                             }}
-                            sx={{
-                                '&::-webkit-scrollbar': {
-                                    width: '6px',
-                                    borderRadius: '8px',
-                                    backgroundColor: 'transparent',
-                                },
-                                '&::-webkit-scrollbar-thumb': {
-                                    borderRadius: '10px',
-                                    backgroundColor: `rgba(0, 0, 0, 0.3)`,
-                                },
-                            }}
-                            style={{
-                                scrollbarGutter: 'stable',
-                                scrollbarWidth: 'thin',
-                                scrollbarColor: 'rgb(44, 122, 123) transparent',
-                            }}
+                            {...getScrollbarStyle()}
                         >
                             <TaskList tasks={tasks} status={statusBoard} />
                         </VStack>
