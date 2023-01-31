@@ -228,6 +228,7 @@ export function ColumnTask(props: IColumnTaskProps) {
                     </Flex>
                     {tasks && tasks.length > 0 && (
                         <VStack
+                            id="tasklist-container"
                             ref={
                                 refColumnStack as MutableRefObject<HTMLDivElement>
                             }

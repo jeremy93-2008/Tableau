@@ -1,4 +1,10 @@
-import React, { useState } from 'react'
+import React, {
+    MutableRefObject,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from 'react'
 import axios, { AxiosResponse } from 'axios'
 import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react'
 import { useTableauMutation } from '../../../../hooks/useTableauMutation'
@@ -7,6 +13,10 @@ import { TaskItem } from '../../../body/components/board/components/taskItem'
 import { getScrollbarStyle } from '../../../../utils/getScrollbarStyle'
 import { SearchInput } from './searchInput'
 import { RiEmotionSadLine } from 'react-icons/ri'
+import { useTableauQuery } from '../../../../hooks/useTableauQuery'
+import { IBoardWithAllRelation } from '../../../../types/types'
+import { useSession } from 'next-auth/react'
+import { useHighlightFoundTask } from './hook/useHighlightFoundTask'
 
 export type IFinderSearchResult = Record<IFinderSearchType, Task[]>
 
@@ -19,8 +29,10 @@ export interface IFinderSearchValues {
 
 export function Finder() {
     const [result, setResult] = useState<IFinderSearchResult>({ task: [] })
-
+    const portal = useRef<HTMLDivElement>()
     const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const { handleHighlightTask } = useHighlightFoundTask(() => onClose())
 
     const { mutateAsync, isLoading, isSuccess } = useTableauMutation<
         AxiosResponse<IFinderSearchResult, unknown>,
@@ -37,8 +49,32 @@ export function Finder() {
         { noLoading: true }
     )
 
+    const onClosePortalClickOutside = useCallback(
+        (evt: Event) => {
+            if (!portal.current) return
+            const clickedTarget = evt.target as HTMLElement
+            if (
+                clickedTarget === portal.current ||
+                portal.current?.contains(clickedTarget)
+            )
+                return
+            onClose()
+        },
+        [onClose]
+    )
+
+    useEffect(() => {
+        document.body.addEventListener('click', onClosePortalClickOutside)
+        return () => {
+            document.body.removeEventListener(
+                'click',
+                onClosePortalClickOutside
+            )
+        }
+    }, [onClosePortalClickOutside])
+
     return (
-        <Box>
+        <Box ref={portal as MutableRefObject<HTMLDivElement>}>
             <SearchInput
                 onClose={onClose}
                 onOpen={onOpen}
@@ -95,6 +131,7 @@ export function Finder() {
                             return (
                                 <Flex
                                     key={task.id}
+                                    onClick={handleHighlightTask(task)}
                                     boxSizing="border-box"
                                     width="23%"
                                     mr="2%"
