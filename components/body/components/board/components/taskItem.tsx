@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useAtom } from 'jotai'
 import { useDrag } from 'react-dnd'
 import {
     Box,
@@ -14,6 +15,10 @@ import { TaskEdit } from './taskEdit'
 import { TaskItemType } from '../../../../../constants/dragType'
 import { IFullStatus } from '../../../../../types/types'
 
+import { HighlightTaskAtom } from '../../../../../atoms/highlightTaskAtom'
+import { getAnimation } from '../../../../../utils/getAnimation'
+import { calculateTopOverflow } from '../../../../../utils/calculateTopOverflow'
+
 interface ITaskItemProps {
     task: Task
     status?: IFullStatus
@@ -25,6 +30,11 @@ export function TaskItem(props: ITaskItemProps) {
     const { task, status, readonly, style } = props
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [isHoveringTask, setHoveringTask] = useState(false)
+
+    const taskContainer = useRef<HTMLDivElement>()
+    const [highlightTask, setHighlightTask] = useAtom(HighlightTaskAtom)
+    const isCurrentTaskHighlighted = highlightTask?.id === task.id && !readonly
+    const { bounceAnimation } = getAnimation()
 
     const [{ isDragging }, drag] = useDrag(() => ({
         type: TaskItemType,
@@ -46,17 +56,41 @@ export function TaskItem(props: ITaskItemProps) {
         setHoveringTask(false)
     }, [isHoveringTask, setHoveringTask])
 
+    const handleRefTaskContainer = (element: HTMLDivElement) => {
+        drag(element)
+        taskContainer.current = element
+    }
+
+    useEffect(() => {
+        if (!taskContainer.current) return
+        if (highlightTask?.id !== task.id) return
+        const scrollTop = calculateTopOverflow(
+            taskContainer.current?.parentElement!,
+            taskContainer.current.parentElement!.parentElement!
+        )
+        if (scrollTop > 0) {
+            document
+                .getElementById('tasklist-container')!
+                .scrollTo({ top: scrollTop })
+        }
+        window.setTimeout(() => {
+            setHighlightTask(null)
+        }, 2000)
+    }, [highlightTask, setHighlightTask, task])
+
     return (
         <Flex
-            ref={drag}
+            ref={handleRefTaskContainer}
             className="board-item-container"
-            bgColor="teal.600"
+            bgColor={isCurrentTaskHighlighted ? 'yellow.400' : 'teal.600'}
+            color={isCurrentTaskHighlighted ? 'black' : 'gray.100'}
             pl={4}
             borderRadius={10}
             width="100%"
             onMouseEnter={onMouseEnterTask}
             onMouseLeave={onMouseLeaveTask}
             cursor={readonly ? 'inherit' : 'move'}
+            animation={isCurrentTaskHighlighted ? bounceAnimation : ''}
             style={{ opacity: isDragging ? 0.5 : 1, ...style }}
         >
             <Flex
