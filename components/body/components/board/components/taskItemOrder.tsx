@@ -8,7 +8,7 @@ import { TaskItemType } from '../../../../../constants/dragType'
 import { Box, Flex } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { BoardAtom } from '../../../../../atoms/boardAtom'
-import { useReorderTasks } from '../../../../../hooks/useReorderTasks'
+import { useReorderDnDEntity } from '../../../../../hooks/useReorderDnDEntity'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 
@@ -38,12 +38,12 @@ export function TaskItemOrder(props: ITaskItemWithOrderingProps) {
         ).sort((a, b) => a.order - b.order)
     }, [selectedBoard, status])
 
-    const { reorderTasks } = useReorderTasks(orderedTasks, currentTask)
+    const { reorderEntity } = useReorderDnDEntity(orderedTasks, currentTask)
 
     const onDropTaskItem = ({ task: nextTask }: { task: Task }) => {
         if (nextTask.statusId !== status.id || nextTask.id === currentTask?.id)
             return
-        const newOrderedTasks = reorderTasks(nextTask)
+        const newOrderedTasks = reorderEntity(nextTask)
         if (!newOrderedTasks) return
         mutateAsync(newOrderedTasks).then(() => {
             setIsCurrentColumnDropped(false)
