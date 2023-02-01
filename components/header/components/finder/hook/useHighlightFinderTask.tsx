@@ -7,7 +7,7 @@ import { HighlightTaskAtom } from '../../../../../atoms/highlightTaskAtom'
 import { Task } from '.prisma/client'
 import { BoardAtom } from '../../../../../atoms/boardAtom'
 
-export function useHighlightFoundTask(onAfterHighlight: (task: Task) => void) {
+export function useHighlightFinderTask(onAfterHighlight: (task: Task) => void) {
     const [_selectedBoard, setSelectedBoard] = useAtom(BoardAtom)
     const [_highlightTask, setHighlightTask] = useAtom(HighlightTaskAtom)
     const { data: session } = useSession()

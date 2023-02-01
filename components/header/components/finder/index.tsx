@@ -16,7 +16,7 @@ import { RiEmotionSadLine } from 'react-icons/ri'
 import { useTableauQuery } from '../../../../hooks/useTableauQuery'
 import { IBoardWithAllRelation } from '../../../../types/types'
 import { useSession } from 'next-auth/react'
-import { useHighlightFoundTask } from './hook/useHighlightFoundTask'
+import { useHighlightFinderTask } from './hook/useHighlightFinderTask'
 
 export type IFinderSearchResult = Record<IFinderSearchType, Task[]>
 
@@ -32,7 +32,7 @@ export function Finder() {
     const portal = useRef<HTMLDivElement>()
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const { handleHighlightTask } = useHighlightFoundTask(() => onClose())
+    const { handleHighlightTask } = useHighlightFinderTask(() => onClose())
 
     const { mutateAsync, isLoading, isSuccess } = useTableauMutation<
         AxiosResponse<IFinderSearchResult, unknown>,
