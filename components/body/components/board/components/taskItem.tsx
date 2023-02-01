@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useAtomValue } from 'jotai'
+import React, { useCallback, useRef, useState } from 'react'
 import { useDrag } from 'react-dnd'
 import {
     Box,
@@ -14,10 +13,7 @@ import { Task } from '.prisma/client'
 import { TaskEdit } from './taskEdit'
 import { TaskItemType } from '../../../../../constants/dragType'
 import { IFullStatus } from '../../../../../types/types'
-
-import { HighlightTaskAtom } from '../../../../../atoms/highlightTaskAtom'
 import { getAnimation } from '../../../../../utils/getAnimation'
-import { calculateOverflow } from '../../../../../utils/calculateOverflow'
 import { useHighlightTaskItem } from '../hooks/useHighlightTaskItem'
 
 interface ITaskItemProps {
