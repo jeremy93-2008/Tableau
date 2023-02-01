@@ -7,11 +7,8 @@ import { useAtom } from 'jotai'
 import { BoardAtom } from '../../../../../atoms/boardAtom'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
-
-interface IColumnMoveValues {
-    currentColumn: IFullStatus
-    affectedColumn: IFullStatus
-}
+import { useSwapEntity } from '../../../../../hooks/useSwapEntity'
+import { StatusBoard } from '.prisma/client'
 
 interface IColumnTaskMoveProps {
     statusBoard: IFullStatus
@@ -20,10 +17,10 @@ interface IColumnTaskMoveProps {
 export function ColumnTaskMove(props: IColumnTaskMoveProps) {
     const { statusBoard } = props
     const [selectedBoard] = useAtom(BoardAtom)
-    const [refetchBoards] = useAtom(RefetchBoardAtom)
+    const [refetchBoard] = useAtom(RefetchBoardAtom)
 
-    const { mutateAsync } = useTableauMutation((values: IColumnMoveValues) => {
-        return axios.post(`api/column/move`, values, {
+    const { mutateAsync } = useTableauMutation((values: IFullStatus[]) => {
+        return axios.post(`api/columns/order`, values, {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -31,42 +28,59 @@ export function ColumnTaskMove(props: IColumnTaskMoveProps) {
         })
     })
 
-    const sortedColumns = useMemo(() => {
+    const orderedColumns = useMemo(() => {
         return selectedBoard?.Status.sort((a, b) => a.order - b.order)
     }, [selectedBoard])
 
-    const getAffectedColumn = useCallback(
-        (type: 'add' | 'substract') => {
-            if (!sortedColumns) return
-            const currentColumnIndex = sortedColumns.findIndex(
-                (col) => col.order === statusBoard.order
-            )
-            if (!currentColumnIndex) return
-            if (type === 'add') return sortedColumns[currentColumnIndex + 1]
-            return sortedColumns[currentColumnIndex - 1]
-        },
-        [sortedColumns, statusBoard]
-    )
+    const currentIndexColumn = useMemo(() => {
+        return orderedColumns?.findIndex((col) => col.id === statusBoard.id)
+    }, [orderedColumns, statusBoard])
+
+    const { swapEntity: swapColumn } = useSwapEntity(orderedColumns)
 
     const handleColumnMove = useCallback(
-        (type: 'add' | 'substract') => () => {
-            const affectedColumn = getAffectedColumn(type) ?? statusBoard
-            mutateAsync({
-                currentColumn: statusBoard,
-                affectedColumn,
-            }).then(() => {
-                refetchBoards.fetch()
-            })
+        (type: 'add' | 'subtract') => {
+            return () => {
+                if (!orderedColumns || currentIndexColumn == null) return
+                const index = currentIndexColumn
+
+                const nextIndexAdd =
+                    orderedColumns.length === index + 1
+                        ? orderedColumns.length - 1
+                        : index + 1
+
+                const nextIndexSubtract = index - 1 < 0 ? 0 : index - 1
+
+                const nextColumn =
+                    type === 'add'
+                        ? orderedColumns[nextIndexAdd]
+                        : orderedColumns[nextIndexSubtract]
+
+                const newOrderedColumns = swapColumn(statusBoard, nextColumn)
+
+                if (!newOrderedColumns) return
+
+                mutateAsync(newOrderedColumns).then(() => {
+                    refetchBoard.fetch()
+                })
+            }
         },
-        [mutateAsync, statusBoard, getAffectedColumn, refetchBoards]
+        [
+            mutateAsync,
+            orderedColumns,
+            swapColumn,
+            statusBoard,
+            refetchBoard,
+            currentIndexColumn,
+        ]
     )
 
     return (
         <>
-            {statusBoard.order > 0 && (
+            {currentIndexColumn! > 0 && (
                 <Tooltip label="Move Column to the Left">
                     <IconButton
-                        onClick={handleColumnMove('substract')}
+                        onClick={handleColumnMove('subtract')}
                         size="sm"
                         colorScheme="teal"
                         aria-label="Move Column to the Left"
@@ -74,7 +88,7 @@ export function ColumnTaskMove(props: IColumnTaskMoveProps) {
                     />
                 </Tooltip>
             )}
-            {statusBoard.order < (selectedBoard?.Status.length ?? 999) - 1 && (
+            {currentIndexColumn! < orderedColumns!.length - 1 && (
                 <Tooltip label="Move Column to the Right">
                     <IconButton
                         onClick={handleColumnMove('add')}

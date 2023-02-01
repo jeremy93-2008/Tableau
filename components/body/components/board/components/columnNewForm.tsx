@@ -25,14 +25,19 @@ interface IColumnNewProps {
 export function ColumnNewForm(props: IColumnNewProps) {
     const { onClose, onSubmit: onColumnSubmit } = props
     const [selectedBoard] = useAtom(BoardAtom)
+
+    const orderedColumns = useMemo(() => {
+        return selectedBoard?.Status.sort((a, b) => a.order - b.order)
+    }, [selectedBoard])
+
     const initialValues = useMemo(
         () => ({
             id: selectedBoard?.id,
             statusName: 'Status',
             isDefault: false,
-            order: selectedBoard?.Status.length ?? 999,
+            order: orderedColumns?.length ?? 999,
         }),
-        [selectedBoard]
+        [selectedBoard, orderedColumns]
     )
 
     const validationSchema = useMemo(
