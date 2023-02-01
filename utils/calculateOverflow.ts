@@ -1,4 +1,4 @@
-export function calculateTopOverflow(
+export function calculateOverflow(
     element: HTMLElement,
     scrollParent: HTMLElement
 ) {
@@ -9,5 +9,11 @@ export function calculateTopOverflow(
     const bottomScrollParentElement =
         rectScrollParentElement.top + rectScrollParentElement.height
 
-    return bottomElementHeight - bottomScrollParentElement
+    const topElementHeight = rectElement.top + rectElement.height
+    const topScrollParentElement = rectScrollParentElement.top
+
+    return {
+        scrollTop: topElementHeight - topScrollParentElement,
+        scrollBottom: bottomElementHeight - bottomScrollParentElement,
+    }
 }

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useAtom } from 'jotai'
+import { useAtomValue } from 'jotai'
 import { useDrag } from 'react-dnd'
 import {
     Box,
@@ -17,7 +17,8 @@ import { IFullStatus } from '../../../../../types/types'
 
 import { HighlightTaskAtom } from '../../../../../atoms/highlightTaskAtom'
 import { getAnimation } from '../../../../../utils/getAnimation'
-import { calculateTopOverflow } from '../../../../../utils/calculateTopOverflow'
+import { calculateOverflow } from '../../../../../utils/calculateOverflow'
+import { useHighlightTaskItem } from '../hooks/useHighlightTaskItem'
 
 interface ITaskItemProps {
     task: Task
@@ -32,9 +33,13 @@ export function TaskItem(props: ITaskItemProps) {
     const [isHoveringTask, setHoveringTask] = useState(false)
 
     const taskContainer = useRef<HTMLDivElement>()
-    const [highlightTask, setHighlightTask] = useAtom(HighlightTaskAtom)
-    const isCurrentTaskHighlighted = highlightTask?.id === task.id && !readonly
     const { bounceAnimation } = getAnimation()
+
+    const { isCurrentTaskHighlighted } = useHighlightTaskItem(
+        taskContainer,
+        task,
+        readonly
+    )
 
     const [{ isDragging }, drag] = useDrag(() => ({
         type: TaskItemType,
@@ -60,23 +65,6 @@ export function TaskItem(props: ITaskItemProps) {
         drag(element)
         taskContainer.current = element
     }
-
-    useEffect(() => {
-        if (!taskContainer.current) return
-        if (highlightTask?.id !== task.id) return
-        const scrollTop = calculateTopOverflow(
-            taskContainer.current?.parentElement!,
-            taskContainer.current.parentElement!.parentElement!
-        )
-        if (scrollTop > 0) {
-            document
-                .getElementById('tasklist-container')!
-                .scrollTo({ top: scrollTop })
-        }
-        window.setTimeout(() => {
-            setHighlightTask(null)
-        }, 2000)
-    }, [highlightTask, setHighlightTask, task])
 
     return (
         <Flex
