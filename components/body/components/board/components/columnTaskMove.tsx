@@ -8,7 +8,6 @@ import { BoardAtom } from '../../../../../atoms/boardAtom'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
 import { useSwapEntity } from '../../../../../hooks/useSwapEntity'
-import { StatusBoard } from '.prisma/client'
 
 interface IColumnTaskMoveProps {
     statusBoard: IFullStatus
