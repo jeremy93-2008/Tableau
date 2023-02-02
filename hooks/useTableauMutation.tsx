@@ -3,7 +3,6 @@ import { useAtom } from 'jotai'
 import { MutationFunction } from '@tanstack/query-core'
 import { useMutation, UseMutationOptions } from '@tanstack/react-query'
 import { LoadingAtom } from '../atoms/loadingAtom'
-import { bool } from 'yup'
 
 export function useTableauMutation<TData, TVariables>(
     mutationFn: MutationFunction<TData, TVariables>,
