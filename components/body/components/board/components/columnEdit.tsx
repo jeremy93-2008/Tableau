@@ -57,7 +57,7 @@ export function ColumnEdit(props: IColumnEditProps) {
         (values: IFullStatus) => {
             return axios.post(
                 `api/column/delete`,
-                { id: values.id },
+                { id: values.id, statusId: values.status.id },
                 {
                     headers: {
                         'Content-Type': 'application/json',

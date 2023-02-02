@@ -7,6 +7,7 @@ export default async function handler(
     res: NextApiResponse
 ) {
     const id = req.body.id
+    const statusId = req.body.statusId
 
     if (req.method !== 'POST')
         return res.status(405).send('Method not allowed. Use Post instead')
@@ -29,6 +30,10 @@ export default async function handler(
                 data: { order: column.order },
             })
         })
+
+        //We check if status row based on statusName can be deleted
+        if ((await prisma.statusBoard.count({ where: { statusId } })) === 0)
+            await prisma.status.delete({ where: { id: statusId } })
     })
 
     res.json(result)

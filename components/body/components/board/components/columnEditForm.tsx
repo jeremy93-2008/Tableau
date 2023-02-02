@@ -17,6 +17,7 @@ import { BsTrashFill } from 'react-icons/bs'
 export type IColumnEditFormikValues = {
     id: string
     statusName: string
+    oldStatusName: string
 }
 
 interface IColumnEditProps {
@@ -41,6 +42,7 @@ export function ColumnEditForm(props: IColumnEditProps) {
         () => ({
             id: statusBoard?.id,
             statusName: statusBoard.status.name,
+            oldStatusName: statusBoard.status.name,
         }),
         [statusBoard]
     )
