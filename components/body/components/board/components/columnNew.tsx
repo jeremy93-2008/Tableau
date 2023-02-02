@@ -20,6 +20,9 @@ import { FormikHelpers } from 'formik'
 import { ColumnNewForm, IColumnNewFormikValues } from './columnNewForm'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
+import { BoardAtom } from '../../../../../atoms/boardAtom'
+import { COLUMN_LIMIT } from '../../../../../constants/limit'
+import { noop } from '@chakra-ui/utils'
 
 interface IColumnNewProps {
     isOpen: boolean
@@ -29,6 +32,7 @@ interface IColumnNewProps {
 
 export function ColumnNew(props: IColumnNewProps) {
     const { isOpen, onOpen, onClose } = props
+    const [selectedBoard] = useAtom(BoardAtom)
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
     const { mutateAsync } = useTableauMutation(
@@ -58,7 +62,13 @@ export function ColumnNew(props: IColumnNewProps) {
 
     return (
         <Popover isLazy isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
-            <Tooltip label="Add new status column">
+            <Tooltip
+                label={
+                    selectedBoard!.Status!.length < COLUMN_LIMIT
+                        ? 'Add new status column'
+                        : 'Column limit reached. You have reached the maximum number of columns (20). Please delete some existing columns to create a new one.'
+                }
+            >
                 <Box>
                     <PopoverTrigger>
                         <Flex
@@ -66,7 +76,12 @@ export function ColumnNew(props: IColumnNewProps) {
                             flexDirection="column"
                             justifyContent="center"
                             alignItems="center"
-                            cursor="pointer"
+                            cursor={'pointer'}
+                            pointerEvents={
+                                selectedBoard!.Status!.length < COLUMN_LIMIT
+                                    ? 'auto'
+                                    : 'none'
+                            }
                         >
                             <AddIcon w={12} h={12} />
                             <Text fontWeight="medium" mt={4}>
