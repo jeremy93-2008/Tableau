@@ -7,6 +7,7 @@ import { LoadingAtom } from '../atoms/loadingAtom'
 export function useTableauMutation<TData, TVariables>(
     mutationFn: MutationFunction<TData, TVariables>,
     options?: UseMutationOptions<TData, unknown, TVariables> & {
+        key?: string
         noLoading?: boolean
     }
 ) {
@@ -21,8 +22,12 @@ export function useTableauMutation<TData, TVariables>(
 
     useEffect(() => {
         if (options?.noLoading) return
-        if (isLoading) return setLoading(true)
-        setLoading(false)
+        if (isLoading)
+            return setLoading({
+                isLoading: true,
+                reason: options?.key ?? 'mutation',
+            })
+        setLoading({ isLoading: false, reason: options?.key ?? 'mutation' })
     }, [options, isLoading, setLoading])
 
     return mutation

@@ -1,3 +1,11 @@
 import { atom } from 'jotai'
 
-export const LoadingAtom = atom(false)
+interface ILoadingAtom {
+    isLoading: boolean
+    reason: string | null
+}
+
+export const LoadingAtom = atom<ILoadingAtom>({
+    isLoading: false,
+    reason: null,
+})
