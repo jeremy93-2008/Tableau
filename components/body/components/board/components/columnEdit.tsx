@@ -27,10 +27,11 @@ import { IFullStatus } from '../../../../../types/types'
 
 interface IColumnEditProps {
     statusBoard: IFullStatus
+    isHoveringColumn: boolean
 }
 
 export function ColumnEdit(props: IColumnEditProps) {
-    const { statusBoard } = props
+    const { statusBoard, isHoveringColumn } = props
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const {
@@ -98,14 +99,16 @@ export function ColumnEdit(props: IColumnEditProps) {
                     <Box>
                         <PopoverTrigger>
                             <Flex onClick={() => onOpen()}>
-                                <Tooltip label="Edit this column">
-                                    <IconButton
-                                        aria-label={'Edit this column'}
-                                        colorScheme="teal"
-                                        size="sm"
-                                        icon={<BsFillPencilFill />}
-                                    />
-                                </Tooltip>
+                                {(isHoveringColumn || isOpen) && (
+                                    <Tooltip label="Edit this column">
+                                        <IconButton
+                                            aria-label={'Edit this column'}
+                                            colorScheme="teal"
+                                            size="sm"
+                                            icon={<BsFillPencilFill />}
+                                        />
+                                    </Tooltip>
+                                )}
                             </Flex>
                         </PopoverTrigger>
                     </Box>
