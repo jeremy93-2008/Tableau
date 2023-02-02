@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import prisma from '../../../lib/prisma'
+import { BOARD_LIMIT, COLUMN_LIMIT } from '../../../constants/limit'
 
 export default async function handler(
     req: NextApiRequest,
@@ -22,6 +23,16 @@ export default async function handler(
 
     if (!userEntry)
         return res.status(500).send("The user doesn't exist in the database")
+
+    if (
+        (await prisma.board.count({ where: { userId: userEntry.id } })) >
+        BOARD_LIMIT
+    )
+        return res
+            .status(500)
+            .send(
+                'Board limit reached. You have reached the maximum number of Board (25). Please delete some existing board to create a new one.'
+            )
 
     const result = await prisma.board.create({
         data: {

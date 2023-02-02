@@ -59,7 +59,7 @@ export function BoardSide() {
                     </Text>
                 </Flex>
                 <Flex>
-                    <BoardNew onAfterSubmit={onAfterSubmit} />
+                    <BoardNew boards={data} onAfterSubmit={onAfterSubmit} />
                 </Flex>
             </Flex>
             <BoardList listOfBoards={data} onItemClick={onItemClick} />

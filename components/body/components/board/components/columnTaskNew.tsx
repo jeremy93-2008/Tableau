@@ -21,6 +21,8 @@ import { FormikHelpers } from 'formik'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 import { IFullStatus } from '../../../../../types/types'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
+import { BoardAtom } from '../../../../../atoms/boardAtom'
+import { TASK_LIMIT } from '../../../../../constants/limit'
 
 interface IColumnTaskNewProps {
     isVisible: boolean
@@ -30,6 +32,7 @@ interface IColumnTaskNewProps {
 export function ColumnTaskNew(props: IColumnTaskNewProps) {
     const { isVisible, status } = props
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const [selectedBoard] = useAtom(BoardAtom)
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
     const { mutateAsync } = useTableauMutation(
@@ -61,12 +64,19 @@ export function ColumnTaskNew(props: IColumnTaskNewProps) {
         <Popover isLazy isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
             <PopoverTrigger>
                 <Box>
-                    <Tooltip label="Add a new task">
+                    <Tooltip
+                        label={
+                            selectedBoard!.Task!.length > TASK_LIMIT
+                                ? 'Task limit reached. You have reached the maximum number of task (50). Please delete some existing tasks to create a new one.'
+                                : 'Add a new task'
+                        }
+                    >
                         <Button
                             colorScheme="teal"
-                            bgColor="teal.600"
-                            _hover={{ bgColor: 'teal.700' }}
                             width="100%"
+                            isDisabled={
+                                selectedBoard!.Task!.length > TASK_LIMIT
+                            }
                             mt={2}
                             style={{
                                 opacity: isVisible ? '1' : '0',

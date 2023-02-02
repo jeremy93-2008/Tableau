@@ -21,13 +21,16 @@ import { useSession } from 'next-auth/react'
 
 import { BoardNewForm, IBoardNewFormikValues } from './boardNewForm'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
+import { IBoardWithAllRelation } from '../../../../../types/types'
+import { BOARD_LIMIT } from '../../../../../constants/limit'
 
 interface IBoardNewProps {
+    boards?: IBoardWithAllRelation[]
     onAfterSubmit: () => void
 }
 
 export function BoardNew(props: IBoardNewProps) {
-    const { onAfterSubmit } = props
+    const { boards, onAfterSubmit } = props
     const { data: session } = useSession()
     const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -59,13 +62,23 @@ export function BoardNew(props: IBoardNewProps) {
     return (
         <>
             <Popover isLazy isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
-                <Tooltip label="Add new board" isDisabled={!session}>
+                <Tooltip
+                    label={
+                        (boards?.length ?? 0) > BOARD_LIMIT
+                            ? 'Board limit reached. You have reached the maximum number of boards (25). Please delete some existing boards to create a new one.'
+                            : 'Add new board'
+                    }
+                    isDisabled={!session}
+                >
                     <Box>
                         <PopoverTrigger>
                             <IconButton
                                 aria-label="Add new board"
                                 icon={<AddIcon />}
-                                isDisabled={!session}
+                                isDisabled={
+                                    !session ||
+                                    (boards?.length ?? 0) > BOARD_LIMIT
+                                }
                             />
                         </PopoverTrigger>
                     </Box>

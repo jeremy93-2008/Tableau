@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import prisma from '../../../lib/prisma'
+import { BOARD_LIMIT, TASK_LIMIT } from '../../../constants/limit'
 
 export default async function handler(
     req: NextApiRequest,
@@ -21,6 +22,17 @@ export default async function handler(
         return res
             .status(500)
             .send("The user are not logged in or doesn't exist")
+
+    if (
+        (await prisma.task.count({
+            where: { user: { email }, boardId, statusId },
+        })) > TASK_LIMIT
+    )
+        return res
+            .status(500)
+            .send(
+                'Task limit reached. You have reached the maximum number of Task (50). Please delete some existing task to create a new one.'
+            )
 
     const result = await prisma.task.create({
         data: {
