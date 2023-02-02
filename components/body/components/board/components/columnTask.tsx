@@ -159,9 +159,10 @@ export function ColumnTask(props: IColumnTaskProps) {
                 <>
                     <Flex justifyContent="space-between" mt={3} mb={4}>
                         <Flex flex={1} alignItems="center">
-                            {isHoveringColumn && (
-                                <ColumnEdit statusBoard={statusBoard} />
-                            )}
+                            <ColumnEdit
+                                statusBoard={statusBoard}
+                                isHoveringColumn={isHoveringColumn}
+                            />
                             <Text
                                 justifySelf="center"
                                 fontSize="16px"
