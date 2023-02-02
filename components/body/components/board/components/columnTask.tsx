@@ -28,9 +28,10 @@ import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 import { IBoardWithAllRelation, IFullStatus } from '../../../../../types/types'
 import { ColumnTaskMove } from './columnTaskMove'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
-import { BsTrashFill } from 'react-icons/bs'
+import { BsFillPencilFill, BsTrashFill } from 'react-icons/bs'
 import { DeleteModal } from '../../modal/deleteModal'
 import { getScrollbarStyle } from '../../../../../utils/getScrollbarStyle'
+import { ColumnEdit } from './columnEdit'
 
 interface IColumnTaskProps {
     selectedBoard: IBoardWithAllRelation
@@ -49,12 +50,6 @@ export function ColumnTask(props: IColumnTaskProps) {
         onClose: onCloseColumnNew,
     } = useDisclosure()
 
-    const {
-        isOpen: isColumnDeleteOpen,
-        onOpen: onOpenColumnDelete,
-        onClose: onCloseColumnDelete,
-    } = useDisclosure()
-
     const [isHoveringColumn, setHoveringColumn] = useState(false)
     const [isDropColumnAllowed, setDropColumnAllowed] = useState(false)
 
@@ -67,31 +62,6 @@ export function ColumnTask(props: IColumnTaskProps) {
     const taskLength = useMemo(() => {
         return tasks?.length
     }, [tasks])
-
-    const { mutateAsync: mutateColumnDeleteAsync } = useTableauMutation(
-        (values: IFullStatus) => {
-            return axios.post(
-                `api/column/delete`,
-                { id: values.id },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Accept: 'application/json',
-                    },
-                }
-            )
-        }
-    )
-
-    const onDeleteColumn = useCallback(
-        (column: IFullStatus) => {
-            mutateColumnDeleteAsync(column).then(() => {
-                onCloseColumnDelete()
-                refetchBoards.fetch()
-            })
-        },
-        [mutateColumnDeleteAsync, onCloseColumnDelete, refetchBoards]
-    )
 
     const { mutateAsync: mutateTaskEditAsync } = useTableauMutation(
         (values: ITaskEditFormikValues) => {
@@ -187,29 +157,10 @@ export function ColumnTask(props: IColumnTaskProps) {
         >
             {!newColumn && statusBoard && (
                 <>
-                    <DeleteModal
-                        title="Delete Column"
-                        isOpen={isColumnDeleteOpen}
-                        onClose={onCloseColumnDelete}
-                        onSubmit={() => {
-                            onDeleteColumn(statusBoard)
-                        }}
-                    />
                     <Flex justifyContent="space-between" mt={3} mb={4}>
                         <Flex flex={1} alignItems="center">
                             {isHoveringColumn && (
-                                <Tooltip label="Delete this column">
-                                    <IconButton
-                                        onClick={() => onOpenColumnDelete()}
-                                        aria-label={'Delete this column'}
-                                        colorScheme="teal"
-                                        _hover={{
-                                            bgColor: 'red.500',
-                                        }}
-                                        size="sm"
-                                        icon={<BsTrashFill />}
-                                    />
-                                </Tooltip>
+                                <ColumnEdit statusBoard={statusBoard} />
                             )}
                             <Text
                                 justifySelf="center"
