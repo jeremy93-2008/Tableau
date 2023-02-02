@@ -7,19 +7,21 @@ import { useSession } from 'next-auth/react'
 export function LoadingProvider(props: React.PropsWithChildren) {
     const { children } = props
     const { status: authStatus } = useSession()
-    const [isLoading, setLoading] = useAtom(LoadingAtom)
+    const [loading, setLoading] = useAtom(LoadingAtom)
 
     useEffect(() => {
-        if (authStatus === 'loading') return setLoading(true)
-        setLoading(false)
-    }, [authStatus, setLoading])
+        if (authStatus === 'loading')
+            return setLoading({ isLoading: true, reason: 'auth' })
+        if (loading.reason === 'auth')
+            setLoading({ isLoading: false, reason: 'auth' })
+    }, [authStatus, loading, setLoading])
 
     return (
         <>
             <Flex flex={1} overflow="hidden" flexDirection="column">
                 {children}
             </Flex>
-            {isLoading && (
+            {loading.isLoading && (
                 <Flex
                     position="fixed"
                     bgColor="rgba(0,0,0,0.6)"
