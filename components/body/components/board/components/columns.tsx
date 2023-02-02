@@ -1,14 +1,11 @@
 import React, { useCallback, WheelEvent } from 'react'
 import { Flex, Text } from '@chakra-ui/react'
-import { IBoardWithAllRelation } from '../../../../../types/types'
 import { ColumnTask } from './columnTask'
+import { useAtom } from 'jotai'
+import { BoardAtom } from '../../../../../atoms/boardAtom'
 
-interface IBoardColumnsProps {
-    selectedBoard: IBoardWithAllRelation
-}
-
-export function Columns(props: IBoardColumnsProps) {
-    const { selectedBoard } = props
+export function Columns() {
+    const [selectedBoard] = useAtom(BoardAtom)
 
     const onHScroll = useCallback((event: WheelEvent<HTMLDivElement>) => {
         const container = document.getElementById('columns-container')
@@ -32,7 +29,7 @@ export function Columns(props: IBoardColumnsProps) {
                 px={5}
                 pt={'33px'}
             >
-                {selectedBoard.name}
+                {selectedBoard!.name}
             </Text>
             <Flex
                 id="columns-container"
@@ -49,16 +46,16 @@ export function Columns(props: IBoardColumnsProps) {
                     scrollbarGutter: 'stable',
                 }}
             >
-                {selectedBoard.Status.sort((a, b) => a.order - b.order).map(
+                {selectedBoard!.Status.sort((a, b) => a.order - b.order).map(
                     (status) => (
                         <ColumnTask
                             key={status.id}
-                            selectedBoard={selectedBoard}
+                            selectedBoard={selectedBoard!}
                             statusBoard={status}
                         />
                     )
                 )}
-                <ColumnTask selectedBoard={selectedBoard} newColumn />
+                <ColumnTask selectedBoard={selectedBoard!} newColumn />
             </Flex>
         </Flex>
     )
