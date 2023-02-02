@@ -1,8 +1,21 @@
 {
-  "name": "tableau-monorepo",
-  "version": "1.0.0",
+  "name": "tableau",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "analyze": "ANALYZE=true next build",
+    "docker:dev": "npm run prisma:docker:deploy && dotenv -e .env.dev -- next dev",
+    "prisma:studio": "dotenv -e .env -- npx prisma studio",
+    "prisma:generate": "dotenv -e .env -- npx prisma generate",
+    "prisma:migrate": "dotenv -e .env -- npx prisma migrate dev",
+    "prisma:docker:studio": "dotenv -e .env.dev -- npx prisma studio",
+    "prisma:docker:generate": "dotenv -e .env.dev -- npx prisma generate",
+    "prisma:docker:migrate": "dotenv -e .env.dev -- npx prisma migrate dev",
+    "prisma:docker:deploy": "dotenv -e .env.dev -- npx prisma migrate deploy"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.16",
