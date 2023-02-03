@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useAtom } from 'jotai'
 import { QueryFunction, QueryKey } from '@tanstack/query-core'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
-import { LoadingAtom } from '../atoms/loadingAtom'
+import { LoadingAtom } from 'shared-atoms'
 import { useSession } from 'next-auth/react'
 
 export function useTableauQuery<TData>(

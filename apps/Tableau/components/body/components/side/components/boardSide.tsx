@@ -4,9 +4,8 @@ import { useAtom } from 'jotai'
 import { Flex, Text } from '@chakra-ui/react'
 import { BoardList } from './boardList'
 import { BoardNew } from './boardNew'
-import { BoardAtom } from '../../../../../atoms/boardAtom'
 import { IBoardWithAllRelation } from '../../../../../types/types'
-import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
+import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 import { useTableauQuery } from '../../../../../hooks/useTableauQuery'
 
 export function BoardSide() {

@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useAtom } from 'jotai'
 import { MutationFunction } from '@tanstack/query-core'
 import { useMutation, UseMutationOptions } from '@tanstack/react-query'
-import { LoadingAtom } from '../atoms/loadingAtom'
+import { LoadingAtom } from 'shared-atoms'
 
 export function useTableauMutation<TData, TVariables>(
     mutationFn: MutationFunction<TData, TVariables>,

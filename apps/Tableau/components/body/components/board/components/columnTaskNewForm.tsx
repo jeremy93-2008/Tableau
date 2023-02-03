@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai'
-import { BoardAtom } from '../../../../../atoms/boardAtom'
+import { BoardAtom } from 'shared-atoms'
 import React, { useCallback, useMemo } from 'react'
 import * as Yup from 'yup'
 import { Formik, FormikHelpers } from 'formik'

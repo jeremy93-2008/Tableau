@@ -5,7 +5,7 @@ import { Formik, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
 import { TextInput } from '../../../../textInput'
 import { useAtom } from 'jotai'
-import { BoardAtom } from '../../../../../atoms/boardAtom'
+import { BoardAtom } from 'shared-atoms'
 
 export type IColumnNewFormikValues = {
     id: string | undefined

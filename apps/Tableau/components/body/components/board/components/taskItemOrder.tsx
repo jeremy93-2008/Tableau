@@ -7,10 +7,9 @@ import { useDrop } from 'react-dnd'
 import { TaskItemType } from 'shared-utils'
 import { Box, Flex } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
-import { BoardAtom } from '../../../../../atoms/boardAtom'
 import { useReorderDnDEntity } from '../../../../../hooks/useReorderDnDEntity'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
-import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
+import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 
 interface ITaskItemWithOrderingProps {
     task?: Task

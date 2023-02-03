@@ -3,10 +3,8 @@ import { useTableauQuery } from '../../../../../hooks/useTableauQuery'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { useCallback } from 'react'
 import { useAtom } from 'jotai'
-// @ts-ignore
-import { HighlightTaskAtom } from 'shared-atoms'
+import { BoardAtom, HighlightTaskAtom } from 'shared-atoms'
 import { Task } from '.prisma/client'
-import { BoardAtom } from '../../../../../atoms/boardAtom'
 
 export function useHighlightFinderTask(onAfterHighlight: (task: Task) => void) {
     const [_selectedBoard, setSelectedBoard] = useAtom(BoardAtom)

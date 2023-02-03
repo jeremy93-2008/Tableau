@@ -4,7 +4,7 @@ import { Flex } from '@chakra-ui/react'
 import { NoBoard } from './components/noBoard'
 import { Columns } from './components/columns'
 
-import { BoardAtom } from '../../../../atoms/boardAtom'
+import { BoardAtom } from 'shared-atoms'
 
 export function Board() {
     const [selectedBoard] = useAtom(BoardAtom)

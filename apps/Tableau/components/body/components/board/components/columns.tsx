@@ -2,7 +2,7 @@ import React, { useCallback, WheelEvent } from 'react'
 import { Flex, Text } from '@chakra-ui/react'
 import { ColumnTask } from './columnTask'
 import { useAtom } from 'jotai'
-import { BoardAtom } from '../../../../../atoms/boardAtom'
+import { BoardAtom } from 'shared-atoms'
 
 export function Columns() {
     const [selectedBoard] = useAtom(BoardAtom)
