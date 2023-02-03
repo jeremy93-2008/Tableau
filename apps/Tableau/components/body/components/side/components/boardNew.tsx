@@ -22,7 +22,7 @@ import { useSession } from 'next-auth/react'
 import { BoardNewForm, IBoardNewFormikValues } from './boardNewForm'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
 import { IBoardWithAllRelation } from '../../../../../types/types'
-import { BOARD_LIMIT } from '../../../../../constants/limit'
+import { BOARD_LIMIT } from 'shared-utils'
 
 interface IBoardNewProps {
     boards?: IBoardWithAllRelation[]

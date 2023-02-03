@@ -7,31 +7,21 @@ import React, {
     WheelEvent,
 } from 'react'
 import axios from 'axios'
-import {
-    Container,
-    Flex,
-    IconButton,
-    Text,
-    Tooltip,
-    useDisclosure,
-    VStack,
-} from '@chakra-ui/react'
+import { Container, Flex, Text, useDisclosure, VStack } from '@chakra-ui/react'
 import { Task } from '.prisma/client'
 import { ColumnNew } from './columnNew'
 import { ColumnTaskNew } from './columnTaskNew'
 import { useAtom } from 'jotai'
 import { TaskList } from './taskList'
 import { useDrop } from 'react-dnd'
-import { TaskItemType } from '../../../../../constants/dragType'
+import { TaskItemType } from 'shared-utils'
 import { ITaskEditFormikValues } from './taskEdit'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 import { IBoardWithAllRelation, IFullStatus } from '../../../../../types/types'
 import { ColumnTaskMove } from './columnTaskMove'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
-import { BsFillPencilFill, BsTrashFill } from 'react-icons/bs'
-import { DeleteModal } from '../../modal/deleteModal'
-import { getScrollbarStyle } from '../../../../../utils/getScrollbarStyle'
 import { ColumnEdit } from './columnEdit'
+import { getScrollbarStyle } from 'shared-utils'
 
 interface IColumnTaskProps {
     selectedBoard: IBoardWithAllRelation
