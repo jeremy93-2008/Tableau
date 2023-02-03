@@ -7,15 +7,12 @@ import React, {
 } from 'react'
 import axios, { AxiosResponse } from 'axios'
 import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react'
-import { useTableauMutation } from '../../../../hooks/useTableauMutation'
+import { useTableauMutation } from 'shared-hooks'
 import { Task } from '.prisma/client'
 import { TaskItem } from '../../../body/components/board/components/taskItem'
 import { getScrollbarStyle } from 'shared-utils'
 import { SearchInput } from './searchInput'
 import { RiEmotionSadLine } from 'react-icons/ri'
-import { useTableauQuery } from '../../../../hooks/useTableauQuery'
-import { IBoardWithAllRelation } from '../../../../types/types'
-import { useSession } from 'next-auth/react'
 import { useHighlightFinderTask } from './hook/useHighlightFinderTask'
 
 export type IFinderSearchResult = Record<IFinderSearchType, Task[]>

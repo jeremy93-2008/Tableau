@@ -4,7 +4,7 @@ import { IconButton, Tooltip, useDisclosure } from '@chakra-ui/react'
 import { BsTrashFill } from 'react-icons/bs'
 
 import { DeleteModal } from '../../modal/deleteModal'
-import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
+import { useTableauMutation } from 'shared-hooks'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { useAtom } from 'jotai'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'

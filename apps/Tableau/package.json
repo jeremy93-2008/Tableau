@@ -48,7 +48,8 @@
     "react-icons": "^4.7.1",
     "yup": "^0.32.11",
     "shared-atoms": "*",
-    "shared-utils": "*"
+    "shared-utils": "*",
+    "shared-hooks": "*"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
