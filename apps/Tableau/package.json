@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "analyze": "ANALYZE=true next build",
+    "start:docker": "docker compose up",
     "docker:dev": "npm run prisma:docker:deploy && dotenv -e .env.dev -- next dev",
     "prisma:studio": "dotenv -e .env -- npx prisma studio",
     "prisma:generate": "dotenv -e .env -- npx prisma generate",
@@ -45,7 +46,8 @@
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "18.2.0",
     "react-icons": "^4.7.1",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "shared-utils": "*"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
