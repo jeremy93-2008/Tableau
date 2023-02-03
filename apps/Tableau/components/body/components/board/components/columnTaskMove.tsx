@@ -5,8 +5,7 @@ import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import { IFullStatus } from '../../../../../types/types'
 import { useAtom } from 'jotai'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
-import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
-import { useSwapEntity } from '../../../../../hooks/useSwapEntity'
+import { useTableauMutation, useSwapEntity } from 'shared-hooks'
 
 interface IColumnTaskMoveProps {
     statusBoard: IFullStatus

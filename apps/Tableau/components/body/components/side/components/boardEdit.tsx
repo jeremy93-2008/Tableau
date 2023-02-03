@@ -22,7 +22,7 @@ import { BsFillPencilFill } from 'react-icons/bs'
 import { BoardEditForm, IBoardEditFormikValues } from './boardEditForm'
 import { useAtom } from 'jotai'
 import { RefetchBoardAtom } from 'shared-atoms'
-import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
+import { useTableauMutation } from 'shared-hooks'
 
 interface IBoardEditProps {
     isVisible: boolean

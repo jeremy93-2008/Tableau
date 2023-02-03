@@ -6,7 +6,7 @@ import { BoardList } from './boardList'
 import { BoardNew } from './boardNew'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
-import { useTableauQuery } from '../../../../../hooks/useTableauQuery'
+import { useTableauQuery } from 'shared-hooks'
 
 export function BoardSide() {
     const { data: session } = useSession()

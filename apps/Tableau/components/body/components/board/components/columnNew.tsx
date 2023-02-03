@@ -19,7 +19,7 @@ import { AddIcon } from '@chakra-ui/icons'
 import { FormikHelpers } from 'formik'
 import { ColumnNewForm, IColumnNewFormikValues } from './columnNewForm'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
-import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
+import { useTableauMutation } from 'shared-hooks'
 import { COLUMN_LIMIT } from 'shared-utils'
 import { noop } from '@chakra-ui/utils'
 

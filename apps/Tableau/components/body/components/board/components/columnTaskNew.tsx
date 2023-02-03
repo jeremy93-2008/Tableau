@@ -20,7 +20,7 @@ import { ColumnTaskNewForm, ITaskNewFormikValues } from './columnTaskNewForm'
 import { FormikHelpers } from 'formik'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 import { IFullStatus } from '../../../../../types/types'
-import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
+import { useTableauMutation } from 'shared-hooks'
 import { TASK_LIMIT } from 'shared-utils'
 
 interface IColumnTaskNewProps {

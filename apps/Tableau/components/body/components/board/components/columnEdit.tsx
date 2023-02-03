@@ -19,7 +19,7 @@ import {
 import { useAtom } from 'jotai'
 import { FormikHelpers } from 'formik'
 import { RefetchBoardAtom } from 'shared-atoms'
-import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
+import { useTableauMutation } from 'shared-hooks'
 import { ColumnEditForm, IColumnEditFormikValues } from './columnEditForm'
 import { BsFillPencilFill } from 'react-icons/bs'
 import { DeleteModal } from '../../modal/deleteModal'

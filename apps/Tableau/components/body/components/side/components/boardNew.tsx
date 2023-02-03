@@ -20,7 +20,7 @@ import { AddIcon } from '@chakra-ui/icons'
 import { useSession } from 'next-auth/react'
 
 import { BoardNewForm, IBoardNewFormikValues } from './boardNewForm'
-import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
+import { useTableauMutation } from 'shared-hooks'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { BOARD_LIMIT } from 'shared-utils'
 

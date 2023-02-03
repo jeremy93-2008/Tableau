@@ -19,7 +19,7 @@ import { ITaskEditFormikValues } from './taskEdit'
 import { RefetchBoardAtom } from 'shared-atoms'
 import { IBoardWithAllRelation, IFullStatus } from '../../../../../types/types'
 import { ColumnTaskMove } from './columnTaskMove'
-import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
+import { useTableauMutation } from 'shared-hooks'
 import { ColumnEdit } from './columnEdit'
 import { getScrollbarStyle } from 'shared-utils'
 
