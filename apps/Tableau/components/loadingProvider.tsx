@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Flex, Spinner } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
-import { LoadingAtom } from '../atoms/loadingAtom'
+import { LoadingAtom } from 'shared-atoms'
 import { useSession } from 'next-auth/react'
 
 export function LoadingProvider(props: React.PropsWithChildren) {

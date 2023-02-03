@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { FormikHelpers } from 'formik'
-import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
+import { RefetchBoardAtom } from 'shared-atoms'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
 import { ColumnEditForm, IColumnEditFormikValues } from './columnEditForm'
 import { BsFillPencilFill } from 'react-icons/bs'

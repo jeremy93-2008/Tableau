@@ -18,10 +18,9 @@ import {
 import { AddIcon } from '@chakra-ui/icons'
 import { ColumnTaskNewForm, ITaskNewFormikValues } from './columnTaskNewForm'
 import { FormikHelpers } from 'formik'
-import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
+import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 import { IFullStatus } from '../../../../../types/types'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
-import { BoardAtom } from '../../../../../atoms/boardAtom'
 import { TASK_LIMIT } from 'shared-utils'
 
 interface IColumnTaskNewProps {

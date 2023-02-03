@@ -21,7 +21,7 @@ import { IBoardWithAllRelation } from '../../../../../types/types'
 import { BsFillPencilFill } from 'react-icons/bs'
 import { BoardEditForm, IBoardEditFormikValues } from './boardEditForm'
 import { useAtom } from 'jotai'
-import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
+import { RefetchBoardAtom } from 'shared-atoms'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
 
 interface IBoardEditProps {

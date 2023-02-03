@@ -7,8 +7,7 @@ import { DeleteModal } from '../../modal/deleteModal'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { useAtom } from 'jotai'
-import { BoardAtom } from '../../../../../atoms/boardAtom'
-import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
+import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 
 interface IBoardDeleteProps {
     isVisible: boolean

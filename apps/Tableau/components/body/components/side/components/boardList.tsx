@@ -3,7 +3,7 @@ import { Avatar, Flex, Text } from '@chakra-ui/react'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { noop } from '@chakra-ui/utils'
 import { useAtom } from 'jotai'
-import { BoardAtom } from '../../../../../atoms/boardAtom'
+import { BoardAtom } from 'shared-atoms'
 import { BoardEdit } from './boardEdit'
 import { BoardDelete } from './boardDelete'
 
