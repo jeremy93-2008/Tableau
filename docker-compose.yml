@@ -7,9 +7,9 @@ services:
       dockerfile: ./apps/Tableau/Dockerfile
     container_name: web-tableau
     volumes:
-      - ./apps/Tableau:/usr/src/app
-      - ./node_modules:/usr/src/app/node_modules
-      - ./apps/Tableau/.next:/usr/src/app/.next
+      - ./apps/Tableau:/monorepo/apps/Tableau
+      - ./node_modules:/monorepo/node_modules
+      - ./apps/Tableau/.next:/monorepo/Tableau/.next
     depends_on:
       postgres:
         condition: service_healthy

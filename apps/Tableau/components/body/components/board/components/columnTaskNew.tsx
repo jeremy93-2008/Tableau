@@ -22,7 +22,7 @@ import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 import { IFullStatus } from '../../../../../types/types'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
 import { BoardAtom } from '../../../../../atoms/boardAtom'
-import { TASK_LIMIT } from '../../../../../constants/limit'
+import { TASK_LIMIT } from 'shared-utils'
 
 interface IColumnTaskNewProps {
     isVisible: boolean

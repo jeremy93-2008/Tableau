@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
-import { calculateOverflow } from '../../../../../utils/calculateOverflow'
+import { calculateOverflow } from 'shared-utils'
 import { useAtom } from 'jotai'
-import { HighlightTaskAtom } from '../../../../../atoms/highlightTaskAtom'
+import { HighlightTaskAtom } from 'shared-atoms'
 import { Task } from '.prisma/client'
 
 export function useHighlightTaskItem(

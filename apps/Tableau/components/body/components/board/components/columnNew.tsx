@@ -21,7 +21,7 @@ import { ColumnNewForm, IColumnNewFormikValues } from './columnNewForm'
 import { RefetchBoardAtom } from '../../../../../atoms/refetchBoardAtom'
 import { useTableauMutation } from '../../../../../hooks/useTableauMutation'
 import { BoardAtom } from '../../../../../atoms/boardAtom'
-import { COLUMN_LIMIT } from '../../../../../constants/limit'
+import { COLUMN_LIMIT } from 'shared-utils'
 import { noop } from '@chakra-ui/utils'
 
 interface IColumnNewProps {

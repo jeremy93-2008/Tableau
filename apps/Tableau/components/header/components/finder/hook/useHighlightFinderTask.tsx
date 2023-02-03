@@ -3,7 +3,8 @@ import { useTableauQuery } from '../../../../../hooks/useTableauQuery'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { useCallback } from 'react'
 import { useAtom } from 'jotai'
-import { HighlightTaskAtom } from '../../../../../atoms/highlightTaskAtom'
+// @ts-ignore
+import { HighlightTaskAtom } from 'shared-atoms'
 import { Task } from '.prisma/client'
 import { BoardAtom } from '../../../../../atoms/boardAtom'
 

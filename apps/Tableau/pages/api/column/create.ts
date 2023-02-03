@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
-import { COLUMN_LIMIT } from '../../../constants/limit'
+import { COLUMN_LIMIT } from 'shared-utils'
 
 export default async function handler(
     req: NextApiRequest,
