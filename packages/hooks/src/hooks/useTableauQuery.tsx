@@ -21,21 +21,25 @@ export function useTableauQuery<TData>(
 
     useEffect(() => {
         if (!session) return
-        if (isFetching || isLoading || isRefetching)
+        if (isFetching || isLoading || isRefetching) {
+            if (loading.isLoading && loading.reason == (queryKey[0] as string))
+                return
             return setLoading({
                 isLoading: true,
                 reason: queryKey[0] as string,
             })
-        if (!loading.isLoading) return
+        }
+        if (!loading.isLoading || loading.reason !== (queryKey[0] as string))
+            return
         setLoading({ isLoading: false, reason: queryKey[0] as string })
     }, [
-        loading.isLoading,
         session,
         queryKey,
+        loading,
+        setLoading,
         isFetching,
         isLoading,
         isRefetching,
-        setLoading,
     ])
 
     return query
