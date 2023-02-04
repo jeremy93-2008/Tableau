@@ -10,7 +10,7 @@ export function useTableauQuery<TData>(
     options?: UseQueryOptions
 ) {
     const { data: session } = useSession()
-    const [_isLoading, setLoading] = useAtom(LoadingAtom)
+    const [loading, setLoading] = useAtom(LoadingAtom)
 
     const query = useQuery<TData>(
         queryKey,
@@ -26,8 +26,17 @@ export function useTableauQuery<TData>(
                 isLoading: true,
                 reason: queryKey[0] as string,
             })
+        if (!loading.isLoading) return
         setLoading({ isLoading: false, reason: queryKey[0] as string })
-    }, [session, queryKey, isFetching, isLoading, isRefetching, setLoading])
+    }, [
+        loading.isLoading,
+        session,
+        queryKey,
+        isFetching,
+        isLoading,
+        isRefetching,
+        setLoading,
+    ])
 
     return query
 }

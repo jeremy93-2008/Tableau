@@ -5,6 +5,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 })
 
 module.exports = withBundleAnalyzer({
+    reactStrictMode: true,
     transpilePackages: ['shared-utils', 'shared-atoms', 'shared-hooks'],
     webpack5: true,
     webpack: (config) => {

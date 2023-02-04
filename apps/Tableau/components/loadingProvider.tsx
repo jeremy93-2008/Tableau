@@ -12,7 +12,7 @@ export function LoadingProvider(props: React.PropsWithChildren) {
     useEffect(() => {
         if (authStatus === 'loading')
             return setLoading({ isLoading: true, reason: 'auth' })
-        if (loading.reason === 'auth')
+        if (loading.isLoading && loading.reason === 'auth')
             setLoading({ isLoading: false, reason: 'auth' })
     }, [authStatus, loading, setLoading])
 
