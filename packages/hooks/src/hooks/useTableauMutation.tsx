@@ -1,8 +1,15 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useAtom } from 'jotai'
 import { MutationFunction } from '@tanstack/query-core'
-import { useMutation, UseMutationOptions } from '@tanstack/react-query'
+import {
+    UseMutateAsyncFunction,
+    UseMutateFunction,
+    useMutation,
+    UseMutationOptions,
+    UseMutationResult,
+} from '@tanstack/react-query'
 import { LoadingAtom } from 'shared-atoms'
+import { MutateOptions } from '@tanstack/query-core/src/types'
 
 export function useTableauMutation<TData, TVariables>(
     mutationFn: MutationFunction<TData, TVariables>,
@@ -10,26 +17,36 @@ export function useTableauMutation<TData, TVariables>(
         key?: string
         noLoading?: boolean
     }
-) {
-    const [loading, setLoading] = useAtom(LoadingAtom)
+): UseMutationResult<TData, unknown, TVariables> {
+    const [_loading, setLoading] = useAtom(LoadingAtom)
 
     const mutation = useMutation<TData, unknown, TVariables>(
         mutationFn,
         options
     )
 
-    const { isLoading } = mutation
+    const handleMutateAsyncFn = useCallback(
+        (
+            mutateAsync: UseMutateAsyncFunction<
+                TData,
+                unknown,
+                TVariables,
+                unknown
+            >
+        ) => {
+            return (
+                variables: TVariables,
+                options?: MutateOptions<TData, unknown, TVariables, unknown>
+            ) => {
+                setLoading({ isLoading: true, reason: mutateAsync.toString() })
+                return mutateAsync(variables, options)
+            }
+        },
+        [setLoading]
+    )
 
-    useEffect(() => {
-        if (options?.noLoading) return
-        if (isLoading)
-            return setLoading({
-                isLoading: true,
-                reason: options?.key ?? 'mutation',
-            })
-        if (!loading.isLoading) return
-        setLoading({ isLoading: false, reason: options?.key ?? 'mutation' })
-    }, [loading.isLoading, options, isLoading, setLoading])
-
-    return mutation
+    return {
+        ...mutation,
+        mutateAsync: handleMutateAsyncFn(mutation.mutateAsync),
+    }
 }
