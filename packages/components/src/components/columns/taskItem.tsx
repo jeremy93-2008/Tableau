@@ -12,9 +12,9 @@ import { BsClock, BsClockHistory, BsFillPencilFill } from 'react-icons/bs'
 import { Task } from '.prisma/client'
 import { TaskEdit } from './taskEdit'
 import { TaskItemType } from 'shared-utils'
-import { IFullStatus } from '../../../../../types/types'
+import { IFullStatus } from '../../types/types'
 import { getAnimation } from 'shared-utils'
-import { useHighlightTaskItem } from '../hooks/useHighlightTaskItem'
+import { useHighlightTaskItem } from './hooks/useHighlightTaskItem'
 
 interface ITaskItemProps {
     task: Task

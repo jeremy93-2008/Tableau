@@ -1,6 +1,6 @@
 import React from 'react'
 import { Task } from '.prisma/client'
-import { IFullStatus } from '../../../../../types/types'
+import { IFullStatus } from '../../types/types'
 import { TaskItemOrder } from './taskItemOrder'
 
 interface ITaskListProps {

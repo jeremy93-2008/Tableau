@@ -6,7 +6,12 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 module.exports = withBundleAnalyzer({
     reactStrictMode: true,
-    transpilePackages: ['shared-utils', 'shared-atoms', 'shared-hooks'],
+    transpilePackages: [
+        'shared-utils',
+        'shared-atoms',
+        'shared-hooks',
+        'shared-components',
+    ],
     webpack5: true,
     webpack: (config) => {
         config.resolve.fallback = { fs: false }

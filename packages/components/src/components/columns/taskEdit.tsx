@@ -13,7 +13,7 @@ import axios from 'axios'
 import { useAtom } from 'jotai'
 import { RefetchBoardAtom } from 'shared-atoms'
 import { TaskEditForm } from './taskEditForm'
-import { IFullStatus } from '../../../../../types/types'
+import { IFullStatus } from '../../types/types'
 import { useTableauMutation } from 'shared-hooks'
 
 export type ITaskEditFormikValues = {

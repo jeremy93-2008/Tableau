@@ -1,6 +1,6 @@
 import { useSession } from 'next-auth/react'
 import { useTableauQuery } from 'shared-hooks'
-import { IBoardWithAllRelation } from '../../../../../types/types'
+import { IBoardWithAllRelation } from '../../../types/types'
 import { useCallback } from 'react'
 import { useAtom } from 'jotai'
 import { BoardAtom, HighlightTaskAtom } from 'shared-atoms'

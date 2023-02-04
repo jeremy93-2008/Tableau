@@ -22,8 +22,8 @@ import { RefetchBoardAtom } from 'shared-atoms'
 import { useTableauMutation } from 'shared-hooks'
 import { ColumnEditForm, IColumnEditFormikValues } from './columnEditForm'
 import { BsFillPencilFill } from 'react-icons/bs'
-import { DeleteModal } from '../../modal/deleteModal'
-import { IFullStatus } from '../../../../../types/types'
+import { DeleteModal } from './modal/deleteModal'
+import { IFullStatus } from '../../types/types'
 
 interface IColumnEditProps {
     statusBoard: IFullStatus
