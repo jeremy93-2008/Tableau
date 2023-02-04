@@ -1,5 +1,5 @@
 import { Formik, FormikHelpers } from 'formik'
-import { TextInput } from '../../../../textInput'
+import { TextInput } from '../textInput'
 import {
     Button,
     ButtonGroup,
@@ -13,9 +13,9 @@ import React, { useCallback, useMemo } from 'react'
 import * as Yup from 'yup'
 import { ITaskEditFormikValues } from './taskEdit'
 import { Task } from '.prisma/client'
-import { IFullStatus } from '../../../../../types/types'
+import { IFullStatus } from '../../types/types'
 import { BsTrashFill } from 'react-icons/bs'
-import { DeleteModal } from '../../modal/deleteModal'
+import { DeleteModal } from './modal/deleteModal'
 
 interface ITaskEditForm {
     task: Task

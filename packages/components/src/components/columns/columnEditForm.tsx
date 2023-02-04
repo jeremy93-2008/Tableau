@@ -10,8 +10,8 @@ import { WarningIcon } from '@chakra-ui/icons'
 import React, { useCallback, useMemo } from 'react'
 import { Formik, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
-import { TextInput } from '../../../../textInput'
-import { IFullStatus } from '../../../../../types/types'
+import { TextInput } from '../textInput'
+import { IFullStatus } from '../../types/types'
 import { BsTrashFill } from 'react-icons/bs'
 
 export type IColumnEditFormikValues = {

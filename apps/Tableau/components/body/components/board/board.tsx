@@ -2,8 +2,7 @@ import React from 'react'
 import { useAtom } from 'jotai'
 import { Flex } from '@chakra-ui/react'
 import { NoBoard } from './components/noBoard'
-import { Columns } from './components/columns'
-
+import { Columns } from 'shared-components'
 import { BoardAtom } from 'shared-atoms'
 
 export function Board() {

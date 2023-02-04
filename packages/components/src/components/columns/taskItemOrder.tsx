@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { Task } from '.prisma/client'
-import { IFullStatus } from '../../../../../types/types'
+import { IFullStatus } from '../../types/types'
 import { TaskItem } from './taskItem'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useDrop } from 'react-dnd'

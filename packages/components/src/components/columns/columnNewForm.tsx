@@ -3,10 +3,10 @@ import { WarningIcon } from '@chakra-ui/icons'
 import React, { useCallback, useMemo } from 'react'
 import { Formik, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
-import { TextInput } from '../../../../textInput'
+import { TextInput } from '../textInput'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
-import { IFullStatus } from '../../../../../types/types'
+import { IFullStatus } from '../../types/types'
 
 export type IColumnNewFormikValues = {
     id: string | undefined

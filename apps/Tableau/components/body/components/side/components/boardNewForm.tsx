@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import * as Yup from 'yup'
-import { TextInput } from '../../../../textInput'
+import { TextInput } from 'shared-components'
 import { Button, ButtonGroup, Flex, Text } from '@chakra-ui/react'
 import { WarningIcon } from '@chakra-ui/icons'
 import { Formik, FormikHelpers, FormikValues } from 'formik'

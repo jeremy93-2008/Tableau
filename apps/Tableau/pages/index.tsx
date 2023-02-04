@@ -3,7 +3,7 @@ import { Provider } from 'jotai'
 import { Flex } from '@chakra-ui/react'
 import { Header } from '../components/header'
 import { Body } from '../components/body'
-import { LoadingProvider } from '../components/loadingProvider'
+import { LoadingProvider } from 'shared-components'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider } from 'react-dnd'
 
