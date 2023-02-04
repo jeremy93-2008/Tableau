@@ -19,6 +19,23 @@ services:
     ports:
       - "3000:3000"
       - "9229:9229"
+  web-tableau-plus:
+    build:
+      context: .
+      dockerfile: ./apps/Tableau-plus/Dockerfile
+    container_name: web-tableau-plus
+    volumes:
+      - ./apps/Tableau-plus:/monorepo/apps/Tableau-plus
+      - ./packages:/monorepo/packages
+      - ./node_modules:/monorepo/node_modules
+      - ./apps/Tableau-plus/.next:/monorepo/Tableau-plus/.next
+    depends_on:
+      postgres:
+        condition: service_healthy
+    links:
+      - postgres
+    ports:
+      - "8080:8080"
   postgres:
     image: postgres
     ports:
