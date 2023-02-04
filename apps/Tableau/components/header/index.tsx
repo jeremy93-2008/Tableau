@@ -1,6 +1,6 @@
 import { Flex, Heading } from '@chakra-ui/react'
-import { Finder } from './components/finder'
-import { Profile } from './components/profile'
+import { Finder } from 'shared-components'
+import { Profile } from 'shared-components'
 
 export function Header() {
     return (
