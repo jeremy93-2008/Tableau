@@ -16,7 +16,8 @@
     "prisma:docker:studio": "dotenv -e .env.dev -- npx prisma studio",
     "prisma:docker:generate": "dotenv -e .env.dev -- npx prisma generate",
     "prisma:docker:migrate": "dotenv -e .env.dev -- npx prisma migrate dev",
-    "prisma:docker:deploy": "dotenv -e .env.dev -- npx prisma migrate deploy"
+    "prisma:docker:deploy": "dotenv -e .env.dev -- npx prisma migrate deploy",
+    "vercel-build": "prisma generate && next build"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.16",
