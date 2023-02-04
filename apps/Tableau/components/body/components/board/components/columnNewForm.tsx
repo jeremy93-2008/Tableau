@@ -6,6 +6,7 @@ import * as Yup from 'yup'
 import { TextInput } from '../../../../textInput'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
+import { IFullStatus } from '../../../../../types/types'
 
 export type IColumnNewFormikValues = {
     id: string | undefined
@@ -27,7 +28,9 @@ export function ColumnNewForm(props: IColumnNewProps) {
     const [selectedBoard] = useAtom(BoardAtom)
 
     const orderedColumns = useMemo(() => {
-        return selectedBoard?.Status.sort((a, b) => a.order - b.order)
+        return selectedBoard?.Status.sort(
+            (a: IFullStatus, b: IFullStatus) => a.order - b.order
+        )
     }, [selectedBoard])
 
     const initialValues = useMemo(
