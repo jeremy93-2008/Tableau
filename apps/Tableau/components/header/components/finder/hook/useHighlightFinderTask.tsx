@@ -21,7 +21,6 @@ export function useHighlightFinderTask(onAfterHighlight: (task: Task) => void) {
     const handleHighlightTask = useCallback(
         (task: Task) => () => {
             if (!data) return
-            console.log(data.find((board) => board.id === task.boardId))
             setSelectedBoard(data.find((board) => board.id === task.boardId)!)
             setHighlightTask(task)
             if (onAfterHighlight) onAfterHighlight(task)

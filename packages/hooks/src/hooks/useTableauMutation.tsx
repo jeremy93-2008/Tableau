@@ -19,6 +19,7 @@ export function useTableauMutation<TData, TVariables>(
     }
 ): UseMutationResult<TData, unknown, TVariables> {
     const [_loading, setLoading] = useAtom(LoadingAtom)
+    const defaultOptions = options
 
     const mutation = useMutation<TData, unknown, TVariables>(
         mutationFn,
@@ -38,11 +39,16 @@ export function useTableauMutation<TData, TVariables>(
                 variables: TVariables,
                 options?: MutateOptions<TData, unknown, TVariables, unknown>
             ) => {
-                setLoading({ isLoading: true, reason: mutateAsync.toString() })
+                if (!defaultOptions?.noLoading) {
+                    setLoading({
+                        isLoading: true,
+                        reason: defaultOptions?.key ?? mutateAsync.toString(),
+                    })
+                }
                 return mutateAsync(variables, options)
             }
         },
-        [setLoading]
+        [defaultOptions, setLoading]
     )
 
     return {
