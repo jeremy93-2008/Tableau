@@ -1,8 +1,11 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
-
     "build": {
+      "dependsOn": ["^prisma:generate"],
+      "outputs": [".next/**"]
+    },
+    "vercel-build": {
       "dependsOn": ["^prisma:generate"],
       "outputs": [".next/**"]
     },
