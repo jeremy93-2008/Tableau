@@ -5,10 +5,6 @@
       "dependsOn": ["^prisma:generate"],
       "outputs": [".next/**"]
     },
-    "vercel-build": {
-      "dependsOn": ["^prisma:generate"],
-      "outputs": [".next/**"]
-    },
     "lint": {},
     "dev": {
       "cache": false,
