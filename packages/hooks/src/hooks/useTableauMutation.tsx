@@ -11,7 +11,7 @@ export function useTableauMutation<TData, TVariables>(
         noLoading?: boolean
     }
 ) {
-    const [_isLoading, setLoading] = useAtom(LoadingAtom)
+    const [loading, setLoading] = useAtom(LoadingAtom)
 
     const mutation = useMutation<TData, unknown, TVariables>(
         mutationFn,
@@ -27,8 +27,9 @@ export function useTableauMutation<TData, TVariables>(
                 isLoading: true,
                 reason: options?.key ?? 'mutation',
             })
+        if (!loading.isLoading) return
         setLoading({ isLoading: false, reason: options?.key ?? 'mutation' })
-    }, [options, isLoading, setLoading])
+    }, [loading.isLoading, options, isLoading, setLoading])
 
     return mutation
 }
