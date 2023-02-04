@@ -1,0 +1,20 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "outputs": [".next/**"]
+    },
+    "lint": {},
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "docker:dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "start:docker": {},
+    "prisma:generate": {},
+    "prisma:docker:generate": {}
+  }
+}

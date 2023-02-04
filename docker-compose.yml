@@ -2,12 +2,15 @@ version: "3.7"
 
 services:
   web-tableau:
-    build: .
+    build:
+      context: .
+      dockerfile: ./apps/Tableau/Dockerfile
     container_name: web-tableau
     volumes:
-      - .:/usr/src/app
-      - ./node_modules:/usr/src/app/node_modules
-      - ./.next:/usr/src/app/.next
+      - ./apps/Tableau:/monorepo/apps/Tableau
+      - ./packages:/monorepo/packages
+      - ./node_modules:/monorepo/node_modules
+      - ./apps/Tableau/.next:/monorepo/Tableau/.next
     depends_on:
       postgres:
         condition: service_healthy
