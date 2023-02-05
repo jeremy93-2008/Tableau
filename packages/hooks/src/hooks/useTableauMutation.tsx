@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { useAtom } from 'jotai'
 import { MutationFunction } from '@tanstack/query-core'
 import {
@@ -7,10 +7,12 @@ import {
     UseMutationOptions,
     UseMutationResult,
 } from '@tanstack/react-query'
+import { useToast } from '@chakra-ui/react'
 import { LoadingAtom } from 'shared-atoms'
 import { MutateOptions } from '@tanstack/query-core/src/types'
 import { AxiosError } from 'axios'
 import { signIn } from 'next-auth/react'
+import { reloadSession } from 'shared-utils'
 
 export function useTableauMutation<TData, TVariables>(
     mutationFn: MutationFunction<TData, TVariables>,
@@ -19,6 +21,7 @@ export function useTableauMutation<TData, TVariables>(
         noLoading?: boolean
     }
 ): UseMutationResult<TData, unknown, TVariables> {
+    const toast = useToast()
     const [_loading, setLoading] = useAtom(LoadingAtom)
     const defaultOptions = options
 
@@ -53,18 +56,19 @@ export function useTableauMutation<TData, TVariables>(
                         isLoading: false,
                         reason: e.response!.statusText,
                     })
-                    if (e.response!.status === 401)
-                        signIn(
-                            'auth0',
-                            { callbackUrl: '/' },
-                            { prompt: 'login' }
-                        ).then()
+                    toast({
+                        title: e.response!.statusText,
+                        description: e.response!.data as string,
+                        status: 'error',
+                        duration: 9000,
+                    })
+                    reloadSession()
                 })
 
                 return awaitedMutateAsync
             }
         },
-        [defaultOptions, setLoading]
+        [defaultOptions, setLoading, toast]
     )
 
     return {
