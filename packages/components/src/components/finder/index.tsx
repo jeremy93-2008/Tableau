@@ -14,6 +14,7 @@ import { getScrollbarStyle } from 'shared-utils'
 import { SearchInput } from './searchInput'
 import { RiEmotionSadLine } from 'react-icons/ri'
 import { useHighlightFinderTask } from './hook/useHighlightFinderTask'
+import { useSession } from 'next-auth/react'
 
 export type IFinderSearchResult = Record<IFinderSearchType, Task[]>
 
@@ -25,9 +26,12 @@ export interface IFinderSearchValues {
 }
 
 export function Finder() {
+    const { status } = useSession()
     const [result, setResult] = useState<IFinderSearchResult>({ task: [] })
     const portal = useRef<HTMLDivElement>()
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen: isOpenDisclosure, onOpen, onClose } = useDisclosure()
+
+    const isOpen = isOpenDisclosure && status !== 'unauthenticated'
 
     const { handleHighlightTask } = useHighlightFinderTask(() => onClose())
 
@@ -69,6 +73,11 @@ export function Finder() {
             )
         }
     }, [onClosePortalClickOutside])
+
+    useEffect(() => {
+        if (status !== 'unauthenticated' || result.task.length == 0) return
+        setResult({ task: [] })
+    }, [status, result, setResult])
 
     return (
         <Box ref={portal as MutableRefObject<HTMLDivElement>}>

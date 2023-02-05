@@ -11,6 +11,7 @@ import { useToast } from '@chakra-ui/react'
 import { LoadingAtom } from 'shared-atoms'
 import { MutateOptions } from '@tanstack/query-core/src/types'
 import { AxiosError } from 'axios'
+import { reloadSession } from 'shared-utils'
 
 export function useTableauMutation<TData, TVariables>(
     mutationFn: MutationFunction<TData, TVariables>,
@@ -60,6 +61,7 @@ export function useTableauMutation<TData, TVariables>(
                         status: 'error',
                         duration: 9000,
                     })
+                    reloadSession()
                 })
 
                 return awaitedMutateAsync

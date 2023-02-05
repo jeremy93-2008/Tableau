@@ -1,9 +1,10 @@
 import { useCallback, useEffect } from 'react'
 import { useAtom } from 'jotai'
-import { QueryKey } from '@tanstack/query-core'
+import { QueryFunction, QueryKey } from '@tanstack/query-core'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import { LoadingAtom } from 'shared-atoms'
 import { signIn, useSession } from 'next-auth/react'
+import { reloadSession } from 'shared-utils'
 import { AxiosError } from 'axios'
 import { useToast } from '@chakra-ui/react'
 
@@ -18,6 +19,7 @@ export function useTableauQuery<TData>(
 
     const onError = useCallback(
         (e: AxiosError) => {
+            reloadSession()
             toast({
                 title: e.response!.statusText,
                 description: e.response!.data as string,
