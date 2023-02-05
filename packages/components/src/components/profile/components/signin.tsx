@@ -7,7 +7,9 @@ export function Signin() {
         <Button
             colorScheme="teal"
             rightIcon={<ExternalLinkIcon />}
-            onClick={() => signIn('auth0', { callbackUrl: '/' })}
+            onClick={() =>
+                signIn('auth0', { callbackUrl: '/' }, { prompt: 'login' })
+            }
         >
             Sign in
         </Button>

@@ -11,6 +11,7 @@ module.exports = withBundleAnalyzer({
         'shared-atoms',
         'shared-hooks',
         'shared-components',
+        'shared-libs',
     ],
     webpack5: true,
     webpack: (config) => {

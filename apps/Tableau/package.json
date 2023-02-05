@@ -51,7 +51,8 @@
     "shared-atoms": "*",
     "shared-utils": "*",
     "shared-hooks": "*",
-    "shared-components": "*"
+    "shared-components": "*",
+    "shared-libs": "*"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",

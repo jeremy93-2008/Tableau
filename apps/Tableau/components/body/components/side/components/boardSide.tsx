@@ -61,7 +61,9 @@ export function BoardSide() {
                     <BoardNew boards={data} onAfterSubmit={onAfterSubmit} />
                 </Flex>
             </Flex>
-            <BoardList listOfBoards={data} onItemClick={onItemClick} />
+            {session && (
+                <BoardList listOfBoards={data} onItemClick={onItemClick} />
+            )}
         </Flex>
     )
 }

@@ -3,13 +3,14 @@ import { useAtom } from 'jotai'
 import { MutationFunction } from '@tanstack/query-core'
 import {
     UseMutateAsyncFunction,
-    UseMutateFunction,
     useMutation,
     UseMutationOptions,
     UseMutationResult,
 } from '@tanstack/react-query'
 import { LoadingAtom } from 'shared-atoms'
 import { MutateOptions } from '@tanstack/query-core/src/types'
+import { AxiosError } from 'axios'
+import { signIn } from 'next-auth/react'
 
 export function useTableauMutation<TData, TVariables>(
     mutationFn: MutationFunction<TData, TVariables>,
@@ -45,7 +46,22 @@ export function useTableauMutation<TData, TVariables>(
                         reason: defaultOptions?.key ?? mutateAsync.toString(),
                     })
                 }
-                return mutateAsync(variables, options)
+                const awaitedMutateAsync = mutateAsync(variables, options)
+
+                awaitedMutateAsync.catch((e: AxiosError) => {
+                    setLoading({
+                        isLoading: false,
+                        reason: e.response!.statusText,
+                    })
+                    if (e.response!.status === 401)
+                        signIn(
+                            'auth0',
+                            { callbackUrl: '/' },
+                            { prompt: 'login' }
+                        ).then()
+                })
+
+                return awaitedMutateAsync
             }
         },
         [defaultOptions, setLoading]
