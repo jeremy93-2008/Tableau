@@ -34,6 +34,7 @@
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.10",
     "axios": "^1.2.3",
+    "chakra-react-select": "^4.4.3",
     "dotenv-cli": "^6.0.0",
     "eslint": "8.31.0",
     "eslint-config-next": "13.1.1",
@@ -47,12 +48,12 @@
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "18.2.0",
     "react-icons": "^4.7.1",
-    "yup": "^0.32.11",
     "shared-atoms": "*",
-    "shared-utils": "*",
-    "shared-hooks": "*",
     "shared-components": "*",
-    "shared-libs": "*"
+    "shared-hooks": "*",
+    "shared-libs": "*",
+    "shared-utils": "*",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
