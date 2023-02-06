@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withSession } from 'shared-libs'
+import { withAuth } from 'shared-libs'
 import prisma from '../../../lib/prisma'
 import { IFullStatus } from '../../../types/types'
 import { authOptions } from '../auth/[...nextauth]'
@@ -8,7 +8,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withSession({ req, res, authOptions }, async (req, res) => {
+    await withAuth({ req, res, authOptions }, async (req, res) => {
         const currentColumn: IFullStatus = req.body.currentColumn
         const affectedColumn: IFullStatus = req.body.affectedColumn
 

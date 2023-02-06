@@ -3,13 +3,13 @@ import { getSession } from 'next-auth/react'
 import prisma from '../../../lib/prisma'
 import { BOARD_LIMIT, TASK_LIMIT } from 'shared-utils'
 import { authOptions } from '../auth/[...nextauth]'
-import { withSession } from 'shared-libs'
+import { withAuth } from 'shared-libs'
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withSession({ req, res, authOptions }, async (req, res) => {
+    await withAuth({ req, res, authOptions }, async (req, res) => {
         const name = req.body.name
         const description = req.body.description
         const boardId = req.body.boardId

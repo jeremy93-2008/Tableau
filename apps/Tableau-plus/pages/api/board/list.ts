@@ -2,13 +2,13 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth/next'
 import prisma from '../../../lib/prisma'
 import { authOptions } from '../auth/[...nextauth]'
-import { withSession } from 'shared-libs'
+import { withAuth } from 'shared-libs'
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withSession({ req, res, authOptions }, async () => {
+    await withAuth({ req, res, authOptions }, async () => {
         const session = await getServerSession(req, res, authOptions)
         const email = session?.user?.email ?? ''
         const userEntry = await prisma.user.findFirst({

@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../lib/prisma'
 import { Task } from '.prisma/client'
 import { authOptions } from './auth/[...nextauth]'
-import { withSession } from 'shared-libs'
+import { withAuth } from 'shared-libs'
 
 type IFinderSearchResult = Record<IFinderSearchType, Task[]>
 
@@ -17,7 +17,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withSession({ req, res, authOptions }, async (req, res, session) => {
+    await withAuth({ req, res, authOptions }, async (req, res, session) => {
         const values: IFinderSearchValues = req.body
 
         const result = await prisma.$transaction(
