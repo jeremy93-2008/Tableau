@@ -8,7 +8,7 @@ interface IWithSessionOptions {
     authOptions: AuthOptions
 }
 
-export async function withSession(
+export async function withAuth(
     options: IWithSessionOptions,
     onSuccess: (
         req: NextApiRequest,

@@ -1,8 +1,10 @@
 import React, { useCallback, WheelEvent } from 'react'
-import { Flex, Text } from '@chakra-ui/react'
+import { Avatar, Button, Flex, Text } from '@chakra-ui/react'
 import { ColumnTask } from './columnTask'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
+import { BsFillPeopleFill } from 'react-icons/bs'
+import { ColumnShare } from './columnShare'
 
 export function Columns() {
     const [selectedBoard] = useAtom(BoardAtom)
@@ -22,15 +24,21 @@ export function Columns() {
 
     return (
         <Flex flexDirection="column">
-            <Text
-                color="gray.600"
-                fontWeight="medium"
-                fontSize="18px"
-                px={5}
-                pt={'33px'}
+            <Flex
+                alignItems="center"
+                justifyContent="space-between"
+                px={7}
+                mt="28px"
+                pt={3}
+                height="32px"
             >
-                {selectedBoard!.name}
-            </Text>
+                <Text color="gray.600" fontWeight="medium" fontSize="18px">
+                    {selectedBoard!.name}
+                </Text>
+                <Flex alignItems="center">
+                    <ColumnShare />
+                </Flex>
+            </Flex>
             <Flex
                 id="columns-container"
                 flex={1}

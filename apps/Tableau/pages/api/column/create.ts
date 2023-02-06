@@ -2,13 +2,13 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { COLUMN_LIMIT } from 'shared-utils'
 import { authOptions } from '../auth/[...nextauth]'
-import { withSession } from 'shared-libs'
+import { withAuth } from 'shared-libs'
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withSession({ req, res, authOptions }, async (req, res) => {
+    await withAuth({ req, res, authOptions }, async (req, res) => {
         const id = req.body.id
         const statusName = req.body.statusName
         const isDefault = req.body.isDefault

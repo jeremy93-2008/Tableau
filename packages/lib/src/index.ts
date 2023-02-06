@@ -1,1 +1,1 @@
-export { withSession } from './withSession'
+export { withAuth } from './withAuth'
