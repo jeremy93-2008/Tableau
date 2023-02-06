@@ -58,11 +58,13 @@ model Status {
 model BoardUserSharing {
   id             String  @id @default(cuid())
   boardId        String
-  board          Board   @relation(fields: [boardId], references: [id])
+  board          Board   @relation(fields: [boardId], references: [id], onDelete: Cascade)
   userId         String
   user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   canEditContent Boolean // Can you edit Tasks
   canEditSchema  Boolean // Can you edit Columns and Board
+
+  @@unique([boardId, userId])
 }
 
 model Account {

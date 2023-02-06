@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
     Avatar,
     Button,
@@ -12,25 +12,25 @@ import {
     Tooltip,
     useDisclosure,
 } from '@chakra-ui/react'
-import { BsFillPeopleFill } from 'react-icons/bs'
 import { useTableauQuery } from 'shared-hooks'
 import { useSession } from 'next-auth/react'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
 import { IFullBoardSharing } from 'tableau/types/types'
-import { ColumnShareForm } from '../columnShareForm'
+import { ColumnShareForm } from './columnShareForm'
+import { FaUserPlus } from 'react-icons/fa'
 
 export function ColumnShare() {
     const { data: session } = useSession()
     const [selectedBoard] = useAtom(BoardAtom)
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const { data: boardsSharedUser } = useTableauQuery<IFullBoardSharing[]>(
-        ['api/share/list', { boardId: selectedBoard?.id }],
-        {
-            enabled: !!session,
-            refetchOnWindowFocus: false,
-        }
-    )
+    const { data: boardsSharedUser, refetch } = useTableauQuery<
+        IFullBoardSharing[]
+    >(['api/share/list', { boardId: selectedBoard?.id }], {
+        enabled: !!session,
+        refetchOnWindowFocus: false,
+    })
+
     return (
         <>
             {boardsSharedUser && (
@@ -69,20 +69,23 @@ export function ColumnShare() {
                 onClick={() => onOpen()}
                 colorScheme="teal"
                 variant="outline"
-                leftIcon={<BsFillPeopleFill />}
+                leftIcon={<FaUserPlus />}
                 ml={3}
             >
-                Share
+                Invite
             </Button>
-            <Modal size="2xl" isOpen={isOpen} onClose={onClose}>
+            <Modal size="xl" isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Share {selectedBoard?.name}</ModalHeader>
+                    <ModalHeader>
+                        Manage Invitations for {selectedBoard?.name}
+                    </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody pb={6}>
                         <ColumnShareForm
                             selectedBoard={selectedBoard!}
                             boardsSharedUser={boardsSharedUser!}
+                            refetchSharedBoard={refetch}
                         />
                     </ModalBody>
                 </ModalContent>

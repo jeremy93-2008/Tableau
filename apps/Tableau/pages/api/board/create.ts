@@ -81,6 +81,13 @@ export default async function handler(
                         },
                     ],
                 },
+                BoardUserSharing: {
+                    create: {
+                        user: { connect: { email } },
+                        canEditSchema: true,
+                        canEditContent: true,
+                    },
+                },
             },
         })
 

@@ -44,6 +44,17 @@ CREATE TABLE "Status" (
 );
 
 -- CreateTable
+CREATE TABLE "BoardUserSharing" (
+    "id" TEXT NOT NULL,
+    "boardId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "canEditContent" BOOLEAN NOT NULL,
+    "canEditSchema" BOOLEAN NOT NULL,
+
+    CONSTRAINT "BoardUserSharing_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Account" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
@@ -93,6 +104,9 @@ CREATE TABLE "VerificationToken" (
 CREATE UNIQUE INDEX "Status_name_key" ON "Status"("name");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "BoardUserSharing_boardId_userId_key" ON "BoardUserSharing"("boardId", "userId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provider", "providerAccountId");
 
 -- CreateIndex
@@ -124,6 +138,12 @@ ALTER TABLE "StatusBoard" ADD CONSTRAINT "StatusBoard_statusId_fkey" FOREIGN KEY
 
 -- AddForeignKey
 ALTER TABLE "StatusBoard" ADD CONSTRAINT "StatusBoard_boardId_fkey" FOREIGN KEY ("boardId") REFERENCES "Board"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BoardUserSharing" ADD CONSTRAINT "BoardUserSharing_boardId_fkey" FOREIGN KEY ("boardId") REFERENCES "Board"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BoardUserSharing" ADD CONSTRAINT "BoardUserSharing_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

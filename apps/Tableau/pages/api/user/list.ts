@@ -8,16 +8,8 @@ export default async function handler(
     res: NextApiResponse
 ) {
     await withAuth({ req, res, authOptions }, async () => {
-        const id = req.body.id as string
-
-        if (req.method !== 'POST')
-            return res.status(405).send('Method not allowed. Use Post instead')
-
-        if (!id)
-            return res.status(400).send('No BoardId and Email was provided')
-
-        const result = await prisma.boardUserSharing.delete({
-            where: { id },
+        const result = await prisma.user.findMany({
+            include: { accounts: true, sessions: true },
         })
 
         res.json(result)

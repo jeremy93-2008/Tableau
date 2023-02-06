@@ -19,6 +19,11 @@ export default async function handler(
             prisma.statusBoard.deleteMany({
                 where: { board: { id: board.id } },
             }),
+            prisma.boardUserSharing.delete({
+                where: {
+                    boardId_userId: { userId: board.userId, boardId: board.id },
+                },
+            }),
             prisma.board.delete({ where: { id: board.id } }),
         ])
 

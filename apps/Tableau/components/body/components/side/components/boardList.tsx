@@ -1,11 +1,12 @@
-import React from 'react'
-import { Avatar, Flex, Text } from '@chakra-ui/react'
+import React, { useCallback } from 'react'
+import { Avatar, AvatarBadge, Flex, Text, Tooltip } from '@chakra-ui/react'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { noop } from '@chakra-ui/utils'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
 import { BoardEdit } from './boardEdit'
 import { BoardDelete } from './boardDelete'
+import { useSession } from 'next-auth/react'
 
 interface IBoardListProps {
     listOfBoards?: IBoardWithAllRelation[]
@@ -13,12 +14,24 @@ interface IBoardListProps {
 }
 
 export function BoardList(props: IBoardListProps) {
+    const { data: session } = useSession()
+
     const [selectedBoard] = useAtom(BoardAtom)
     const { listOfBoards, onItemClick } = props
+
+    const getIsBoardOwner = useCallback(
+        (board: IBoardWithAllRelation) => {
+            if (!session || !session.user) return
+            return session.user.email === board.user.email
+        },
+        [session]
+    )
+
     return (
         <Flex flexDirection="column" pt={2}>
             {listOfBoards &&
                 listOfBoards.map((board) => {
+                    const isCurrentUserBoardOwner = getIsBoardOwner(board)
                     return (
                         <Flex
                             key={board.id}
@@ -56,7 +69,22 @@ export function BoardList(props: IBoardListProps) {
                                     src="https://bit.ly/broken-link"
                                     borderRadius="10px"
                                     mr={2}
-                                />
+                                >
+                                    {!isCurrentUserBoardOwner && (
+                                        <Tooltip
+                                            label={`Board shared by ${board.user.name} (${board.user.email})`}
+                                        >
+                                            <Avatar
+                                                position="absolute"
+                                                top={7}
+                                                left={7}
+                                                boxSize="1.5em"
+                                                border="solid 2px teal"
+                                                src={board.user.image!}
+                                            />
+                                        </Tooltip>
+                                    )}
+                                </Avatar>
                                 <Text pl={1}>{board.name}</Text>
                             </Flex>
                             <Flex>

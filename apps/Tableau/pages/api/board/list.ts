@@ -20,17 +20,20 @@ export default async function handler(
                 .status(500)
                 .send("The user doesn't exist in the database")
 
-        const result = await prisma.board.findMany({
-            where: {
-                user: { email: { equals: userEntry.email } },
-            },
+        const result = await prisma.boardUserSharing.findMany({
+            where: { user: { email } },
             include: {
-                Status: { include: { status: true } },
-                user: true,
-                Task: true,
+                board: {
+                    include: {
+                        Status: { include: { status: true } },
+                        user: true,
+                        Task: true,
+                    },
+                },
             },
+            orderBy: { board: { name: 'desc' } },
         })
 
-        res.json(result)
+        res.json(result.map((r) => r.board))
     })
 }

@@ -8,21 +8,15 @@ export default async function handler(
     res: NextApiResponse
 ) {
     await withAuth({ req, res, authOptions }, async () => {
-        const boardId = req.query.boardId as string
         const email = req.query.email as string
 
-        if (!boardId)
-            return res.status(400).send('No BoardId and UserId was provided')
+        if (!email) return res.status(400).send('No Email was provided')
 
-        const result = await prisma.boardUserSharing.findMany({
+        const result = await prisma.user.findUnique({
             where: {
-                boardId,
-                user: { email },
+                email,
             },
-            include: {
-                board: true,
-                user: true,
-            },
+            include: { accounts: true, sessions: true },
         })
 
         res.json(result)
