@@ -19,7 +19,11 @@ export default async function handler(
         const email = session?.user?.email ?? ''
 
         if (req.method !== 'POST')
-            return res.status(405).send('Method not allowed. Use Post instead')
+            return res
+                .status(405)
+                .send(
+                    'Error: Method Not Allowed. Please use the POST method for this request.'
+                )
 
         if (!session)
             return res

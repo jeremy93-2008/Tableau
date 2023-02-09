@@ -33,6 +33,7 @@ export function useShareRolesOptions(selectedBoard: IBoardWithAllRelation) {
         {
             enabled: !!session,
             refetchOnWindowFocus: false,
+            noLoading: true,
         }
     )
     const options: IOptionsMenuItem[] = useMemo(

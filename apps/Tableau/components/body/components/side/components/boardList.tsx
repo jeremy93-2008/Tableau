@@ -1,5 +1,12 @@
 import React, { useCallback } from 'react'
-import { Avatar, AvatarBadge, Flex, Text, Tooltip } from '@chakra-ui/react'
+import {
+    Avatar,
+    AvatarBadge,
+    Flex,
+    Image,
+    Text,
+    Tooltip,
+} from '@chakra-ui/react'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { noop } from '@chakra-ui/utils'
 import { useAtom } from 'jotai'
@@ -74,13 +81,15 @@ export function BoardList(props: IBoardListProps) {
                                         <Tooltip
                                             label={`Board shared by ${board.user.name} (${board.user.email})`}
                                         >
-                                            <Avatar
+                                            <Image
                                                 position="absolute"
                                                 top={7}
                                                 left={7}
                                                 boxSize="1.5em"
                                                 border="solid 2px teal"
+                                                borderRadius="100%"
                                                 src={board.user.image!}
+                                                referrerPolicy="no-referrer"
                                             />
                                         </Tooltip>
                                     )}

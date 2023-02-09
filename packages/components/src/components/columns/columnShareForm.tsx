@@ -27,8 +27,6 @@ interface IColumnShareFormProps {
 export function ColumnShareForm(props: IColumnShareFormProps) {
     const { selectedBoard, boardsSharedUser, refetchSharedBoard } = props
 
-    const [loading, setLoading] = useAtom(LoadingAtom)
-
     const { mutateAsync: mutateDeleteAsync } = useTableauMutation(
         (value: Partial<IShareMutationEditValue>) => {
             return axios.post(`api/share/delete`, value, {
@@ -37,7 +35,8 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
                     Accept: 'application/json',
                 },
             })
-        }
+        },
+        { noLoading: true }
     )
 
     const { mutateAsync: mutateEditAsync } = useTableauMutation(
@@ -48,7 +47,8 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
                     Accept: 'application/json',
                 },
             })
-        }
+        },
+        { noLoading: true }
     )
 
     const {
@@ -97,7 +97,7 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
 
     return (
         <Flex flexDirection="column" alignItems="center">
-            <ColumnShareFormNew />
+            <ColumnShareFormNew refetchSharedBoard={refetchSharedBoard} />
             {selectedBoard &&
                 boardsSharedUser &&
                 boardsSharedUser.map((boardShared, idx) => {

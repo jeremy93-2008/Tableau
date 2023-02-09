@@ -13,7 +13,11 @@ export default async function handler(
         const affectedColumn: IFullStatus = req.body.affectedColumn
 
         if (req.method !== 'POST')
-            return res.status(405).send('Method not allowed. Use Post instead')
+            return res
+                .status(405)
+                .send(
+                    'Error: Method Not Allowed. Please use the POST method for this request.'
+                )
 
         const result = prisma.$transaction([
             prisma.statusBoard.update({

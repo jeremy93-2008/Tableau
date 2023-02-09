@@ -39,7 +39,22 @@ export default async function handler(
                             },
                         ],
                         AND: {
-                            user: { email: { equals: session.user!.email } },
+                            board: {
+                                OR: [
+                                    {
+                                        BoardUserSharing: {
+                                            some: {
+                                                user: {
+                                                    email: session.user!.email,
+                                                },
+                                            },
+                                        },
+                                    },
+                                    {
+                                        user: { email: session.user!.email },
+                                    },
+                                ],
+                            },
                         },
                     },
                 })

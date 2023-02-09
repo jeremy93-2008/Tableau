@@ -15,7 +15,11 @@ export default async function handler(
         const order = req.body.order
 
         if (req.method !== 'POST')
-            return res.status(405).send('Method not allowed. Use Post instead')
+            return res
+                .status(405)
+                .send(
+                    'Error: Method Not Allowed. Please use the POST method for this request.'
+                )
 
         if (
             (await prisma.statusBoard.count({ where: { boardId: id } })) >

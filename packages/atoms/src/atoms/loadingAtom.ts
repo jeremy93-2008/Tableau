@@ -1,11 +1,7 @@
 import { atom } from 'jotai'
 
 interface ILoadingAtom {
-    isLoading: boolean
-    reason: string | null
+    query: Record<string, boolean>
+    mutation: boolean
 }
-
-export const LoadingAtom = atom<ILoadingAtom>({
-    isLoading: false,
-    reason: null,
-})
+export const LoadingAtom = atom<ILoadingAtom>({ query: {}, mutation: false })

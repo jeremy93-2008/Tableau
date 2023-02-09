@@ -13,7 +13,11 @@ export default async function handler(
         const canEditContent = req.body.canEditContent as boolean
 
         if (req.method !== 'POST')
-            return res.status(405).send('Method not allowed. Use Post instead')
+            return res
+                .status(405)
+                .send(
+                    'Error: Method Not Allowed. Please use the POST method for this request.'
+                )
 
         if (!id)
             return res.status(400).send('No BoardId and Email was provided')

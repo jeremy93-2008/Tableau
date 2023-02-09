@@ -12,7 +12,11 @@ export default async function handler(
         const board = req.body as IBoardWithAllRelation
 
         if (req.method !== 'POST')
-            return res.status(405).send('Method not allowed. Use Post instead')
+            return res
+                .status(405)
+                .send(
+                    'Error: Method Not Allowed. Please use the POST method for this request.'
+                )
 
         const results = await prisma.$transaction([
             prisma.task.deleteMany({ where: { board: { id: board.id } } }),

@@ -21,7 +21,6 @@ export function useTableauMutation<TData, TVariables>(
     }
 ): UseMutationResult<TData, unknown, TVariables> {
     const toast = useToast()
-    const [_loading, setLoading] = useAtom(LoadingAtom)
     const defaultOptions = options
 
     const mutation = useMutation<TData, unknown, TVariables>(
@@ -42,19 +41,9 @@ export function useTableauMutation<TData, TVariables>(
                 variables: TVariables,
                 options?: MutateOptions<TData, unknown, TVariables, unknown>
             ) => {
-                if (!defaultOptions?.noLoading) {
-                    setLoading({
-                        isLoading: true,
-                        reason: defaultOptions?.key ?? mutateAsync.toString(),
-                    })
-                }
                 const awaitedMutateAsync = mutateAsync(variables, options)
 
                 awaitedMutateAsync.catch((e: AxiosError) => {
-                    setLoading({
-                        isLoading: false,
-                        reason: e.response!.statusText,
-                    })
                     toast({
                         title: e.response!.statusText,
                         description: e.response!.data as string,
@@ -67,7 +56,7 @@ export function useTableauMutation<TData, TVariables>(
                 return awaitedMutateAsync
             }
         },
-        [defaultOptions, setLoading, toast]
+        [defaultOptions, toast]
     )
 
     return {
