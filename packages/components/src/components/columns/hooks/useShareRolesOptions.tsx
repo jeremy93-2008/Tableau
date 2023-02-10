@@ -23,19 +23,6 @@ export type IOptionsMenuItem = {
 export function useShareRolesOptions(selectedBoard: IBoardWithAllRelation) {
     const { data: session } = useSession()
 
-    const { data: boardsShareOfCurrentUser } = useTableauQuery<
-        IFullBoardSharing[]
-    >(
-        [
-            'api/share/list',
-            { boardId: selectedBoard?.id, email: session?.user?.email },
-        ],
-        {
-            enabled: !!session,
-            refetchOnWindowFocus: false,
-            noLoading: true,
-        }
-    )
     const options: IOptionsMenuItem[] = useMemo(
         () => [
             {
@@ -136,23 +123,9 @@ export function useShareRolesOptions(selectedBoard: IBoardWithAllRelation) {
         )
     }
 
-    const getHasCurrentUserSharingPermissions = useCallback(
-        (boardShared: IFullBoardSharing) => {
-            if (!session || !session.user) return false
-            if (selectedBoard.user.email === session.user.email) return true
-            if (!boardsShareOfCurrentUser) return false
-            const isCurrentUserAdmin =
-                boardsShareOfCurrentUser[0].canEditSchema &&
-                boardsShareOfCurrentUser[0].canEditContent
-            return isCurrentUserAdmin && !boardShared.canEditSchema
-        },
-        [boardsShareOfCurrentUser, selectedBoard, session]
-    )
-
     return {
         options,
         getBoardSharingRoleByUser,
         Option,
-        getHasCurrentUserSharingPermissions,
     }
 }

@@ -1,6 +1,14 @@
 import React, { useCallback } from 'react'
 import axios from 'axios'
-import { Avatar, CloseButton, Flex, Text, Tooltip } from '@chakra-ui/react'
+import {
+    Avatar,
+    CloseButton,
+    Flex,
+    Tag,
+    Text,
+    Tooltip,
+    useDisclosure,
+} from '@chakra-ui/react'
 import { IBoardWithAllRelation, IFullBoardSharing } from '../../types/types'
 import { ActionMeta, Select, SingleValue } from 'chakra-react-select'
 import {
@@ -8,9 +16,9 @@ import {
     useShareRolesOptions,
 } from './hooks/useShareRolesOptions'
 import { useTableauMutation } from 'shared-hooks'
-import { useAtom } from 'jotai'
-import { LoadingAtom } from 'shared-atoms'
 import { ColumnShareFormNew } from './columnShareFormNew'
+import { useSession } from 'next-auth/react'
+import { DeleteModal } from './modal/deleteModal'
 
 type IShareMutationEditValue = {
     id: string
@@ -26,6 +34,13 @@ interface IColumnShareFormProps {
 
 export function ColumnShareForm(props: IColumnShareFormProps) {
     const { selectedBoard, boardsSharedUser, refetchSharedBoard } = props
+    const { data: session } = useSession()
+
+    const {
+        isOpen: isDeleteModalOpen,
+        onOpen: onDeleteModalOpen,
+        onClose: onDeleteModalClose,
+    } = useDisclosure()
 
     const { mutateAsync: mutateDeleteAsync } = useTableauMutation(
         (value: Partial<IShareMutationEditValue>) => {
@@ -51,39 +66,29 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
         { noLoading: true }
     )
 
-    const {
-        Option,
-        options,
-        getBoardSharingRoleByUser,
-        getHasCurrentUserSharingPermissions,
-    } = useShareRolesOptions(selectedBoard)
-
-    const getIsBoardOwner = useCallback(
-        (boardShared: IFullBoardSharing) => {
-            return boardShared.userId === selectedBoard?.userId
-        },
-        [selectedBoard]
-    )
+    const { Option, options, getBoardSharingRoleByUser } =
+        useShareRolesOptions(selectedBoard)
 
     const handleDeleteUserSharingPermission = useCallback(
-        (boardShared: IFullBoardSharing) => () => {
-            mutateDeleteAsync({ id: boardShared.id }).then(() => {
+        (userBoardShared: IFullBoardSharing) => () => {
+            onDeleteModalClose()
+            mutateDeleteAsync({ id: userBoardShared.id }).then(() => {
                 window.setTimeout(() => {
                     refetchSharedBoard()
                 })
             })
         },
-        [mutateDeleteAsync, refetchSharedBoard]
+        [mutateDeleteAsync, onDeleteModalClose, refetchSharedBoard]
     )
 
     const handleChangePermission = useCallback(
-        (boardShared: IFullBoardSharing) =>
+        (userBoardShared: IFullBoardSharing) =>
             (
                 newValue: SingleValue<IOptionsMenuItem>,
                 actionMeta: ActionMeta<IOptionsMenuItem>
             ) => {
                 mutateEditAsync({
-                    id: boardShared.id,
+                    id: userBoardShared.id,
                     canEditSchema: newValue!.canEditSchema,
                     canEditContent: newValue!.canEditContent,
                 }).then(() => {
@@ -97,13 +102,19 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
 
     return (
         <Flex flexDirection="column" alignItems="center">
+            {
+                <Tag mb={2} colorScheme="red">
+                    You don&apos;t have permission to add or modify new
+                    collaborator
+                </Tag>
+            }
             <ColumnShareFormNew refetchSharedBoard={refetchSharedBoard} />
             {selectedBoard &&
                 boardsSharedUser &&
-                boardsSharedUser.map((boardShared, idx) => {
+                boardsSharedUser.map((userBoardShared, idx) => {
                     return (
                         <Flex
-                            key={boardShared.id}
+                            key={userBoardShared.id}
                             width="80%"
                             justifyContent="space-around"
                             gap={4}
@@ -111,46 +122,35 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
                             mb={4}
                         >
                             <Avatar
-                                name={boardShared.user.email!}
-                                src={boardShared.user.image!}
+                                name={userBoardShared.user.email!}
+                                src={userBoardShared.user.image!}
                                 size="sm"
                                 zIndex={boardsSharedUser.length - idx}
                                 cursor="pointer"
-                                border={
-                                    getIsBoardOwner(boardShared)
-                                        ? 'solid 3px teal'
-                                        : ''
-                                }
                                 style={{ zIndex: -1 }}
                             />
                             <Flex flexDirection="column">
                                 <Text fontWeight="medium">
-                                    {boardShared.user.name}
+                                    {userBoardShared.user.name}
                                 </Text>
                                 <Text fontSize="12px">
-                                    ({boardShared.user.email})
+                                    ({userBoardShared.user.email})
                                 </Text>
                             </Flex>
                             <Flex gap={2} cursor="pointer">
                                 <Select
                                     onChange={handleChangePermission(
-                                        boardShared
+                                        userBoardShared
                                     )}
                                     colorScheme="teal"
                                     selectedOptionColor="teal"
                                     defaultValue={getBoardSharingRoleByUser(
-                                        boardShared
+                                        userBoardShared
                                     )}
                                     size="sm"
                                     components={{ Option }}
                                     options={options}
                                     isSearchable={false}
-                                    isDisabled={
-                                        getIsBoardOwner(boardShared) ||
-                                        !getHasCurrentUserSharingPermissions(
-                                            boardShared
-                                        )
-                                    }
                                     chakraStyles={{
                                         container: (provided) => ({
                                             ...provided,
@@ -178,16 +178,17 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
                             <Flex>
                                 <Tooltip label="Delete this Collaborator">
                                     <CloseButton
-                                        onClick={handleDeleteUserSharingPermission(
-                                            boardShared
-                                        )}
-                                        visibility={
-                                            !getIsBoardOwner(boardShared)
-                                                ? 'visible'
-                                                : 'hidden'
-                                        }
+                                        onClick={() => onDeleteModalOpen()}
                                     />
                                 </Tooltip>
+                                <DeleteModal
+                                    title="Delete this Collaborator"
+                                    onClose={onDeleteModalClose}
+                                    isOpen={isDeleteModalOpen}
+                                    onSubmit={handleDeleteUserSharingPermission(
+                                        userBoardShared
+                                    )}
+                                />
                             </Flex>
                         </Flex>
                     )

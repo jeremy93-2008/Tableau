@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Button, Flex, Text } from '@chakra-ui/react'
+import { Button, Flex, Tag, Text } from '@chakra-ui/react'
 import { useToast } from '@chakra-ui/react'
 import { Select } from 'chakra-react-select'
 import React, { useCallback, useMemo, useState } from 'react'
@@ -56,7 +56,7 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
             }))
         if (!inputText) return userList
         return [{ label: inputText, value: inputText }, ...userList]
-    }, [data, inputText])
+    }, [data, inputText, session])
 
     const { mutateAsync: mutateAddAsync } = useTableauMutation(
         (value: IShareMutationAddValue) => {
@@ -102,7 +102,7 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
     return (
         <Flex width="100%" flexDirection="column">
             <Text fontSize={12} fontWeight="medium">
-                Add a Collaborator
+                Add a Collaborator{' '}
             </Text>
             <Flex
                 width="100%"
