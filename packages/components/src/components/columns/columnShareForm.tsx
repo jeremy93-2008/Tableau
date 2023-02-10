@@ -19,6 +19,7 @@ import { useTableauMutation } from 'shared-hooks'
 import { ColumnShareFormNew } from './columnShareFormNew'
 import { useSession } from 'next-auth/react'
 import { DeleteModal } from './modal/deleteModal'
+import { useShareRolesPermission } from './hooks/useShareRolesPermission'
 
 type IShareMutationEditValue = {
     id: string
@@ -66,6 +67,8 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
         { noLoading: true }
     )
 
+    const { permissions } = useShareRolesPermission(boardsSharedUser)
+
     const { Option, options, getBoardSharingRoleByUser } =
         useShareRolesOptions(selectedBoard)
 
@@ -102,14 +105,18 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
 
     return (
         <Flex flexDirection="column" alignItems="center">
-            {
+            {!permissions?.add && (
                 <Tag mb={2} colorScheme="red">
                     You don&apos;t have permission to add or modify new
                     collaborator
                 </Tag>
-            }
-            <ColumnShareFormNew refetchSharedBoard={refetchSharedBoard} />
+            )}
+            <ColumnShareFormNew
+                refetchSharedBoard={refetchSharedBoard}
+                permissions={permissions}
+            />
             {selectedBoard &&
+                permissions &&
                 boardsSharedUser &&
                 boardsSharedUser.map((userBoardShared, idx) => {
                     return (
@@ -147,6 +154,11 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
                                     defaultValue={getBoardSharingRoleByUser(
                                         userBoardShared
                                     )}
+                                    isDisabled={
+                                        !permissions.userBoardSharing.get(
+                                            userBoardShared.id
+                                        )!.edit
+                                    }
                                     size="sm"
                                     components={{ Option }}
                                     options={options}
@@ -178,6 +190,11 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
                             <Flex>
                                 <Tooltip label="Delete this Collaborator">
                                     <CloseButton
+                                        isDisabled={
+                                            !permissions.userBoardSharing.get(
+                                                userBoardShared.id
+                                            )!.delete
+                                        }
                                         onClick={() => onDeleteModalOpen()}
                                     />
                                 </Tooltip>

@@ -12,9 +12,10 @@ export async function addShareablePermissionCb(options: {
         never,
         Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
     >
+    params?: { boardId: string }
 }) {
-    const { res, req, prisma, authOptions } = options
-    const boardId = req.body.boardId as string
+    const { res, req, prisma, authOptions, params } = options
+    const boardId = params?.boardId ?? (req.body.boardId as string)
     const session = await getServerSession(req, res, authOptions)
 
     if (!session || !session.user) return false

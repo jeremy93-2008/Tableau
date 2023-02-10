@@ -12,9 +12,10 @@ export async function editShareablePermissionCb(options: {
         never,
         Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
     >
+    params?: { id: string }
 }) {
-    const { res, req, prisma, authOptions } = options
-    const id = req.body.id as string
+    const { res, req, prisma, authOptions, params } = options
+    const id = params?.id ?? (req.body.id as string)
 
     const session = await getServerSession(req, res, authOptions)
 

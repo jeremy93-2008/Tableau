@@ -23,10 +23,14 @@ type IShareMutationAddValue = {
 
 interface IColumnShareFormNewProps {
     refetchSharedBoard: () => void
+    permissions: {
+        add: boolean
+        userBoardSharing: Map<string, { edit: boolean; delete: boolean }>
+    } | null
 }
 
 export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
-    const { refetchSharedBoard } = props
+    const { refetchSharedBoard, permissions } = props
     const toast = useToast()
     const { data: session } = useSession()
     const [selectedBoard] = useAtom(BoardAtom)
@@ -127,6 +131,7 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
                         setSelectedUser({ label: val, value: val })
                     }}
                     onChange={(val) => setSelectedUser(val as IOptionsMenuItem)}
+                    isDisabled={!permissions?.add}
                     placeholder="Email"
                     options={optionsUser}
                     chakraStyles={{
@@ -169,6 +174,7 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
                     components={{ Option }}
                     options={optionsRole}
                     isSearchable={false}
+                    isDisabled={!permissions?.add}
                     chakraStyles={{
                         container: (provided) => ({
                             ...provided,
@@ -193,6 +199,7 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
                     }}
                 />
                 <Button
+                    isDisabled={!permissions?.add}
                     onClick={handleClickInvite}
                     colorScheme="teal"
                     leftIcon={<FaUserPlus />}
