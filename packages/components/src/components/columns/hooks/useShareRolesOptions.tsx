@@ -10,7 +10,6 @@ import {
 } from 'react-icons/fa'
 import { GroupBase, OptionProps } from 'chakra-react-select'
 import { useSession } from 'next-auth/react'
-import { useTableauQuery } from 'shared-hooks'
 
 export type IOptionsMenuItem = {
     label: string

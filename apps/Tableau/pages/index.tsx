@@ -1,6 +1,6 @@
 import React from 'react'
 import { Provider } from 'jotai'
-import { Flex } from '@chakra-ui/react'
+import { Alert, AlertIcon, Flex } from '@chakra-ui/react'
 import { Header } from '../components/header'
 import { Body } from '../components/body'
 import { LoadingProvider } from 'shared-components'
@@ -13,6 +13,13 @@ export default function Home() {
             <Provider>
                 <DndProvider backend={HTML5Backend}>
                     <LoadingProvider>
+                        <Alert status="warning">
+                            <AlertIcon />
+                            The application is not suitable for use. Tableau
+                            still on the development, use it on you own risk.
+                            (Loading screen feedback are not available
+                            temporary)
+                        </Alert>
                         <Header />
                         <Body />
                     </LoadingProvider>
