@@ -13,13 +13,6 @@ export default function Home() {
             <Provider>
                 <DndProvider backend={HTML5Backend}>
                     <LoadingProvider>
-                        <Alert status="warning">
-                            <AlertIcon />
-                            The application is not suitable for use. Tableau
-                            still on the development, use it on you own risk.
-                            (Loading screen feedback are not available
-                            temporary)
-                        </Alert>
                         <Header />
                         <Body />
                     </LoadingProvider>
