@@ -7,8 +7,6 @@ import {
     editShareablePermissionCb,
     withAuth,
 } from 'shared-libs'
-import { mockSession } from 'next-auth/client/__tests__/helpers/mocks'
-import user = mockSession.user
 
 interface IRequestObject {
     boardId: string
@@ -31,60 +29,21 @@ export default async function handler(
 
         const ShareableRolesPermissions = new Map()
 
-        const userBoardSharingDatabase = await prisma.boardUserSharing.findMany(
-            {
-                include: { user: true, board: { include: { user: true } } },
-            }
-        )
-
-        const currentUser = await prisma.user.findFirst({
-            where: { email: session.user!.email },
-        })
-
-        if (!currentUser) return res.status(400).send('Bad Request')
-
         for (let idx = 0; idx < userBoardSharing.length; idx++) {
             const { id } = userBoardSharing[idx]
-            const userBoardSharingDatabaseToEdit =
-                userBoardSharingDatabase.find(
-                    (userBoardSharingSingle) => userBoardSharingSingle.id === id
-                )
-
-            if (!userBoardSharingDatabaseToEdit) return
-
-            const userBoardSharingDatabaseOfCurrentUser =
-                userBoardSharingDatabase.find(
-                    (userBoardSharingSingle) =>
-                        userBoardSharingSingle.boardId ===
-                            userBoardSharingDatabaseToEdit.boardId &&
-                        userBoardSharingSingle.userId === currentUser.id
-                )
-
             const edit = await editShareablePermissionCb({
                 req,
                 res,
                 authOptions,
                 prisma,
-                params: {
-                    id,
-                    currentUser: currentUser!,
-                    boardUserSharingToEdit: userBoardSharingDatabaseToEdit,
-                    boardUserSharingOfCurrentUser:
-                        userBoardSharingDatabaseOfCurrentUser,
-                },
+                params: { id },
             })
             const remove = await deleteShareablePermissionCb({
                 req,
                 res,
                 authOptions,
                 prisma,
-                params: {
-                    id,
-                    currentUser: currentUser!,
-                    boardUserSharingToEdit: userBoardSharingDatabaseToEdit,
-                    boardUserSharingOfCurrentUser:
-                        userBoardSharingDatabaseOfCurrentUser,
-                },
+                params: { id },
             })
 
             ShareableRolesPermissions.set(id, {

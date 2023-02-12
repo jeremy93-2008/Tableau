@@ -17,6 +17,7 @@ export function useTableauMutation<TData, TVariables>(
     mutationFn: MutationFunction<TData, TVariables>,
     options?: UseMutationOptions<TData, unknown, TVariables> & {
         key?: string
+        loadingKey?: string | null
         noLoading?: boolean
     }
 ): UseMutationResult<TData, unknown, TVariables> {
@@ -47,13 +48,19 @@ export function useTableauMutation<TData, TVariables>(
                 if (!defaultOptions?.noLoading) {
                     setLoadingObj((prevLoadingObj) => ({
                         ...prevLoadingObj,
-                        mutation: true,
+                        mutation: {
+                            loadingKey: defaultOptions?.loadingKey ?? null,
+                            isLoading: true,
+                        },
                     }))
                 }
                 awaitedMutateAsync.then(() => {
                     setLoadingObj((prevLoadingObj) => ({
                         ...prevLoadingObj,
-                        mutation: false,
+                        mutation: {
+                            loadingKey: defaultOptions?.loadingKey ?? null,
+                            isLoading: false,
+                        },
                     }))
                 })
 

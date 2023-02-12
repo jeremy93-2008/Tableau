@@ -4,22 +4,25 @@ import { useAtomValue } from 'jotai'
 import { LoadingAtom } from 'shared-atoms'
 import { useSession } from 'next-auth/react'
 
-export function LoadingProvider(props: React.PropsWithChildren) {
-    const { children } = props
+interface ILoadingProviderProps extends React.PropsWithChildren {
+    loadingKey?: string
+}
+
+export function LoadingProvider(props: ILoadingProviderProps) {
+    const { loadingKey, children } = props
     const { status: authStatus } = useSession()
     const loading = useAtomValue(LoadingAtom)
 
     const isLoading = useMemo(() => {
         const isAuthenticating = authStatus === 'loading'
-        const queryIsLoading = Object.values(loading.query).some(
-            (isLoading) => isLoading
-        )
-        const mutateIsLoading = loading.mutation
+        const queryIsLoading = Object.values(loading.query)
+            .filter((load) => load.loadingKey === loadingKey)
+            .some((load) => load.isLoading)
+
+        const mutateIsLoading = loading.mutation.isLoading
 
         return queryIsLoading || mutateIsLoading || isAuthenticating
-    }, [authStatus, loading.mutation, loading.query])
-
-    console.log(loading)
+    }, [authStatus, loadingKey, loading.mutation, loading.query])
 
     return (
         <>
@@ -30,8 +33,8 @@ export function LoadingProvider(props: React.PropsWithChildren) {
                 <Flex
                     position="fixed"
                     bgColor="rgba(0,0,0,0.6)"
-                    width="100vw"
-                    height="100vh"
+                    width="100%"
+                    height="100%"
                     justifyContent="center"
                     alignItems="center"
                     top={0}

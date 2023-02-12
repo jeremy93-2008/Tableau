@@ -19,6 +19,7 @@ import { BoardAtom } from 'shared-atoms'
 import { IFullBoardSharing } from 'tableau/types/types'
 import { ColumnShareForm } from './columnShareForm'
 import { FaUserPlus } from 'react-icons/fa'
+import { LoadingProvider } from '../loadingProvider'
 
 export function ColumnShare() {
     const { data: session } = useSession()
@@ -78,17 +79,19 @@ export function ColumnShare() {
             <Modal size="xl" isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>
-                        Manage Invitations for {selectedBoard?.name}
-                    </ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody pb={6}>
-                        <ColumnShareForm
-                            selectedBoard={selectedBoard!}
-                            boardsSharedUser={boardsSharedUser!}
-                            refetchSharedBoard={refetch}
-                        />
-                    </ModalBody>
+                    <LoadingProvider loadingKey="sharing">
+                        <ModalHeader>
+                            Manage Invitations for {selectedBoard?.name}
+                        </ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody pb={6}>
+                            <ColumnShareForm
+                                selectedBoard={selectedBoard!}
+                                boardsSharedUser={boardsSharedUser!}
+                                refetchSharedBoard={refetch}
+                            />
+                        </ModalBody>
+                    </LoadingProvider>
                 </ModalContent>
             </Modal>
         </>

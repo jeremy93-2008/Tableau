@@ -11,6 +11,7 @@ import { useToast } from '@chakra-ui/react'
 export function useTableauQuery<TData>(
     queryKey: QueryKey,
     options?: UseQueryOptions & {
+        loadingKey?: string | null
         noLoading?: boolean
     }
 ) {
@@ -38,14 +39,21 @@ export function useTableauQuery<TData>(
     useEffect(() => {
         if (options?.noLoading) return
         setLoadingObj((prevLoad) => {
-            if (isLoading === prevLoad.query[queryKey as unknown as string]) {
+            if (
+                prevLoad.query[queryKey as unknown as string] &&
+                isLoading ===
+                    prevLoad.query[queryKey as unknown as string].isLoading
+            ) {
                 return prevLoad
             } else {
                 return {
                     ...prevLoad,
                     query: {
                         ...prevLoad.query,
-                        [queryKey as unknown as string]: isLoading,
+                        [queryKey as unknown as string]: {
+                            loadingKey: options?.loadingKey ?? null,
+                            isLoading,
+                        },
                     },
                 }
             }

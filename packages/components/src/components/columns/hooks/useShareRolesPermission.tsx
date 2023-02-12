@@ -34,7 +34,7 @@ export function useShareRolesPermission(
         {
             enabled: !!selectedBoard?.id && !!boardsSharedUser,
             refetchOnWindowFocus: false,
-            noLoading: true,
+            loadingKey: 'sharing',
         }
     )
 
