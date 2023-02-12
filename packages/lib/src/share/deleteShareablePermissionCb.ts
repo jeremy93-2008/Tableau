@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth/next'
-import { AuthOptions } from 'next-auth'
-import { Prisma, PrismaClient } from '@prisma/client'
+import { AuthOptions, User } from 'next-auth'
+import { Board, BoardUserSharing, Prisma, PrismaClient } from '@prisma/client'
 
 export async function deleteShareablePermissionCb(options: {
     req: NextApiRequest
@@ -12,26 +12,40 @@ export async function deleteShareablePermissionCb(options: {
         never,
         Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
     >
-    params?: { id: string }
+    params?: {
+        id: string
+        boardUserSharingToEdit?:
+            | BoardUserSharing & { user: User; board: Board & { user: User } }
+        boardUserSharingOfCurrentUser?: BoardUserSharing & {
+            user: User
+            board: Board & { user: User }
+        }
+        currentUser?: User
+    }
 }) {
     const { res, req, prisma, authOptions, params } = options
     const id = params?.id ?? (req.body.id as string)
 
     const session = await getServerSession(req, res, authOptions)
 
-    const boardUserSharingToEdit = await prisma.boardUserSharing.findUnique({
-        where: { id },
-        include: { user: true, board: { include: { user: true } } },
-    })
+    const boardUserSharingToEdit =
+        params?.boardUserSharingToEdit ??
+        (await prisma.boardUserSharing.findUnique({
+            where: { id },
+            include: { user: true, board: { include: { user: true } } },
+        }))
     if (!boardUserSharingToEdit || !session || !session.user) return false
 
-    const currentUser = await prisma.user.findFirst({
-        where: { email: session.user.email },
-    })
+    const currentUser =
+        params?.currentUser ??
+        (await prisma.user.findFirst({
+            where: { email: session.user.email },
+        }))
     if (!currentUser) return false
 
     const boardUserSharingOfCurrentUser =
-        await prisma.boardUserSharing.findUnique({
+        params?.boardUserSharingOfCurrentUser ??
+        (await prisma.boardUserSharing.findUnique({
             where: {
                 boardId_userId: {
                     boardId: boardUserSharingToEdit.boardId,
@@ -39,7 +53,7 @@ export async function deleteShareablePermissionCb(options: {
                 },
             },
             include: { user: true, board: { include: { user: true } } },
-        })
+        }))
     if (!boardUserSharingOfCurrentUser) return false
 
     // 1. We check if the user line to be deleted is the owner,
