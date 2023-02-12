@@ -52,13 +52,21 @@ export function useTableauQuery<TData>(
                         ...prevLoad.query,
                         [queryKey as unknown as string]: {
                             loadingKey: options?.loadingKey ?? null,
-                            isLoading,
+                            isLoading: isLoading || isRefetching || isFetching,
                         },
                     },
                 }
             }
         })
-    }, [isLoading, isRefetching, isFetching, setLoadingObj, queryKey])
+    }, [
+        isLoading,
+        isRefetching,
+        isFetching,
+        setLoadingObj,
+        queryKey,
+        options?.noLoading,
+        options?.loadingKey,
+    ])
 
     return query
 }
