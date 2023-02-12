@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 import { MutationFunction } from '@tanstack/query-core'
 import {
     UseMutateAsyncFunction,
@@ -23,6 +23,8 @@ export function useTableauMutation<TData, TVariables>(
     const toast = useToast()
     const defaultOptions = options
 
+    const setLoadingObj = useSetAtom(LoadingAtom)
+
     const mutation = useMutation<TData, unknown, TVariables>(
         mutationFn,
         options
@@ -42,6 +44,18 @@ export function useTableauMutation<TData, TVariables>(
                 options?: MutateOptions<TData, unknown, TVariables, unknown>
             ) => {
                 const awaitedMutateAsync = mutateAsync(variables, options)
+                if (!defaultOptions?.noLoading) {
+                    setLoadingObj((prevLoadingObj) => ({
+                        ...prevLoadingObj,
+                        mutation: true,
+                    }))
+                }
+                awaitedMutateAsync.then(() => {
+                    setLoadingObj((prevLoadingObj) => ({
+                        ...prevLoadingObj,
+                        mutation: false,
+                    }))
+                })
 
                 awaitedMutateAsync.catch((e: AxiosError) => {
                     toast({
@@ -56,7 +70,7 @@ export function useTableauMutation<TData, TVariables>(
                 return awaitedMutateAsync
             }
         },
-        [defaultOptions, toast]
+        [setLoadingObj, toast]
     )
 
     return {

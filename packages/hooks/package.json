@@ -10,6 +10,8 @@
     "@tanstack/react-query": "^4.22.0",
     "next-auth": "^4.18.7",
     "jotai": "^1.13.1",
+    "jotai-optics": "^0.3.0",
+    "optics-ts": "^2.4.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "ts-node": "^10.9.1",

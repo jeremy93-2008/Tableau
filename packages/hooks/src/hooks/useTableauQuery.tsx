@@ -1,9 +1,9 @@
-import { useCallback } from 'react'
-import { useAtomValue, useSetAtom } from 'jotai'
+import { useCallback, useEffect } from 'react'
+import { useSetAtom } from 'jotai'
 import { QueryKey } from '@tanstack/query-core'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import { LoadingAtom } from 'shared-atoms'
-import { signIn, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { reloadSession } from 'shared-utils'
 import { AxiosError } from 'axios'
 import { useToast } from '@chakra-ui/react'
@@ -16,7 +16,6 @@ export function useTableauQuery<TData>(
 ) {
     const toast = useToast()
 
-    const { data: session } = useSession()
     const setLoadingObj = useSetAtom(LoadingAtom)
 
     const onError = useCallback(
@@ -35,6 +34,23 @@ export function useTableauQuery<TData>(
     const query = useQuery<TData>(queryKey, { ...options, onError } as any)
 
     const { isFetching, isLoading, isRefetching } = query
+
+    useEffect(() => {
+        if (options?.noLoading) return
+        setLoadingObj((prevLoad) => {
+            if (isLoading === prevLoad.query[queryKey as unknown as string]) {
+                return prevLoad
+            } else {
+                return {
+                    ...prevLoad,
+                    query: {
+                        ...prevLoad.query,
+                        [queryKey as unknown as string]: isLoading,
+                    },
+                }
+            }
+        })
+    }, [isLoading, isRefetching, isFetching, setLoadingObj, queryKey])
 
     return query
 }
