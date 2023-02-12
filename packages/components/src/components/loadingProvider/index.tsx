@@ -31,7 +31,7 @@ export function LoadingProvider(props: ILoadingProviderProps) {
             </Flex>
             {isLoading && (
                 <Flex
-                    position="fixed"
+                    position="absolute"
                     bgColor="rgba(0,0,0,0.6)"
                     width="100%"
                     height="100%"
