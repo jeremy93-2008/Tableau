@@ -7,11 +7,12 @@ import { Task } from '.prisma/client'
 export function useHighlightTaskItem(
     ref: React.MutableRefObject<HTMLDivElement | undefined>,
     task: Task,
-    readonly?: boolean
+    noHighlightIt?: boolean
 ) {
     const taskContainer = ref
     const [highlightTask, setHighlightTask] = useAtom(HighlightTaskAtom)
-    const isCurrentTaskHighlighted = highlightTask?.id === task.id && !readonly
+    const isCurrentTaskHighlighted =
+        highlightTask?.id === task.id && !noHighlightIt
 
     const clearHighlight = useCallback(() => {
         setHighlightTask(null)

@@ -20,11 +20,12 @@ interface ITaskItemProps {
     task: Task
     status?: IFullStatus
     readonly?: boolean
+    noHighlightIt?: boolean
     style?: React.CSSProperties
 }
 
 export function TaskItem(props: ITaskItemProps) {
-    const { task, status, readonly, style } = props
+    const { task, status, readonly, noHighlightIt, style } = props
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [isHoveringTask, setHoveringTask] = useState(false)
 
@@ -34,7 +35,7 @@ export function TaskItem(props: ITaskItemProps) {
     const { isCurrentTaskHighlighted } = useHighlightTaskItem(
         taskContainer,
         task,
-        readonly
+        noHighlightIt
     )
 
     const [{ isDragging }, drag] = useDrag(() => ({

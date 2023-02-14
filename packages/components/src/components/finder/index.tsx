@@ -146,6 +146,7 @@ export function Finder() {
                                     <TaskItem
                                         task={task}
                                         readonly
+                                        noHighlightIt
                                         style={{ cursor: 'pointer' }}
                                     />
                                 </Flex>
