@@ -54,7 +54,8 @@
     "shared-hooks": "*",
     "shared-libs": "*",
     "shared-utils": "*",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "zod": "^3.20.6"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
