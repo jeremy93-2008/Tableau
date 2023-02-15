@@ -9,10 +9,11 @@ import { useTableauMutation, useSwapEntity } from 'shared-hooks'
 
 interface IColumnTaskMoveProps {
     statusBoard: IFullStatus
+    isDisabled: boolean
 }
 
 export function ColumnTaskMove(props: IColumnTaskMoveProps) {
-    const { statusBoard } = props
+    const { statusBoard, isDisabled } = props
     const [selectedBoard] = useAtom(BoardAtom)
     const [refetchBoard] = useAtom(RefetchBoardAtom)
 
@@ -80,6 +81,7 @@ export function ColumnTaskMove(props: IColumnTaskMoveProps) {
                         onClick={handleColumnMove('subtract')}
                         size="sm"
                         colorScheme="teal"
+                        isDisabled={isDisabled}
                         aria-label="Move Column to the Left"
                         icon={<ArrowBackIcon />}
                     />
@@ -92,6 +94,7 @@ export function ColumnTaskMove(props: IColumnTaskMoveProps) {
                         size="sm"
                         ml={2}
                         colorScheme="teal"
+                        isDisabled={isDisabled}
                         aria-label="Move Column to the Right"
                         icon={<ArrowForwardIcon />}
                     />

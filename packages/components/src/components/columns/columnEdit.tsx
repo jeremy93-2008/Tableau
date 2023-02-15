@@ -28,10 +28,11 @@ import { IFullStatus } from '../../types/types'
 interface IColumnEditProps {
     statusBoard: IFullStatus
     isHoveringColumn: boolean
+    isDisabled: boolean
 }
 
 export function ColumnEdit(props: IColumnEditProps) {
-    const { statusBoard, isHoveringColumn } = props
+    const { statusBoard, isDisabled, isHoveringColumn } = props
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const {
@@ -105,6 +106,7 @@ export function ColumnEdit(props: IColumnEditProps) {
                                             aria-label={'Edit this column'}
                                             colorScheme="teal"
                                             size="sm"
+                                            isDisabled={isDisabled}
                                             icon={<BsFillPencilFill />}
                                         />
                                     </Tooltip>

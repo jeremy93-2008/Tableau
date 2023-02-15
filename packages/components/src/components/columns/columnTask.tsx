@@ -22,6 +22,7 @@ import { ColumnTaskMove } from './columnTaskMove'
 import { useTableauMutation } from 'shared-hooks'
 import { ColumnEdit } from './columnEdit'
 import { getScrollbarStyle } from 'shared-utils'
+import { useColumnPermission } from './hooks/useColumnPermission'
 
 interface IColumnTaskProps {
     selectedBoard: IBoardWithAllRelation
@@ -33,6 +34,8 @@ export function ColumnTask(props: IColumnTaskProps) {
     const { selectedBoard, statusBoard, newColumn } = props
     const refColumnStack = useRef<HTMLDivElement>()
     const [refetchBoards] = useAtom(RefetchBoardAtom)
+
+    const userPermissionForColumn = useColumnPermission()
 
     const {
         isOpen: isColumnNewOpen,
@@ -152,6 +155,9 @@ export function ColumnTask(props: IColumnTaskProps) {
                             <ColumnEdit
                                 statusBoard={statusBoard}
                                 isHoveringColumn={isHoveringColumn}
+                                isDisabled={
+                                    !userPermissionForColumn?.edit ?? true
+                                }
                             />
                             <Text
                                 justifySelf="center"
@@ -164,7 +170,12 @@ export function ColumnTask(props: IColumnTaskProps) {
                         </Flex>
                         <Flex height={8}>
                             {isHoveringColumn && (
-                                <ColumnTaskMove statusBoard={statusBoard} />
+                                <ColumnTaskMove
+                                    statusBoard={statusBoard}
+                                    isDisabled={
+                                        !userPermissionForColumn?.move ?? true
+                                    }
+                                />
                             )}
                         </Flex>
                     </Flex>
@@ -206,6 +217,7 @@ export function ColumnTask(props: IColumnTaskProps) {
                         isOpen={isColumnNewOpen}
                         onOpen={onOpenColumnNew}
                         onClose={onCloseColumnNew}
+                        isDisabled={!userPermissionForColumn?.add ?? true}
                     />
                 </Flex>
             )}

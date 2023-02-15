@@ -21,11 +21,12 @@ interface ITaskItemProps {
     status?: IFullStatus
     readonly?: boolean
     noHighlightIt?: boolean
+    isDisabled?: boolean
     style?: React.CSSProperties
 }
 
 export function TaskItem(props: ITaskItemProps) {
-    const { task, status, readonly, noHighlightIt, style } = props
+    const { task, status, isDisabled, readonly, noHighlightIt, style } = props
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [isHoveringTask, setHoveringTask] = useState(false)
 
@@ -119,6 +120,7 @@ export function TaskItem(props: ITaskItemProps) {
                             <IconButton
                                 onClick={() => onOpen()}
                                 colorScheme="teal"
+                                isDisabled={isDisabled}
                                 bgColor="teal.600"
                                 _hover={{
                                     bgColor: 'teal.500',

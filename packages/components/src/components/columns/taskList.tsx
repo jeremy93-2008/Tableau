@@ -2,6 +2,7 @@ import React from 'react'
 import { Task } from '.prisma/client'
 import { IFullStatus } from '../../types/types'
 import { TaskItemOrder } from './taskItemOrder'
+import { useTaskPermission } from './hooks/useTaskPermission'
 
 interface ITaskListProps {
     tasks: Task[]
@@ -10,7 +11,7 @@ interface ITaskListProps {
 
 export function TaskList(props: ITaskListProps) {
     const { tasks, status } = props
-
+    const taskPermission = useTaskPermission()
     return (
         <>
             {[...tasks, undefined].map((task, idx) => {
@@ -19,6 +20,7 @@ export function TaskList(props: ITaskListProps) {
                         key={task?.id ?? idx}
                         status={status}
                         task={task}
+                        isDisabled={!taskPermission?.edit ?? true}
                     />
                 )
             })}

@@ -13,10 +13,11 @@ import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 interface ITaskItemWithOrderingProps {
     task?: Task
     status: IFullStatus
+    isDisabled?: boolean
 }
 
 export function TaskItemOrder(props: ITaskItemWithOrderingProps) {
-    const { task: currentTask, status } = props
+    const { task: currentTask, isDisabled, status } = props
     const [selectedBoard] = useAtom(BoardAtom)
     const [refetchBoard] = useAtom(RefetchBoardAtom)
     const [isCurrentColumnDropped, setIsCurrentColumnDropped] = useState(false)
@@ -97,6 +98,7 @@ export function TaskItemOrder(props: ITaskItemWithOrderingProps) {
                     key={currentTask.id}
                     status={status}
                     task={currentTask}
+                    isDisabled={isDisabled}
                 />
             )}
         </Flex>
