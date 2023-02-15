@@ -1,9 +1,9 @@
 import NextAuth, { AuthOptions, SessionStrategy } from 'next-auth'
 import Auth0Provider from 'next-auth/providers/auth0'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import prisma from '../../../lib/prisma'
+import prisma from '../../../lib/database/prisma'
 import { randomBytes, randomUUID } from 'crypto'
-import { linkNewVerifiedUserAccount } from '../../../lib/linkNewVerifiedUserAccount'
+import { linkNewVerifiedUserAccount } from '../../../lib/auth/linkNewVerifiedUserAccount'
 
 export const authOptions: AuthOptions = {
     adapter: PrismaAdapter(prisma),

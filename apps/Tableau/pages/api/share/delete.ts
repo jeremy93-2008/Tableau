@@ -1,47 +1,50 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../../lib/prisma'
+import prisma from '../../../lib/database/prisma'
 import { authOptions } from '../auth/[...nextauth]'
-import {
-    editShareablePermissionCb,
-    withAuth,
-    withPermissions,
-} from 'shared-libs'
+import { deleteShareablePermissionCb, Procedure } from 'shared-libs'
+import { hasPostMethod } from '../../../lib/validation/hasPostMethod'
+import { isAuthenticated } from '../../../lib/auth/isAuthenticated'
+import { ErrorMessage } from 'shared-utils'
+import { onCallExceptions } from '../../../lib/exceptions/onCallExceptions'
+import { z } from 'zod'
+
+type ISchemaParams = z.infer<typeof schema>
+
+const schema = z.object({
+    id: z.string().cuid(),
+})
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withAuth({ req, res, authOptions }, async () => {
-        return withPermissions(
-            { res },
-            () =>
-                editShareablePermissionCb({
+    await (
+        await Procedure<ISchemaParams>({ req })
+            .input((req) => {
+                return schema.safeParse(req.body)
+            })
+            .check(hasPostMethod(req))
+            .checkAsync(async (params, setError) => {
+                const session = await isAuthenticated({ req, res, authOptions })
+
+                if (!session) return setError(401, ErrorMessage.Unauthorized)
+                if (!params) return setError(400, ErrorMessage.BadRequest)
+
+                return deleteShareablePermissionCb({
                     req,
                     res,
                     authOptions,
                     prisma,
-                }),
-            async () => {
-                const id = req.body.id as string
-
-                if (req.method !== 'POST')
-                    return res
-                        .status(405)
-                        .send(
-                            'Error: Method Not Allowed. Please use the POST method for this request.'
-                        )
-
-                if (!id)
-                    return res
-                        .status(400)
-                        .send('No BoardId and Email was provided')
-
-                const result = await prisma.boardUserSharing.delete({
-                    where: { id },
                 })
+            })
+    )
+        .success(async (params) => {
+            const { id } = params
+            const result = await prisma.boardUserSharing.delete({
+                where: { id },
+            })
 
-                res.json(result)
-            }
-        )
-    })
+            res.json(result)
+        })
+        .catch((errors) => onCallExceptions(res, errors))
 }

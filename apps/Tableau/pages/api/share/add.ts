@@ -1,67 +1,74 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../../lib/prisma'
+import prisma from '../../../lib/database/prisma'
 import { authOptions } from '../auth/[...nextauth]'
-import {
-    addShareablePermissionCb,
-    withAuth,
-    withPermissions,
-} from 'shared-libs'
+import { addShareablePermissionCb, Procedure } from 'shared-libs'
+import { hasPostMethod } from '../../../lib/validation/hasPostMethod'
+import { isAuthenticated } from '../../../lib/auth/isAuthenticated'
+import { ErrorMessage } from 'shared-utils'
+import { onCallExceptions } from '../../../lib/exceptions/onCallExceptions'
+import { z } from 'zod'
+
+type ISchemaParams = z.infer<typeof schema>
+
+const schema = z.object({
+    boardId: z.string().cuid(),
+    email: z.string().email(),
+    canEditSchema: z.boolean(),
+    canEditContent: z.boolean(),
+})
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withAuth({ req, res, authOptions }, async (req, res) => {
-        return withPermissions(
-            { res },
-            () => addShareablePermissionCb({ req, res, authOptions, prisma }),
-            async () => {
-                const boardId = req.body.boardId
-                const email = req.body.email
-                const canEditSchema = req.body.canEditSchema
-                const canEditContent = req.body.canEditContent
+    await (
+        await Procedure<ISchemaParams>({ req })
+            .input((req) => {
+                return schema.safeParse(req.body)
+            })
+            .check(hasPostMethod(req))
+            .checkAsync(async (params, setError) => {
+                const session = await isAuthenticated({ req, res, authOptions })
 
-                if (!email || !boardId || !email.includes('@'))
-                    return res
-                        .status(400)
-                        .send(
-                            'Error: Invalid Parameters. Please check and correct the following parameters before proceeding.'
-                        )
+                if (!session) return setError(401, ErrorMessage.Unauthorized)
+                if (!params) return setError(400, ErrorMessage.BadRequest)
 
-                if (req.method !== 'POST')
-                    return res
-                        .status(405)
-                        .send(
-                            'Error: Method Not Allowed. Please use the POST method for this request.'
-                        )
-
-                const isUserAlreadyHasAccount = await prisma.user.findFirst({
-                    where: { email },
+                return addShareablePermissionCb({
+                    req,
+                    res,
+                    authOptions,
+                    prisma,
                 })
+            })
+    )
+        .success(async (params) => {
+            const { boardId, email, canEditSchema, canEditContent } = params
+            const isUserAlreadyHasAccount = await prisma.user.findFirst({
+                where: { email },
+            })
 
-                const result = await prisma.boardUserSharing.create({
-                    data: {
-                        board: { connect: { id: boardId } },
-                        user: {
-                            connectOrCreate: {
-                                where: { email },
-                                create: {
-                                    name: email.split('@')[0],
-                                    email,
-                                    image: 'to_link',
-                                },
+            const result = await prisma.boardUserSharing.create({
+                data: {
+                    board: { connect: { id: boardId } },
+                    user: {
+                        connectOrCreate: {
+                            where: { email },
+                            create: {
+                                name: email.split('@')[0],
+                                email,
+                                image: 'to_link',
                             },
                         },
-                        canEditSchema,
-                        canEditContent,
                     },
-                })
+                    canEditSchema,
+                    canEditContent,
+                },
+            })
 
-                res.json({
-                    data: result,
-                    isUserAlreadyHasAccount: !!isUserAlreadyHasAccount,
-                })
-            }
-        )
-    })
+            res.json({
+                data: result,
+                isUserAlreadyHasAccount: !!isUserAlreadyHasAccount,
+            })
+        })
+        .catch((errors) => onCallExceptions(res, errors))
 }

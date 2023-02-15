@@ -4,9 +4,9 @@ export function getBoardPermission(
     currentUserOfBoardSharingToEdit: BoardUserSharing | null
 ) {
     return {
-        add: currentUserOfBoardSharingToEdit?.canEditSchema ?? false,
+        add: true,
         edit: currentUserOfBoardSharingToEdit?.canEditSchema ?? false,
         delete: currentUserOfBoardSharingToEdit?.canEditSchema ?? false,
-        read: currentUserOfBoardSharingToEdit?.canEditContent ?? false,
+        read: true,
     }
 }

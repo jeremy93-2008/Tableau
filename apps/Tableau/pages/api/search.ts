@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../lib/prisma'
+import prisma from '../../lib/database/prisma'
 import { Task } from '.prisma/client'
 import { authOptions } from './auth/[...nextauth]'
 import { withAuth } from 'shared-libs'

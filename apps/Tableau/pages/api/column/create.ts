@@ -1,51 +1,66 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../../lib/prisma'
-import { COLUMN_LIMIT } from 'shared-utils'
+import prisma from '../../../lib/database/prisma'
+import { COLUMN_LIMIT, ErrorMessage } from 'shared-utils'
 import { authOptions } from '../auth/[...nextauth]'
-import { withAuth } from 'shared-libs'
+import { Procedure, withAuth } from 'shared-libs'
+import { z } from 'zod'
+import { onCallExceptions } from '../../../lib/exceptions/onCallExceptions'
+import { isAuthenticated } from '../../../lib/auth/isAuthenticated'
+import { getUserPermissionTable } from '../../../lib/auth/getUserPermissionTable'
+import { hasPostMethod } from '../../../lib/validation/hasPostMethod'
+import { hasUserSchemaPermission } from '../../../lib/validation/hasUserSchemaPermission'
+
+type ISchemaParams = z.infer<typeof schema>
+
+const schema = z.object({
+    id: z.string(),
+    statusName: z.string(),
+    isDefault: z.boolean(),
+    order: z.number(),
+})
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withAuth({ req, res, authOptions }, async (req, res) => {
-        const id = req.body.id
-        const statusName = req.body.statusName
-        const isDefault = req.body.isDefault
-        const order = req.body.order
+    await (
+        await Procedure<ISchemaParams>({ req })
+            .input((req) => {
+                return schema.safeParse(req.body)
+            })
+            .check(hasPostMethod(req))
+            .checkAsync(async (params, setError) => {
+                const session = await isAuthenticated({ req, res, authOptions })
 
-        if (req.method !== 'POST')
-            return res
-                .status(405)
-                .send(
-                    'Error: Method Not Allowed. Please use the POST method for this request.'
-                )
+                if (!session) return setError(401, ErrorMessage.Unauthorized)
+                if (!params) return setError(400, ErrorMessage.BadRequest)
 
-        if (
-            (await prisma.statusBoard.count({ where: { boardId: id } })) >
-            COLUMN_LIMIT
-        )
-            return res
-                .status(500)
-                .send(
-                    'Column limit reached. You have reached the maximum number of columns (20). Please delete some existing columns to create a new one.'
-                )
+                return hasUserSchemaPermission({
+                    session,
+                    setError,
+                    boardId: params.id,
+                })
+            })
+    )
+        .success(async (params) => {
+            const { id, statusName, order, isDefault } = params
 
-        const result = await prisma.statusBoard.create({
-            data: {
-                order,
-                status: {
-                    connectOrCreate: {
-                        where: { name: statusName },
-                        create: { name: statusName, isDefault },
+            const result = await prisma.statusBoard.create({
+                data: {
+                    order,
+                    status: {
+                        connectOrCreate: {
+                            where: { name: statusName },
+                            create: { name: statusName, isDefault },
+                        },
+                    },
+                    board: {
+                        connect: { id },
                     },
                 },
-                board: {
-                    connect: { id },
-                },
-            },
-        })
+            })
 
-        res.json(result)
-    })
+            res.json(result)
+        })
+        .catch((errors) => onCallExceptions(res, errors))
 }

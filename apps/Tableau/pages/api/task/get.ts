@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withAuth } from 'shared-libs'
-import prisma from '../../../lib/prisma'
+import prisma from '../../../lib/database/prisma'
 import { authOptions } from '../auth/[...nextauth]'
 
 export default async function handler(

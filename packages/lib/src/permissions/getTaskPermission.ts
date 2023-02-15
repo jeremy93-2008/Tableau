@@ -8,6 +8,6 @@ export function getTaskPermission(
         edit: currentUserOfBoardSharingToEdit?.canEditContent ?? false,
         move: currentUserOfBoardSharingToEdit?.canEditContent ?? false,
         delete: currentUserOfBoardSharingToEdit?.canEditContent ?? false,
-        read: currentUserOfBoardSharingToEdit?.canEditContent ?? false,
+        read: true,
     }
 }

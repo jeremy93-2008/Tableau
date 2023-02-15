@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
-import prisma from '../../../lib/prisma'
-import { BOARD_LIMIT, COLUMN_LIMIT } from 'shared-utils'
+import prisma from '../../../lib/database/prisma'
+import { BOARD_LIMIT } from 'shared-utils'
 import { authOptions } from '../auth/[...nextauth]'
 import { withAuth } from 'shared-libs'
 
@@ -34,8 +34,9 @@ export default async function handler(
                 .send("The user doesn't exist in the database")
 
         if (
-            (await prisma.board.count({ where: { userId: userEntry.id } })) >
-            BOARD_LIMIT
+            (await prisma.board.count({
+                where: { userId: userEntry.id },
+            })) > BOARD_LIMIT
         )
             return res
                 .status(500)
@@ -58,7 +59,10 @@ export default async function handler(
                             status: {
                                 connectOrCreate: {
                                     where: { name: 'To Do' },
-                                    create: { name: 'To Do', isDefault: true },
+                                    create: {
+                                        name: 'To Do',
+                                        isDefault: true,
+                                    },
                                 },
                             },
                         },
@@ -79,7 +83,10 @@ export default async function handler(
                             status: {
                                 connectOrCreate: {
                                     where: { name: 'Done' },
-                                    create: { name: 'Done', isDefault: true },
+                                    create: {
+                                        name: 'Done',
+                                        isDefault: true,
+                                    },
                                 },
                             },
                         },

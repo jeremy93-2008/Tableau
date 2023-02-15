@@ -8,6 +8,6 @@ export function getColumnPermission(
         edit: currentUserOfBoardSharingToEdit?.canEditSchema ?? false,
         move: currentUserOfBoardSharingToEdit?.canEditSchema ?? false,
         delete: currentUserOfBoardSharingToEdit?.canEditSchema ?? false,
-        read: currentUserOfBoardSharingToEdit?.canEditContent ?? false,
+        read: true,
     }
 }

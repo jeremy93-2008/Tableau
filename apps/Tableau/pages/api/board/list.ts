@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth/next'
-import prisma from '../../../lib/prisma'
+import prisma from '../../../lib/database/prisma'
 import { authOptions } from '../auth/[...nextauth]'
 import { withAuth } from 'shared-libs'
 

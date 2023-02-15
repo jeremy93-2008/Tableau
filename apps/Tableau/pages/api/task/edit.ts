@@ -1,44 +1,82 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withAuth } from 'shared-libs'
-import prisma from '../../../lib/prisma'
+import { Procedure, withAuth } from 'shared-libs'
+import prisma from '../../../lib/database/prisma'
 import { authOptions } from '../auth/[...nextauth]'
+import { hasPostMethod } from '../../../lib/validation/hasPostMethod'
+import { isAuthenticated } from '../../../lib/auth/isAuthenticated'
+import { ErrorMessage } from 'shared-utils'
+import { hasUserContentPermission } from '../../../lib/validation/hasUserContentPermission'
+import { onCallExceptions } from '../../../lib/exceptions/onCallExceptions'
+import { z } from 'zod'
+
+type ISchemaParams = z.infer<typeof schema>
+
+const schema = z.object({
+    id: z.string().cuid(),
+    name: z.string(),
+    description: z.string(),
+    statusId: z.string().cuid(),
+    elapsedTime: z.number(),
+    estimatedTime: z.number(),
+})
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withAuth({ req, res, authOptions }, async (req, res) => {
-        const id = req.body.id
-        const name = req.body.name
-        const description = req.body.description
-        const statusId = req.body.statusId
-        const elapsedTime = req.body.elapsedTime
-        const estimatedTime = req.body.estimatedTime
+    await (
+        await Procedure<ISchemaParams>({ req })
+            .input((req) => {
+                return schema.safeParse(req.body)
+            })
+            .check(hasPostMethod(req))
+            .checkAsync(async (params, setError) => {
+                const session = await isAuthenticated({ req, res, authOptions })
 
-        if (req.method !== 'POST')
-            return res
-                .status(405)
-                .send(
-                    'Error: Method Not Allowed. Please use the POST method for this request.'
-                )
+                if (!session) return setError(401, ErrorMessage.Unauthorized)
+                if (!params) return setError(400, ErrorMessage.BadRequest)
 
-        const result = await prisma.task.update({
-            where: {
+                const { id } = params
+                const currentTask = await prisma.task.findFirst({
+                    where: { id },
+                })
+
+                if (!currentTask) return setError(400, ErrorMessage.BadRequest)
+
+                return hasUserContentPermission({
+                    boardId: currentTask.boardId,
+                    session,
+                    setError,
+                })
+            })
+    )
+        .success(async (params) => {
+            const {
                 id,
-            },
-            data: {
                 name,
                 description,
-                elapsedTime: elapsedTime,
-                estimatedTime: estimatedTime,
-                status: {
-                    connect: {
-                        id: statusId,
+                elapsedTime,
+                estimatedTime,
+                statusId,
+            } = params
+            const result = await prisma.task.update({
+                where: {
+                    id,
+                },
+                data: {
+                    name,
+                    description,
+                    elapsedTime: elapsedTime,
+                    estimatedTime: estimatedTime,
+                    status: {
+                        connect: {
+                            id: statusId,
+                        },
                     },
                 },
-            },
-        })
+            })
 
-        res.json(result)
-    })
+            res.json(result)
+        })
+        .catch((errors) => onCallExceptions(res, errors))
 }

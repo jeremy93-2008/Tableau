@@ -1,5 +1,5 @@
 export { withAuth } from './withAuth'
-export { withPermissions } from './withPermissions'
+export { Procedure } from './procedure'
 export { editShareablePermissionCb } from './permissions/share/editShareablePermissionCb'
 export { addShareablePermissionCb } from './permissions/share/addShareablePermissionCb'
 export { deleteShareablePermissionCb } from './permissions/share/deleteShareablePermissionCb'

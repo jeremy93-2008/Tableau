@@ -1,4 +1,4 @@
-import prisma from './prisma'
+import prisma from '../database/prisma'
 import { AdapterUser } from 'next-auth/adapters'
 import { Account, User } from 'next-auth'
 

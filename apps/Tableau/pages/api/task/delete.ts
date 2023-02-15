@@ -1,24 +1,55 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withAuth } from 'shared-libs'
-import prisma from '../../../lib/prisma'
+import { Procedure, withAuth } from 'shared-libs'
+import prisma from '../../../lib/database/prisma'
 import { authOptions } from '../auth/[...nextauth]'
+import { hasPostMethod } from '../../../lib/validation/hasPostMethod'
+import { isAuthenticated } from '../../../lib/auth/isAuthenticated'
+import { ErrorMessage } from 'shared-utils'
+import { hasUserContentPermission } from '../../../lib/validation/hasUserContentPermission'
+import { onCallExceptions } from '../../../lib/exceptions/onCallExceptions'
+import { z } from 'zod'
+
+type ISchemaParams = z.infer<typeof schema>
+
+const schema = z.object({
+    id: z.string().cuid(),
+})
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withAuth({ req, res, authOptions }, async (req, res) => {
-        const id = req.body.id
+    await (
+        await Procedure<ISchemaParams>({ req })
+            .input((req) => {
+                return schema.safeParse(req.body)
+            })
+            .check(hasPostMethod(req))
+            .checkAsync(async (params, setError) => {
+                const session = await isAuthenticated({ req, res, authOptions })
 
-        if (req.method !== 'POST')
-            return res
-                .status(405)
-                .send(
-                    'Error: Method Not Allowed. Please use the POST method for this request.'
-                )
+                if (!session) return setError(401, ErrorMessage.Unauthorized)
+                if (!params) return setError(400, ErrorMessage.BadRequest)
 
-        const result = await prisma.task.delete({ where: { id } })
+                const { id } = params
+                const currentTask = await prisma.task.findFirst({
+                    where: { id },
+                })
 
-        res.json(result)
-    })
+                if (!currentTask) return setError(400, ErrorMessage.BadRequest)
+
+                return hasUserContentPermission({
+                    boardId: currentTask.boardId,
+                    session,
+                    setError,
+                })
+            })
+    )
+        .success(async (params) => {
+            const { id } = params
+            const result = await prisma.task.delete({ where: { id } })
+
+            res.json(result)
+        })
+        .catch((errors) => onCallExceptions(res, errors))
 }
