@@ -48,7 +48,9 @@ export function BoardDelete(props: IBoardDeleteProps) {
                     onClick={() => onOpen()}
                     colorScheme="teal"
                     isDisabled={isDisabled}
-                    _hover={{ bgColor: 'red.500', color: 'white' }}
+                    _hover={
+                        isDisabled ? {} : { bgColor: 'red.500', color: 'white' }
+                    }
                     variant={isVisible ? 'solid' : 'ghost'}
                     aria-label="Delete Board"
                     icon={<BsTrashFill />}

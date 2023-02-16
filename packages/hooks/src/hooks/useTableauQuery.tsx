@@ -27,6 +27,7 @@ export function useTableauQuery<TData>(
                 description: e.response!.data as string,
                 status: 'error',
                 duration: 9000,
+                isClosable: true,
             })
         },
         [toast]

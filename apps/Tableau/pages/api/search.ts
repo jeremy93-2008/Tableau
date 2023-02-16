@@ -24,7 +24,7 @@ export default async function handler(
     res: NextApiResponse
 ) {
     await (
-        await Authenticate.Get<typeof schema, ISchemaParams>(req, res, schema)
+        await Authenticate.Post<typeof schema, ISchemaParams>(req, res, schema)
     )
         .success(async (values) => {
             const session = (await isAuthenticated({

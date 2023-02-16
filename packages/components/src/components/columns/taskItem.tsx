@@ -15,6 +15,7 @@ import { TaskItemType } from 'shared-utils'
 import { IFullStatus } from '../../types/types'
 import { getAnimation } from 'shared-utils'
 import { useHighlightTaskItem } from './hooks/useHighlightTaskItem'
+import { noop } from '@chakra-ui/utils'
 
 interface ITaskItemProps {
     task: Task
@@ -42,7 +43,7 @@ export function TaskItem(props: ITaskItemProps) {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: TaskItemType,
         item: { task },
-        canDrag: !readonly,
+        canDrag: !readonly || !isDisabled,
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
             handlerId: monitor.getHandlerId(),
@@ -60,7 +61,7 @@ export function TaskItem(props: ITaskItemProps) {
     }, [isHoveringTask, setHoveringTask])
 
     const handleRefTaskContainer = (element: HTMLDivElement) => {
-        drag(element)
+        isDisabled ? noop() : drag(element)
         taskContainer.current = element
     }
 
@@ -75,7 +76,7 @@ export function TaskItem(props: ITaskItemProps) {
             width="100%"
             onMouseEnter={onMouseEnterTask}
             onMouseLeave={onMouseLeaveTask}
-            cursor={readonly ? 'inherit' : 'move'}
+            cursor={readonly || isDisabled ? 'inherit' : 'move'}
             animation={isCurrentTaskHighlighted ? bounceAnimation : ''}
             style={{ opacity: isDragging ? 0.5 : 1, ...style }}
         >
@@ -123,7 +124,9 @@ export function TaskItem(props: ITaskItemProps) {
                                 isDisabled={isDisabled}
                                 bgColor="teal.600"
                                 _hover={{
-                                    bgColor: 'teal.500',
+                                    bgColor: isDisabled
+                                        ? 'teal.600'
+                                        : 'teal.500',
                                 }}
                                 borderRadius="100%"
                                 aria-label="Edit current Task"

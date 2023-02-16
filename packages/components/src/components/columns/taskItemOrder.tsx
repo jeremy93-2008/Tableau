@@ -23,8 +23,6 @@ export function TaskItemOrder(props: ITaskItemWithOrderingProps) {
     const [refetchBoard] = useAtom(RefetchBoardAtom)
     const [isCurrentColumnDropped, setIsCurrentColumnDropped] = useState(false)
 
-    const taskPermission = useTaskPermission()
-
     const { mutateAsync } = useTableauMutation((values: Task[]) => {
         return axios.post(`api/tasks/order`, values, {
             headers: {
@@ -62,18 +60,20 @@ export function TaskItemOrder(props: ITaskItemWithOrderingProps) {
         [status, currentTask, setIsCurrentColumnDropped]
     )
 
-    const [{ isOver }, drop] = useDrop(
+    const [{ isOver, canDrop }, drop] = useDrop(
         () => ({
             accept: TaskItemType,
             hover: onDropHoverItem,
             drop: onDropTaskItem,
-            canDrop: () => taskPermission?.move ?? false,
+            canDrop: () => {
+                return !isDisabled ?? false
+            },
             collect: (monitor) => ({
                 isOver: monitor.isOver(),
                 canDrop: monitor.canDrop(),
             }),
         }),
-        [orderedTasks, selectedBoard, taskPermission]
+        [orderedTasks, selectedBoard, isDisabled]
     )
 
     return (

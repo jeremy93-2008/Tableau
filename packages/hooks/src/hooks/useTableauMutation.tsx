@@ -77,6 +77,7 @@ export function useTableauMutation<TData, TVariables>(
                         description: e.response!.data as string,
                         status: 'error',
                         duration: 9000,
+                        isClosable: true,
                     })
                     reloadSession()
                 })

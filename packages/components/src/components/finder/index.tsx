@@ -93,11 +93,12 @@ export function Finder() {
                 flexDirection="column"
                 bgColor="teal.500"
                 position="absolute"
-                width="580px"
+                width="35vw"
+                minWidth="580px"
                 minHeight={0}
                 maxHeight={isOpen ? '500px' : '0'}
                 height={isOpen ? 'auto' : '0'}
-                marginLeft="-140px"
+                marginLeft="min(-4vw, -125px)"
                 borderRadius={10}
                 overflowX="hidden"
                 overflowY="auto"
@@ -140,6 +141,7 @@ export function Finder() {
                                     onClick={handleHighlightTask(task)}
                                     boxSizing="border-box"
                                     width="23%"
+                                    maxWidth="150px"
                                     mr="2%"
                                     mb="2%"
                                 >

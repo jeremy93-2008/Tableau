@@ -89,6 +89,7 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
                         'We send a email to invite you collaborator to join you board',
                     status: 'success',
                     duration: 5000,
+                    isClosable: true,
                 })
             window.setTimeout(() => {
                 refetchSharedBoard()

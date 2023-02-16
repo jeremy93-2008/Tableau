@@ -23,5 +23,8 @@ export async function hasUserPermission(
     )
 
     if (!permissionRow) return setError(403, ErrorMessage.Forbidden)
-    return permissionFn(permissionRow)
+
+    const hasPermission = permissionFn(permissionRow)
+
+    return hasPermission ? true : setError(403, ErrorMessage.Forbidden)
 }
