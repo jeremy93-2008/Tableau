@@ -21,7 +21,7 @@ import { FormikHelpers } from 'formik'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 import { IFullStatus } from '../../types/types'
 import { useTableauMutation } from 'shared-hooks'
-import { TASK_LIMIT } from 'shared-utils'
+import { useTaskPermission } from './hooks/useTaskPermission'
 
 interface IColumnTaskNewProps {
     isVisible: boolean
@@ -33,6 +33,8 @@ export function ColumnTaskNew(props: IColumnTaskNewProps) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [selectedBoard] = useAtom(BoardAtom)
     const [refetchBoards] = useAtom(RefetchBoardAtom)
+
+    const taskPermission = useTaskPermission()
 
     const { mutateAsync } = useTableauMutation(
         (values: ITaskNewFormikValues) => {
@@ -65,17 +67,15 @@ export function ColumnTaskNew(props: IColumnTaskNewProps) {
                 <Box>
                     <Tooltip
                         label={
-                            selectedBoard!.Task!.length > TASK_LIMIT
-                                ? 'Task limit reached. You have reached the maximum number of task (50). Please delete some existing tasks to create a new one.'
+                            !taskPermission?.add
+                                ? 'No Allowed'
                                 : 'Add a new task'
                         }
                     >
                         <Button
                             colorScheme="teal"
                             width="100%"
-                            isDisabled={
-                                selectedBoard!.Task!.length > TASK_LIMIT
-                            }
+                            isDisabled={!taskPermission?.add ?? false}
                             mt={2}
                             style={{
                                 opacity: isVisible ? '1' : '0',

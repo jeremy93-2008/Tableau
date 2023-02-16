@@ -15,7 +15,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    ;(
+    await (
         await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
             req,
             res,

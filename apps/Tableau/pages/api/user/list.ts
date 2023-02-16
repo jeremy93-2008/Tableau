@@ -12,7 +12,9 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    ;(await Authenticate.Get<typeof schema, ISchemaParams>(req, res, schema))
+    await (
+        await Authenticate.Get<typeof schema, ISchemaParams>(req, res, schema)
+    )
         .success(async () => {
             const result = await prisma.user.findMany({
                 include: { accounts: true, sessions: true },

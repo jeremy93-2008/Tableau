@@ -9,6 +9,7 @@ import { Box, Flex } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { useTableauMutation, useReorderDnDEntity } from 'shared-hooks'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
+import { useTaskPermission } from './hooks/useTaskPermission'
 
 interface ITaskItemWithOrderingProps {
     task?: Task
@@ -21,6 +22,8 @@ export function TaskItemOrder(props: ITaskItemWithOrderingProps) {
     const [selectedBoard] = useAtom(BoardAtom)
     const [refetchBoard] = useAtom(RefetchBoardAtom)
     const [isCurrentColumnDropped, setIsCurrentColumnDropped] = useState(false)
+
+    const taskPermission = useTaskPermission()
 
     const { mutateAsync } = useTableauMutation((values: Task[]) => {
         return axios.post(`api/tasks/order`, values, {
@@ -64,12 +67,13 @@ export function TaskItemOrder(props: ITaskItemWithOrderingProps) {
             accept: TaskItemType,
             hover: onDropHoverItem,
             drop: onDropTaskItem,
+            canDrop: () => taskPermission?.move ?? false,
             collect: (monitor) => ({
                 isOver: monitor.isOver(),
                 canDrop: monitor.canDrop(),
             }),
         }),
-        [orderedTasks, selectedBoard]
+        [orderedTasks, selectedBoard, taskPermission]
     )
 
     return (

@@ -65,6 +65,13 @@ export function useTableauMutation<TData, TVariables>(
                 })
 
                 awaitedMutateAsync.catch((e: AxiosError) => {
+                    setLoadingObj((prevLoadingObj) => ({
+                        ...prevLoadingObj,
+                        mutation: {
+                            loadingKey: defaultOptions?.loadingKey ?? null,
+                            isLoading: false,
+                        },
+                    }))
                     toast({
                         title: e.response!.statusText,
                         description: e.response!.data as string,
