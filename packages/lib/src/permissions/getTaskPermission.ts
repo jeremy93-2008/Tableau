@@ -1,4 +1,5 @@
 import { BoardUserSharing } from '@prisma/client'
+import { IPermission } from './type'
 
 export function getTaskPermission(
     currentUserOfBoardSharingToEdit: BoardUserSharing | null
@@ -9,5 +10,5 @@ export function getTaskPermission(
         move: currentUserOfBoardSharingToEdit?.canEditContent ?? false,
         delete: currentUserOfBoardSharingToEdit?.canEditContent ?? false,
         read: true,
-    }
+    } as IPermission
 }

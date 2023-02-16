@@ -1,4 +1,5 @@
 import { BoardUserSharing } from '@prisma/client'
+import { IPermission } from './type'
 
 export function getColumnPermission(
     currentUserOfBoardSharingToEdit: BoardUserSharing | null
@@ -9,5 +10,5 @@ export function getColumnPermission(
         move: currentUserOfBoardSharingToEdit?.canEditSchema ?? false,
         delete: currentUserOfBoardSharingToEdit?.canEditSchema ?? false,
         read: true,
-    }
+    } as IPermission
 }

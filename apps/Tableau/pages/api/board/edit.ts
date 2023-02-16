@@ -1,14 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../../lib/database/prisma'
-import { Procedure } from 'shared-libs'
-import { authOptions } from '../auth/[...nextauth]'
+import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { hasPostMethod } from '../../../lib/validation/hasPostMethod'
-import { isAuthenticated } from '../../../lib/auth/isAuthenticated'
-import { ErrorMessage } from 'shared-utils'
-import { getUserPermissionTable } from '../../../lib/auth/getUserPermissionTable'
-import { onCallExceptions } from '../../../lib/exceptions/onCallExceptions'
-import { hasUserSchemaPermission } from '../../../lib/validation/hasUserSchemaPermission'
+import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
+import { getBoardPermission } from 'shared-libs'
+import { Authenticate } from '../../../server/api/Authenticate'
 
 type ISchemaParams = z.infer<typeof schema>
 
@@ -23,24 +18,17 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await (
-        await Procedure<ISchemaParams>({ req })
-            .input((req) => {
-                return schema.safeParse(req.body)
-            })
-            .check(hasPostMethod(req))
-            .checkAsync(async (params, setError) => {
-                const session = await isAuthenticated({ req, res, authOptions })
-
-                if (!session) return setError(401, ErrorMessage.Unauthorized)
-                if (!params) return setError(400, ErrorMessage.BadRequest)
-
-                return hasUserSchemaPermission({
-                    session,
-                    setError,
-                    boardId: params.id,
-                })
-            })
+    ;(
+        await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
+            req,
+            res,
+            schema,
+            {
+                boardId: req.body.id,
+                roleFn: getBoardPermission,
+                action: 'edit',
+            }
+        )
     )
         .success(async (params) => {
             const { id, name, description, backgroundUrl } = params

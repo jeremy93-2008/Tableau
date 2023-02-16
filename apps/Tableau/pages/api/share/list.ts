@@ -1,30 +1,36 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../../lib/database/prisma'
-import { authOptions } from '../auth/[...nextauth]'
-import { withAuth } from 'shared-libs'
+import prisma from '../../../lib/prisma'
+import { z } from 'zod'
+import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
+import { Authenticate } from '../../../server/api/Authenticate'
+
+type ISchemaParams = z.infer<typeof schema>
+
+const schema = z.object({
+    boardId: z.string(),
+    email: z.undefined() || z.string().email(),
+})
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withAuth({ req, res, authOptions }, async () => {
-        const boardId = req.query.boardId as string
-        const email = req.query.email as string
+    ;(await Authenticate.Get<typeof schema, ISchemaParams>(req, res, schema))
+        .success(async (params) => {
+            const { boardId, email } = params
 
-        if (!boardId)
-            return res.status(400).send('No BoardId and UserId was provided')
+            const result = await prisma.boardUserSharing.findMany({
+                where: {
+                    boardId,
+                    user: { email },
+                },
+                include: {
+                    board: true,
+                    user: true,
+                },
+            })
 
-        const result = await prisma.boardUserSharing.findMany({
-            where: {
-                boardId,
-                user: { email },
-            },
-            include: {
-                board: true,
-                user: true,
-            },
+            res.json(result)
         })
-
-        res.json(result)
-    })
+        .catch((errors) => onCallExceptions(res, errors))
 }

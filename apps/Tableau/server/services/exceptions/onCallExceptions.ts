@@ -1,5 +1,5 @@
-import { IErrorPromiseReject } from 'shared-libs/src/procedure'
 import { NextApiResponse } from 'next'
+import { IErrorPromiseReject } from 'shared-libs/src/procedure'
 
 export function onCallExceptions(
     res: NextApiResponse,

@@ -1,14 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getSession } from 'next-auth/react'
-import prisma from '../../../lib/database/prisma'
-import { BOARD_LIMIT, ErrorMessage, TASK_LIMIT } from 'shared-utils'
+import prisma from '../../../lib/prisma'
 import { authOptions } from '../auth/[...nextauth]'
-import { Procedure, withAuth } from 'shared-libs'
-import { hasPostMethod } from '../../../lib/validation/hasPostMethod'
-import { isAuthenticated } from '../../../lib/auth/isAuthenticated'
-import { hasUserContentPermission } from '../../../lib/validation/hasUserContentPermission'
-import { onCallExceptions } from '../../../lib/exceptions/onCallExceptions'
+import { isAuthenticated } from '../../../server/services/auth/isAuthenticated'
+import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
 import { z } from 'zod'
+import { getTaskPermission } from 'shared-libs'
+import { Authenticate } from '../../../server/api/Authenticate'
 
 type ISchemaParams = z.infer<typeof schema>
 
@@ -23,24 +20,17 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await (
-        await Procedure<ISchemaParams>({ req })
-            .input((req) => {
-                return schema.safeParse(req.body)
-            })
-            .check(hasPostMethod(req))
-            .checkAsync(async (params, setError) => {
-                const session = await isAuthenticated({ req, res, authOptions })
-
-                if (!session) return setError(401, ErrorMessage.Unauthorized)
-                if (!params) return setError(400, ErrorMessage.BadRequest)
-
-                return hasUserContentPermission({
-                    boardId: params.boardId,
-                    session,
-                    setError,
-                })
-            })
+    ;(
+        await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
+            req,
+            res,
+            schema,
+            {
+                boardId: req.body.boardId,
+                roleFn: getTaskPermission,
+                action: 'add',
+            }
+        )
     )
         .success(async (params) => {
             const { boardId, statusId, description, name } = params

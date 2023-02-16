@@ -1,28 +1,30 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withAuth } from 'shared-libs'
-import prisma from '../../../lib/database/prisma'
-import { authOptions } from '../auth/[...nextauth]'
+import prisma from '../../../lib/prisma'
+import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
+import { z } from 'zod'
+import { Authenticate } from '../../../server/api/Authenticate'
+
+type ISchemaParams = z.infer<typeof schema>
+
+const schema = z.object({
+    id: z.string().cuid(),
+})
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withAuth({ req, res, authOptions }, async (req, res) => {
-        const id = req.body.id
+    ;(await Authenticate.Get<typeof schema, ISchemaParams>(req, res, schema))
+        .success(async (params) => {
+            const { id } = params
 
-        if (req.method !== 'POST')
-            return res
-                .status(405)
-                .send(
-                    'Error: Method Not Allowed. Please use the POST method for this request.'
-                )
+            const result = await prisma.task.findFirst({
+                where: {
+                    id,
+                },
+            })
 
-        const result = await prisma.task.findFirst({
-            where: {
-                id,
-            },
+            res.json(result)
         })
-
-        res.json(result)
-    })
+        .catch((errors) => onCallExceptions(res, errors))
 }

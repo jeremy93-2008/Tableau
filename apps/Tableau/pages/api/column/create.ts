@@ -1,14 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../../lib/database/prisma'
-import { COLUMN_LIMIT, ErrorMessage } from 'shared-utils'
-import { authOptions } from '../auth/[...nextauth]'
-import { Procedure, withAuth } from 'shared-libs'
+import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { onCallExceptions } from '../../../lib/exceptions/onCallExceptions'
-import { isAuthenticated } from '../../../lib/auth/isAuthenticated'
-import { getUserPermissionTable } from '../../../lib/auth/getUserPermissionTable'
-import { hasPostMethod } from '../../../lib/validation/hasPostMethod'
-import { hasUserSchemaPermission } from '../../../lib/validation/hasUserSchemaPermission'
+import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
+import { getColumnPermission } from 'shared-libs'
+import { Authenticate } from '../../../server/api/Authenticate'
 
 type ISchemaParams = z.infer<typeof schema>
 
@@ -23,24 +18,17 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await (
-        await Procedure<ISchemaParams>({ req })
-            .input((req) => {
-                return schema.safeParse(req.body)
-            })
-            .check(hasPostMethod(req))
-            .checkAsync(async (params, setError) => {
-                const session = await isAuthenticated({ req, res, authOptions })
-
-                if (!session) return setError(401, ErrorMessage.Unauthorized)
-                if (!params) return setError(400, ErrorMessage.BadRequest)
-
-                return hasUserSchemaPermission({
-                    session,
-                    setError,
-                    boardId: params.id,
-                })
-            })
+    ;(
+        await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
+            req,
+            res,
+            schema,
+            {
+                boardId: req.body.id,
+                roleFn: getColumnPermission,
+                action: 'add',
+            }
+        )
     )
         .success(async (params) => {
             const { id, statusName, order, isDefault } = params

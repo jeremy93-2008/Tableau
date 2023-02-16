@@ -1,14 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { Procedure } from 'shared-libs'
-import prisma from '../../../lib/database/prisma'
-import { authOptions } from '../auth/[...nextauth]'
-import { hasPostMethod } from '../../../lib/validation/hasPostMethod'
-import { isAuthenticated } from '../../../lib/auth/isAuthenticated'
-import { ErrorMessage } from 'shared-utils'
-import { hasUserSchemaPermission } from '../../../lib/validation/hasUserSchemaPermission'
+import prisma from '../../../lib/prisma'
 import { z } from 'zod'
 import { columnMoveValidation } from '../column/move'
-import { onCallExceptions } from '../../../lib/exceptions/onCallExceptions'
+import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
+import { getBoardIdFromStatusId } from '../../../server/prisma/getBoardIdFromStatusId'
+import { getColumnPermission } from 'shared-libs'
+import { Authenticate } from '../../../server/api/Authenticate'
 
 type ISchemaParams = z.infer<typeof schema>
 
@@ -18,32 +15,17 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await (
-        await Procedure<ISchemaParams>({ req })
-            .input((req) => {
-                return schema.safeParse(req.body)
-            })
-            .check(hasPostMethod(req))
-            .checkAsync(async (params, setError) => {
-                const session = await isAuthenticated({ req, res, authOptions })
-
-                if (!session) return setError(401, ErrorMessage.Unauthorized)
-                if (!params) return setError(400, ErrorMessage.BadRequest)
-
-                const { id } = params[0]
-                const currentStatusBoard = await prisma.statusBoard.findFirst({
-                    where: { id: id },
-                })
-
-                if (!currentStatusBoard)
-                    return setError(400, ErrorMessage.BadRequest)
-
-                return hasUserSchemaPermission({
-                    boardId: currentStatusBoard.boardId,
-                    session,
-                    setError,
-                })
-            })
+    ;(
+        await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
+            req,
+            res,
+            schema,
+            {
+                boardId: await getBoardIdFromStatusId(req.body[0].id),
+                roleFn: getColumnPermission,
+                action: 'move',
+            }
+        )
     )
         .success(async (params) => {
             const orderedColumns = params
