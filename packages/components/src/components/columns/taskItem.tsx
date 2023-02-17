@@ -37,6 +37,7 @@ export function TaskItem(props: ITaskItemProps) {
     const { isCurrentTaskHighlighted } = useHighlightTaskItem(
         taskContainer,
         task,
+        readonly,
         noHighlightIt
     )
 
