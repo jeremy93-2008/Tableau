@@ -35,7 +35,7 @@ export function useHighlightTaskItem(
             columnTaskContainerList.scrollTo({ top: scrollBottom })
         }
 
-        // We wait until the Scroll make is job and after we hook the click to disable the highlight in whatever click that the user do
+        // We wait until the Scroll make is job, and after we hook the click to disable the highlight in whatever click that the user do
         window.requestIdleCallback(() => {
             document.body.addEventListener('click', clearHighlight)
         })
