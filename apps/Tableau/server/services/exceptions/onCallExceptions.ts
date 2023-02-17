@@ -6,7 +6,9 @@ export function onCallExceptions(
     errors: IErrorPromiseReject<any>
 ) {
     const checkError =
-        errors.checkError.status && errors.checkError.message
+        errors.checkError &&
+        errors.checkError.status &&
+        errors.checkError.message
             ? errors.checkError
             : { status: 500, message: 'Something go wrong' }
     return res

@@ -25,7 +25,7 @@ export function useHighlightTaskItem(
         const columnTaskContainerList =
             taskContainer.current.parentElement!.parentElement!
 
-        // We reset teh value of the scroll to make the calculation of the next scroll easier
+        // We reset the value of the scroll to make the calculation of the next scroll easier
         columnTaskContainerList.scrollTo({ top: 0 })
 
         const { scrollTop, scrollBottom } = calculateOverflow(

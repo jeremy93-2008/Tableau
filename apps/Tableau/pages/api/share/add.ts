@@ -1,10 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import AWS from 'aws-sdk'
 import prisma from '../../../lib/prisma'
 import { authOptions } from '../auth/[...nextauth]'
 import { addShareablePermissionCb } from 'shared-libs'
 import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
 import { z } from 'zod'
 import { Authenticate } from '../../../server/api/Authenticate'
+import { Board } from '.prisma/client'
+import { isAuthenticated } from '../../../server/services/auth/isAuthenticated'
+import { Session } from 'next-auth'
 
 type ISchemaParams = z.infer<typeof schema>
 
@@ -65,4 +69,49 @@ export default async function handler(
             })
         })
         .catch((errors) => onCallExceptions(res, errors))
+}
+
+async function sendCollaborationMail(
+    email: string,
+    board: Board,
+    session: Session
+) {
+    AWS.config.update({
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        region: 'us-east-1',
+    })
+    await new AWS.SES()
+        .sendEmail({
+            Source: `Tableau App <jeremy93-2008@hotmail.fr>`,
+            Destination: { ToAddresses: [email] },
+            Message: {
+                Subject: {
+                    Charset: 'UTF-8',
+                    Data: `Invitation to Collaborate on ${board.name} Board in Tableau App`,
+                },
+                Body: {
+                    Text: {
+                        Charset: 'UTF-8',
+                        Data: `Dear ${email},
+
+You have been invited by ${session.user!.name} to collaborate on ${
+                            board.name
+                        } in the Tableau App.
+
+Tableau App is a powerful tool that helps teams visualize, analyze and share boards and tasks.
+
+To access the board, please follow these steps:
+
+    Click on the following link: https://tableau-jeremy93-2008.vercel.app/
+    Log in to your Tableau account with the email that you was invite or create a new one
+    Once you are logged in, you will be able to view and edit the board.
+
+Best regards,
+Tableau Team`,
+                    },
+                },
+            },
+        })
+        .promise()
 }

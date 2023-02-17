@@ -140,7 +140,7 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
                                 <Text fontWeight="medium">
                                     {userBoardShared.user.name}
                                 </Text>
-                                <Text fontSize="12px">
+                                <Text fontSize="12px" whiteSpace="nowrap">
                                     ({userBoardShared.user.email})
                                 </Text>
                             </Flex>

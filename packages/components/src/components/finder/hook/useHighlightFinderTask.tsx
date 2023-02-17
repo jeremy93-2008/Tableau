@@ -15,7 +15,6 @@ export function useHighlightFinderTask(onAfterHighlight: (task: Task) => void) {
         IBoardWithAllRelation[]
     >(['api/board/list'], {
         enabled: !!session,
-        refetchOnWindowFocus: false,
     })
 
     const handleHighlightTask = useCallback(

@@ -29,7 +29,6 @@ export function ColumnShare() {
         IFullBoardSharing[]
     >(['api/share/list', { boardId: selectedBoard?.id }], {
         enabled: !!session,
-        refetchOnWindowFocus: false,
         noLoading: true,
     })
 

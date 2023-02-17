@@ -46,7 +46,6 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
     const [inputText, setInputText] = useState('')
 
     const { data } = useTableauQuery<User[]>(['api/user/list'], {
-        refetchOnWindowFocus: false,
         noLoading: true,
     })
 
