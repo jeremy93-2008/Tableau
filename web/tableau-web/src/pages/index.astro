@@ -1,8 +1,14 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Index from '../components/index.tsx'
+import Layout from '../layouts/Layout.astro'
+import Index from '../components/index'
 ---
 
 <Layout title="Tableau App">
-	<Index client:load />
+    <Index />
 </Layout>
+
+<style is:global>
+    html {
+        font-size: 100%; /* 100% = 16px */
+    }
+</style>
