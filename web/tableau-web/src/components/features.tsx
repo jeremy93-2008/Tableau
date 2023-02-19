@@ -7,7 +7,7 @@ export function Features() {
     return (
         <div
             id="features"
-            className="flex justify-center items-center px-3 h-[432px]"
+            className="flex flex-col justify-center items-center px-3 py-8 gap-6 lg:gap-0 lg:py-0 lg:h-[432px] lg:flex-row"
             style={{
                 background:
                     'linear-gradient(180deg, #FFFFFF 0%, #E6F5F5 63.02%)',

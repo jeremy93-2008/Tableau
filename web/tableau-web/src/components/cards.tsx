@@ -6,7 +6,7 @@ import IconTasks from './assets/iconTasks'
 export function Cards() {
     return (
         <div id="workflow" className="my-8">
-            <div className="flex justify-center gap-10">
+            <div className="flex flex-col justify-center gap-10 px-10 items-center lg:items-baseline lg:px-0 lg:flex-row">
                 <div className="w-[260px] overflow-hidden rounded-lg shadow-md">
                     <div className="relative bg-rose-500 text-white h-12">
                         <div className="absolute top-[25px] left-[15px] p-1 bg-white text-rose-500 rounded-lg">

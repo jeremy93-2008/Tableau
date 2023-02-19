@@ -9,7 +9,7 @@ export function Header() {
                     Tableau
                 </div>
             </div>
-            <div className="flex items-center">
+            <div className="items-center hidden lg:flex">
                 <a
                     href="#features"
                     className="mr-3 text-[#38B2AC] font-semibold border-b-2 border-transparent transition-all hover:border-[#38B2AC]"
@@ -34,6 +34,16 @@ export function Header() {
                 >
                     Tableau Plus
                 </a>
+                <a
+                    href="https://tableau-jeremy93-2008.vercel.app/"
+                    target="_blank"
+                    className="bg-[#38B2AC] text-white font-semibold rounded-md px-4 py-2 hover:bg-[#319795] transition-colors"
+                    rel="noreferrer"
+                >
+                    Go to Tableau
+                </a>
+            </div>
+            <div className="items-center flex lg:hidden">
                 <a
                     href="https://tableau-jeremy93-2008.vercel.app/"
                     target="_blank"

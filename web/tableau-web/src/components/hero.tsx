@@ -11,7 +11,7 @@ export function Hero() {
         >
             <div className="flex flex-1 items-center justify-center">
                 <div className="flex flex-col mt-[-45px]">
-                    <div className="text-white text-5xl font-bold font-[Montserrat] w-[30vw]">
+                    <div className="text-white text-5xl font-bold font-[Montserrat] w-[75vw] lg:w-[30vw]">
                         <div className="flex">
                             Manage your tasks easily and collaboratively
                         </div>
@@ -20,7 +20,7 @@ export function Hero() {
                         <a
                             href="https://tableau-jeremy93-2008.vercel.app/"
                             target="_blank"
-                            className="w-[25vw] bg-white text-[#38B2AC] text-center text-lg font-semibold cursor-pointer rounded-lg shadow-lg px-14 py-3 hover:scale-110 transition-transform"
+                            className="w-full lg:w-[25vw] bg-white text-[#38B2AC] text-center text-lg font-semibold cursor-pointer rounded-lg shadow-lg px-14 py-3 hover:scale-110 transition-transform"
                             rel="noreferrer"
                         >
                             Go To Tableau
@@ -28,7 +28,7 @@ export function Hero() {
                     </div>
                 </div>
             </div>
-            <div className="flex mt-[-85px]">
+            <div className="hidden mt-[-85px] lg:flex">
                 <Screenshot
                     style={{ width: '55vw', minWidth: 'fit-content' }}
                 />
