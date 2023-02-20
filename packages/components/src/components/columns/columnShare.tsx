@@ -16,10 +16,16 @@ import { useTableauQuery } from 'shared-hooks'
 import { useSession } from 'next-auth/react'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
-import { IFullBoardSharing } from 'tableau-plus/types/types'
 import { ColumnShareForm } from './columnShareForm'
 import { FaUserPlus } from 'react-icons/fa'
 import { LoadingProvider } from '../loadingProvider'
+import { BoardUserSharing } from '@prisma/client'
+import { Board, User } from '.prisma/client'
+
+export type IFullBoardSharing = BoardUserSharing & {
+    board: Board
+    user: User
+}
 
 export function ColumnShare() {
     const { data: session } = useSession()

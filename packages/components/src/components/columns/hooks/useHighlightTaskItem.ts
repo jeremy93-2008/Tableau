@@ -44,14 +44,12 @@ export function useHighlightTaskItem(
 
         const columnsContainer = document.getElementById('columns-container')
 
-        columnsContainer!.scrollTo({ left: 0 })
-
         const { scrollLeft } = calculateHorizontalOverflow(
             taskContainer.current?.parentElement!,
             columnsContainer!
         )
 
-        if (scrollLeft > window.innerWidth - 200)
+        if (scrollLeft > window.innerWidth - 200 || scrollLeft < 0)
             columnsContainer!.scrollTo({ left: scrollLeft, behavior: 'smooth' })
 
         // We wait until the Scroll make is job, and after we hook the click to disable the highlight in whatever click that the user do
