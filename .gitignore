@@ -27,6 +27,7 @@ yarn-error.log*
 
 # local env files
 .env
+.env.dev
 
 # vercel
 .vercel
@@ -35,3 +36,17 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .turbo
+
+# build output
+dist/
+
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+pnpm-debug.log*
+
+.env.production
+
