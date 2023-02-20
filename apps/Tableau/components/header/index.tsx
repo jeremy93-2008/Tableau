@@ -1,5 +1,5 @@
-import { Flex, Heading } from '@chakra-ui/react'
-import { Finder } from 'shared-components'
+import { Flex, Heading, Text } from '@chakra-ui/react'
+import { Finder, Icon } from 'shared-components'
 import { Profile } from 'shared-components'
 
 export function Header() {
@@ -13,8 +13,16 @@ export function Header() {
             px="8"
             zIndex={15}
         >
-            <Heading as="h1" fontSize="1.5rem">
-                Tableau
+            <Heading
+                as="h1"
+                display="flex"
+                alignItems="center"
+                fontSize="1.5rem"
+            >
+                <Icon />
+                <Text ml={2} fontFamily="sans-serif">
+                    Tableau
+                </Text>
             </Heading>
             <Finder />
             <Profile />
