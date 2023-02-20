@@ -26,7 +26,7 @@ export function LoadingProvider(props: ILoadingProviderProps) {
 
     return (
         <>
-            <Flex flex={1} flexDirection="column">
+            <Flex flex={1} width="100%" flexDirection="column">
                 {children}
             </Flex>
             {isLoading && (

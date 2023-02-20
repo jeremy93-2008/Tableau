@@ -43,7 +43,7 @@ export function Columns() {
                 id="columns-container"
                 flex={1}
                 justifyContent="left"
-                w={'calc(100vw - 300px)'}
+                w={{ base: '100vw', md: 'calc(100vw - 300px)' }}
                 px={5}
                 pt={9}
                 pb={9}

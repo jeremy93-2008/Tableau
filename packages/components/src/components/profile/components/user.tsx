@@ -1,4 +1,4 @@
-import { Button, Image } from '@chakra-ui/react'
+import { Button, Image, Text } from '@chakra-ui/react'
 import { Session } from 'next-auth'
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import { useCallback, useEffect, useState } from 'react'
@@ -43,7 +43,9 @@ export function User(props: IUserProps) {
                 }
                 rightIcon={isUserOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
             >
-                {session.user?.name}
+                <Text display={{ base: 'none', md: 'block' }}>
+                    {session.user?.name}
+                </Text>
             </Button>
             {isUserOpen && <UserModal session={session} />}
         </>

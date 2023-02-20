@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { useAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 import { Flex, IconButton, Text, Tooltip } from '@chakra-ui/react'
 import { BoardList } from './boardList'
 import { BoardNew } from './boardNew'
 import { IBoardWithAllRelation } from '../../../../../types/types'
-import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
+import { BoardAtom, RefetchBoardAtom, SidePanelAtom } from 'shared-atoms'
 import { useTableauQuery } from 'shared-hooks'
 import { BiRefresh } from 'react-icons/bi'
 import { getAnimation } from 'shared-utils'
@@ -13,6 +13,8 @@ import { getAnimation } from 'shared-utils'
 export function BoardSide() {
     const { data: session } = useSession()
     const [selectedBoard, setBoard] = useAtom(BoardAtom)
+
+    const setIsOpenSidePanel = useSetAtom(SidePanelAtom)
 
     const [_refetchBoards, setRefetchBoard] = useAtom(RefetchBoardAtom)
 
@@ -32,8 +34,15 @@ export function BoardSide() {
             if (selectedBoard?.id === board.id) return
             setBoard(board)
             setRefetchBoard({ fetch: onAfterSubmit })
+            setIsOpenSidePanel(false)
         },
-        [selectedBoard, setBoard, setRefetchBoard, onAfterSubmit]
+        [
+            selectedBoard,
+            setBoard,
+            setRefetchBoard,
+            onAfterSubmit,
+            setIsOpenSidePanel,
+        ]
     )
 
     const [isRefreshAnimate, setIsRefreshAnimate] = useState(false)

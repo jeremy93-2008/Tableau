@@ -80,7 +80,10 @@ export function Finder() {
     }, [status, result, setResult])
 
     return (
-        <Box ref={portal as MutableRefObject<HTMLDivElement>}>
+        <Box
+            display={{ base: 'none', lg: 'block' }}
+            ref={portal as MutableRefObject<HTMLDivElement>}
+        >
             <SearchInput
                 onClose={onClose}
                 onOpen={onOpen}
