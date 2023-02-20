@@ -20,7 +20,7 @@ export function Side() {
             minW="300px"
             maxW="300px"
             h="calc(100vh - 72px)"
-            zIndex={2}
+            zIndex={10}
             position={{ base: 'absolute', md: 'relative' }}
             left={{ base: isSidePanelOpen ? 0 : '-300px', md: 0 }}
             transition="left .3s ease-in-out"

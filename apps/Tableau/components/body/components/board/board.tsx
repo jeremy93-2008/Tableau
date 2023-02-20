@@ -16,7 +16,13 @@ export function Board() {
     }, [status, selectedBoard, setSelectedBoard])
 
     return (
-        <Flex bg="gray.50" minW="620px" h="calc(100vh - 72px)" flex={4} px={1}>
+        <Flex
+            bg="gray.50"
+            minW={{ base: '0', md: '620px' }}
+            h="calc(100vh - 72px)"
+            flex={4}
+            px={1}
+        >
             {!selectedBoard && <NoBoard />}
             {selectedBoard && <Columns />}
         </Flex>
