@@ -1,40 +1,65 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withAuth } from 'shared-libs'
 import prisma from '../../../lib/prisma'
-import { authOptions } from '../auth/[...nextauth]'
+import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
+import { z } from 'zod'
+import { getBoardIdFromTaskId } from '../../../server/prisma/getBoardIdFromTaskId'
+import { getTaskPermission } from 'shared-libs'
+import { Authenticate } from '../../../server/api/Authenticate'
+
+type ISchemaParams = z.infer<typeof schema>
+
+const schema = z.object({
+    id: z.string().cuid(),
+    name: z.string(),
+    description: z.string(),
+    statusId: z.string().cuid(),
+    elapsedTime: z.number(),
+    estimatedTime: z.number(),
+})
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withAuth({ req, res, authOptions }, async (req, res) => {
-        const id = req.body.id
-        const name = req.body.name
-        const description = req.body.description
-        const statusId = req.body.statusId
-        const elapsedTime = req.body.elapsedTime
-        const estimatedTime = req.body.estimatedTime
-
-        if (req.method !== 'POST')
-            return res.status(405).send('Method not allowed. Use Post instead')
-
-        const result = await prisma.task.update({
-            where: {
+    await (
+        await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
+            req,
+            res,
+            schema,
+            {
+                boardId: await getBoardIdFromTaskId(req.body.id),
+                roleFn: getTaskPermission,
+                action: 'edit',
+            }
+        )
+    )
+        .success(async (params) => {
+            const {
                 id,
-            },
-            data: {
                 name,
                 description,
-                elapsedTime: elapsedTime,
-                estimatedTime: estimatedTime,
-                status: {
-                    connect: {
-                        id: statusId,
+                elapsedTime,
+                estimatedTime,
+                statusId,
+            } = params
+            const result = await prisma.task.update({
+                where: {
+                    id,
+                },
+                data: {
+                    name,
+                    description,
+                    elapsedTime: elapsedTime,
+                    estimatedTime: estimatedTime,
+                    status: {
+                        connect: {
+                            id: statusId,
+                        },
                     },
                 },
-            },
-        })
+            })
 
-        res.json(result)
-    })
+            res.json(result)
+        })
+        .catch((errors) => onCallExceptions(res, errors))
 }

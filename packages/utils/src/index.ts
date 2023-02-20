@@ -1,6 +1,7 @@
 export { getScrollbarStyle } from './getScrollbarStyle'
 export { getAnimation } from './getAnimation'
-export { calculateOverflow } from './calculateOverflow'
+export { calculateVerticalOverflow } from './calculateVerticalOverflow'
+export { calculateHorizontalOverflow } from './calculateHorizontalOverflow'
 export { defaultQueryFn } from './defaultQueryFn'
 export { reloadSession } from './reloadSession'
 export { TASK_LIMIT, BOARD_LIMIT, COLUMN_LIMIT } from './constants/limit'

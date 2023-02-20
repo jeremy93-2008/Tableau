@@ -9,12 +9,13 @@ import { useAtom } from 'jotai'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 
 interface IBoardDeleteProps {
+    isDisabled: boolean
     isVisible: boolean
     singleBoard: IBoardWithAllRelation
 }
 
 export function BoardDelete(props: IBoardDeleteProps) {
-    const { isVisible, singleBoard } = props
+    const { isVisible, isDisabled, singleBoard } = props
 
     const [_selectedBoard, setSelectedBoard] = useAtom(BoardAtom)
     const [refetchBoards] = useAtom(RefetchBoardAtom)
@@ -46,7 +47,10 @@ export function BoardDelete(props: IBoardDeleteProps) {
                 <IconButton
                     onClick={() => onOpen()}
                     colorScheme="teal"
-                    _hover={{ bgColor: 'red.500', color: 'white' }}
+                    isDisabled={isDisabled}
+                    _hover={
+                        isDisabled ? {} : { bgColor: 'red.500', color: 'white' }
+                    }
                     variant={isVisible ? 'solid' : 'ghost'}
                     aria-label="Delete Board"
                     icon={<BsTrashFill />}

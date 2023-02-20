@@ -1,35 +1,59 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withAuth } from 'shared-libs'
 import prisma from '../../../lib/prisma'
-import { IFullStatus } from '../../../types/types'
-import { authOptions } from '../auth/[...nextauth]'
+import { z } from 'zod'
+import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
+import { getBoardIdFromStatusId } from '../../../server/prisma/getBoardIdFromStatusId'
+import { getColumnPermission } from 'shared-libs'
+import { Authenticate } from '../../../server/api/Authenticate'
+
+type ISchemaParams = z.infer<typeof schema>
+
+export const columnMoveValidation = z.object({
+    id: z.string(),
+    order: z.number(),
+})
+
+const schema = z.object({
+    currentColumn: columnMoveValidation,
+    affectedColumn: columnMoveValidation,
+})
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withAuth({ req, res, authOptions }, async (req, res) => {
-        const currentColumn: IFullStatus = req.body.currentColumn
-        const affectedColumn: IFullStatus = req.body.affectedColumn
+    await (
+        await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
+            req,
+            res,
+            schema,
+            {
+                boardId: await getBoardIdFromStatusId(
+                    req.body.currentColumn.id
+                ),
+                roleFn: getColumnPermission,
+                action: 'move',
+            }
+        )
+    )
+        .success(async (params) => {
+            const { currentColumn, affectedColumn } = params
+            const result = prisma.$transaction([
+                prisma.statusBoard.update({
+                    where: { id: affectedColumn.id },
+                    data: {
+                        order: currentColumn.order,
+                    },
+                }),
+                prisma.statusBoard.update({
+                    where: { id: currentColumn.id },
+                    data: {
+                        order: affectedColumn.order,
+                    },
+                }),
+            ])
 
-        if (req.method !== 'POST')
-            return res.status(405).send('Method not allowed. Use Post instead')
-
-        const result = prisma.$transaction([
-            prisma.statusBoard.update({
-                where: { id: affectedColumn.id },
-                data: {
-                    order: currentColumn.order,
-                },
-            }),
-            prisma.statusBoard.update({
-                where: { id: currentColumn.id },
-                data: {
-                    order: affectedColumn.order,
-                },
-            }),
-        ])
-
-        res.json(result)
-    })
+            res.json(result)
+        })
+        .catch((errors) => onCallExceptions(res, errors))
 }

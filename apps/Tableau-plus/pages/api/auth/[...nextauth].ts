@@ -3,6 +3,7 @@ import Auth0Provider from 'next-auth/providers/auth0'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import prisma from '../../../lib/prisma'
 import { randomBytes, randomUUID } from 'crypto'
+import { linkNewVerifiedUserAccount } from '../../../server/services/auth/linkNewVerifiedUserAccount'
 
 export const authOptions: AuthOptions = {
     adapter: PrismaAdapter(prisma),
@@ -13,6 +14,9 @@ export const authOptions: AuthOptions = {
             issuer: process.env.AUTH0_ISSUER,
         }),
     ],
+    callbacks: {
+        signIn: linkNewVerifiedUserAccount,
+    },
     session: {
         // Choose how you want to save the user session.
         // The default is `"jwt"`, an encrypted JWT (JWE) stored in the session cookie.

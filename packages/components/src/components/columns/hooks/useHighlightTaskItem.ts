@@ -1,5 +1,8 @@
 import React, { useCallback, useEffect } from 'react'
-import { calculateOverflow } from 'shared-utils'
+import {
+    calculateHorizontalOverflow,
+    calculateVerticalOverflow,
+} from 'shared-utils'
 import { useAtom } from 'jotai'
 import { HighlightTaskAtom } from 'shared-atoms'
 import { Task } from '.prisma/client'
@@ -28,7 +31,7 @@ export function useHighlightTaskItem(
         // We reset the value of the scroll to make the calculation of the next scroll easier
         columnTaskContainerList.scrollTo({ top: 0 })
 
-        const { scrollTop, scrollBottom } = calculateOverflow(
+        const { scrollTop, scrollBottom } = calculateVerticalOverflow(
             taskContainer.current?.parentElement!,
             columnTaskContainerList
         )
@@ -38,6 +41,18 @@ export function useHighlightTaskItem(
         if (scrollTop > 0) {
             columnTaskContainerList.scrollTo({ top: scrollBottom })
         }
+
+        const columnsContainer = document.getElementById('columns-container')
+
+        columnsContainer!.scrollTo({ left: 0 })
+
+        const { scrollLeft } = calculateHorizontalOverflow(
+            taskContainer.current?.parentElement!,
+            columnsContainer!
+        )
+
+        if (scrollLeft > window.innerWidth - 200)
+            columnsContainer!.scrollTo({ left: scrollLeft, behavior: 'smooth' })
 
         // We wait until the Scroll make is job, and after we hook the click to disable the highlight in whatever click that the user do
         window.requestIdleCallback(() => {

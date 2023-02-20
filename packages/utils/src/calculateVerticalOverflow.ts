@@ -1,4 +1,4 @@
-export function calculateOverflow(
+export function calculateVerticalOverflow(
     element: HTMLElement,
     scrollParent: HTMLElement
 ) {

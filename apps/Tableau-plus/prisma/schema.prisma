@@ -27,14 +27,15 @@ model Task {
 }
 
 model Board {
-  id            String        @id @default(cuid())
-  name          String
-  backgroundUrl String
-  description   String?
-  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        String
-  Task          Task[]
-  Status        StatusBoard[]
+  id               String             @id @default(cuid())
+  name             String
+  backgroundUrl    String
+  description      String?
+  user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           String
+  Task             Task[]
+  Status           StatusBoard[]
+  BoardUserSharing BoardUserSharing[]
 }
 
 model StatusBoard {
@@ -52,6 +53,18 @@ model Status {
   name        String        @unique
   isDefault   Boolean?
   statusBoard StatusBoard[]
+}
+
+model BoardUserSharing {
+  id             String  @id @default(cuid())
+  boardId        String
+  board          Board   @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  canEditContent Boolean // Can you edit Tasks
+  canEditSchema  Boolean // Can you edit Columns and Board
+
+  @@unique([boardId, userId])
 }
 
 model Account {
@@ -82,15 +95,16 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  Task          Task[]
-  Board         Board[]
+  id               String             @id @default(cuid())
+  name             String?
+  email            String?            @unique
+  emailVerified    DateTime?
+  image            String?
+  accounts         Account[]
+  sessions         Session[]
+  Task             Task[]
+  Board            Board[]
+  BoardUserSharing BoardUserSharing[]
 }
 
 model VerificationToken {

@@ -1,12 +1,14 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useAtom } from 'jotai'
-import { Flex, Text } from '@chakra-ui/react'
+import { Flex, IconButton, Text, Tooltip } from '@chakra-ui/react'
 import { BoardList } from './boardList'
 import { BoardNew } from './boardNew'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 import { useTableauQuery } from 'shared-hooks'
+import { BiRefresh } from 'react-icons/bi'
+import { getAnimation } from 'shared-utils'
 
 export function BoardSide() {
     const { data: session } = useSession()
@@ -18,7 +20,7 @@ export function BoardSide() {
         IBoardWithAllRelation[]
     >(['api/board/list'], {
         enabled: !!session,
-        refetchOnWindowFocus: false,
+        refetchInterval: 6000,
     })
 
     const onAfterSubmit = useCallback(() => {
@@ -33,6 +35,17 @@ export function BoardSide() {
         },
         [selectedBoard, setBoard, setRefetchBoard, onAfterSubmit]
     )
+
+    const [isRefreshAnimate, setIsRefreshAnimate] = useState(false)
+    const { spiningAnimation } = getAnimation()
+
+    const onRefreshClick = useCallback(() => {
+        setIsRefreshAnimate(true)
+        refetch().then()
+        window.setTimeout(() => {
+            setIsRefreshAnimate(false)
+        }, 500)
+    }, [setIsRefreshAnimate])
 
     useEffect(() => {
         if (!data) return
@@ -58,10 +71,23 @@ export function BoardSide() {
                     </Text>
                 </Flex>
                 <Flex>
+                    <Tooltip label="Refresh Boards">
+                        <IconButton
+                            onClick={onRefreshClick}
+                            aria-label="Refresh Boards Data"
+                            isDisabled={!session}
+                            animation={isRefreshAnimate ? spiningAnimation : ''}
+                            pointerEvents={isRefreshAnimate ? 'none' : 'auto'}
+                            icon={<BiRefresh color="#666" size="22px" />}
+                        />
+                    </Tooltip>
+
                     <BoardNew boards={data} onAfterSubmit={onAfterSubmit} />
                 </Flex>
             </Flex>
-            <BoardList listOfBoards={data} onItemClick={onItemClick} />
+            {session && (
+                <BoardList listOfBoards={data} onItemClick={onItemClick} />
+            )}
         </Flex>
     )
 }

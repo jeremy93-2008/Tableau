@@ -25,12 +25,13 @@ import { RefetchBoardAtom } from 'shared-atoms'
 import { useTableauMutation } from 'shared-hooks'
 
 interface IBoardEditProps {
+    isDisabled: boolean
     isVisible: boolean
     singleBoard: IBoardWithAllRelation
 }
 
 export function BoardEdit(props: IBoardEditProps) {
-    const { isVisible, singleBoard } = props
+    const { isVisible, isDisabled, singleBoard } = props
     const [refetchBoard] = useAtom(RefetchBoardAtom)
     const { data: session } = useSession()
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -69,6 +70,7 @@ export function BoardEdit(props: IBoardEditProps) {
                             <IconButton
                                 onClick={(evt) => evt.stopPropagation()}
                                 colorScheme="teal"
+                                isDisabled={isDisabled}
                                 variant={isVisible ? 'solid' : 'ghost'}
                                 aria-label="Edit Board"
                                 icon={<BsFillPencilFill />}

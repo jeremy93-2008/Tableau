@@ -1,42 +1,60 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withAuth } from 'shared-libs'
 import prisma from '../../../lib/prisma'
-import { authOptions } from '../auth/[...nextauth]'
+import { z } from 'zod'
+import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
+import { getBoardIdFromStatusId } from '../../../server/prisma/getBoardIdFromStatusId'
+import { getColumnPermission } from 'shared-libs'
+import { Authenticate } from '../../../server/api/Authenticate'
+
+type ISchemaParams = z.infer<typeof schema>
+
+const schema = z.object({
+    id: z.string(),
+    statusName: z.string(),
+    oldStatusName: z.string(),
+})
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withAuth({ req, res, authOptions }, async (req, res) => {
-        const id = req.body.id
-        const name = req.body.statusName
-        const oldName = req.body.oldStatusName
-
-        if (req.method !== 'POST')
-            return res.status(405).send('Method not allowed. Use Post instead')
-
-        const result = await prisma.statusBoard.update({
-            where: {
-                id,
-            },
-            data: {
-                status: {
-                    connectOrCreate: {
-                        where: { name },
-                        create: { name, isDefault: false },
+    await (
+        await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
+            req,
+            res,
+            schema,
+            {
+                boardId: await getBoardIdFromStatusId(req.body.id),
+                roleFn: getColumnPermission,
+                action: 'edit',
+            }
+        )
+    )
+        .success(async (params) => {
+            const { id, statusName, oldStatusName } = params
+            const result = await prisma.statusBoard.update({
+                where: {
+                    id,
+                },
+                data: {
+                    status: {
+                        connectOrCreate: {
+                            where: { name: statusName },
+                            create: { name: statusName, isDefault: false },
+                        },
                     },
                 },
-            },
+            })
+
+            //We check if status row based on statusName can be deleted
+            if (
+                (await prisma.statusBoard.count({
+                    where: { status: { name: oldStatusName } },
+                })) === 0
+            )
+                await prisma.status.delete({ where: { name: oldStatusName } })
+
+            res.json(result)
         })
-
-        //We check if status row based on statusName can be deleted
-        if (
-            (await prisma.statusBoard.count({
-                where: { status: { name: oldName } },
-            })) === 0
-        )
-            await prisma.status.delete({ where: { name: oldName } })
-
-        res.json(result)
-    })
+        .catch((errors) => onCallExceptions(res, errors))
 }

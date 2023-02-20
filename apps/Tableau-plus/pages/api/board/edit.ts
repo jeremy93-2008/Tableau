@@ -1,30 +1,47 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
-import { withAuth } from 'shared-libs'
-import { authOptions } from '../auth/[...nextauth]'
+import { z } from 'zod'
+import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
+import { getBoardPermission } from 'shared-libs'
+import { Authenticate } from '../../../server/api/Authenticate'
+
+type ISchemaParams = z.infer<typeof schema>
+
+const schema = z.object({
+    id: z.string(),
+    name: z.string(),
+    description: z.string(),
+    backgroundUrl: z.string(),
+})
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withAuth({ req, res, authOptions }, async (req, res) => {
-        const id = req.body.id
-        const name = req.body.name
-        const description = req.body.description
-        const backgroundUrl = req.body.backgroundUrl
+    await (
+        await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
+            req,
+            res,
+            schema,
+            {
+                boardId: req.body.id,
+                roleFn: getBoardPermission,
+                action: 'edit',
+            }
+        )
+    )
+        .success(async (params) => {
+            const { id, name, description, backgroundUrl } = params
+            const result = await prisma.board.update({
+                where: { id },
+                data: {
+                    name,
+                    description,
+                    backgroundUrl,
+                },
+            })
 
-        if (req.method !== 'POST')
-            return res.status(405).send('Method not allowed. Use Post instead')
-
-        const result = await prisma.board.update({
-            where: { id },
-            data: {
-                name,
-                description,
-                backgroundUrl,
-            },
+            res.json(result)
         })
-
-        res.json(result)
-    })
+        .catch((errors) => onCallExceptions(res, errors))
 }

@@ -1,47 +1,54 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
-import { COLUMN_LIMIT } from 'shared-utils'
-import { authOptions } from '../auth/[...nextauth]'
-import { withAuth } from 'shared-libs'
+import { z } from 'zod'
+import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
+import { getColumnPermission } from 'shared-libs'
+import { Authenticate } from '../../../server/api/Authenticate'
+
+type ISchemaParams = z.infer<typeof schema>
+
+const schema = z.object({
+    id: z.string(),
+    statusName: z.string(),
+    isDefault: z.boolean(),
+    order: z.number(),
+})
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withAuth({ req, res, authOptions }, async (req, res) => {
-        const id = req.body.id
-        const statusName = req.body.statusName
-        const isDefault = req.body.isDefault
-        const order = req.body.order
-
-        if (req.method !== 'POST')
-            return res.status(405).send('Method not allowed. Use Post instead')
-
-        if (
-            (await prisma.statusBoard.count({ where: { boardId: id } })) >
-            COLUMN_LIMIT
+    await (
+        await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
+            req,
+            res,
+            schema,
+            {
+                boardId: req.body.id,
+                roleFn: getColumnPermission,
+                action: 'add',
+            }
         )
-            return res
-                .status(500)
-                .send(
-                    'Column limit reached. You have reached the maximum number of columns (20). Please delete some existing columns to create a new one.'
-                )
+    )
+        .success(async (params) => {
+            const { id, statusName, order, isDefault } = params
 
-        const result = await prisma.statusBoard.create({
-            data: {
-                order,
-                status: {
-                    connectOrCreate: {
-                        where: { name: statusName },
-                        create: { name: statusName, isDefault },
+            const result = await prisma.statusBoard.create({
+                data: {
+                    order,
+                    status: {
+                        connectOrCreate: {
+                            where: { name: statusName },
+                            create: { name: statusName, isDefault },
+                        },
+                    },
+                    board: {
+                        connect: { id },
                     },
                 },
-                board: {
-                    connect: { id },
-                },
-            },
-        })
+            })
 
-        res.json(result)
-    })
+            res.json(result)
+        })
+        .catch((errors) => onCallExceptions(res, errors))
 }

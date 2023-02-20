@@ -1,30 +1,46 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { withAuth } from 'shared-libs'
 import prisma from '../../../lib/prisma'
-import { IFullStatus } from '../../../types/types'
-import { authOptions } from '../auth/[...nextauth]'
+import { z } from 'zod'
+import { columnMoveValidation } from '../column/move'
+import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
+import { getBoardIdFromStatusId } from '../../../server/prisma/getBoardIdFromStatusId'
+import { getColumnPermission } from 'shared-libs'
+import { Authenticate } from '../../../server/api/Authenticate'
+
+type ISchemaParams = z.infer<typeof schema>
+
+const schema = z.array(columnMoveValidation)
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withAuth({ req, res, authOptions }, async (req, res) => {
-        const orderedColumns: IFullStatus[] = req.body
-
-        if (req.method !== 'POST')
-            return res.status(405).send('Method not allowed. Use Post instead')
-
-        const result = await prisma.$transaction(
-            orderedColumns.map((column) => {
-                return prisma.statusBoard.update({
-                    where: { id: column.id },
-                    data: {
-                        order: column.order,
-                    },
-                })
-            })
+    await (
+        await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
+            req,
+            res,
+            schema,
+            {
+                boardId: await getBoardIdFromStatusId(req.body[0].id),
+                roleFn: getColumnPermission,
+                action: 'move',
+            }
         )
+    )
+        .success(async (params) => {
+            const orderedColumns = params
+            const result = await prisma.$transaction(
+                orderedColumns.map((column) => {
+                    return prisma.statusBoard.update({
+                        where: { id: column.id },
+                        data: {
+                            order: column.order,
+                        },
+                    })
+                })
+            )
 
-        res.json(result)
-    })
+            res.json(result)
+        })
+        .catch((errors) => onCallExceptions(res, errors))
 }

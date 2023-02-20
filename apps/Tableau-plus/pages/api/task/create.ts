@@ -1,66 +1,66 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getSession } from 'next-auth/react'
 import prisma from '../../../lib/prisma'
-import { BOARD_LIMIT, TASK_LIMIT } from 'shared-utils'
 import { authOptions } from '../auth/[...nextauth]'
-import { withAuth } from 'shared-libs'
+import { isAuthenticated } from '../../../server/services/auth/isAuthenticated'
+import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
+import { z } from 'zod'
+import { getTaskPermission } from 'shared-libs'
+import { Authenticate } from '../../../server/api/Authenticate'
+
+type ISchemaParams = z.infer<typeof schema>
+
+const schema = z.object({
+    name: z.string(),
+    description: z.string(),
+    boardId: z.string().cuid(),
+    statusId: z.string().cuid(),
+})
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await withAuth({ req, res, authOptions }, async (req, res) => {
-        const name = req.body.name
-        const description = req.body.description
-        const boardId = req.body.boardId
-        const statusId = req.body.statusId
-
-        const session = await getSession({ req })
-        const email = session?.user?.email ?? ''
-
-        if (req.method !== 'POST')
-            return res.status(405).send('Method not allowed. Use Post instead')
-
-        if (!session)
-            return res
-                .status(500)
-                .send("The user are not logged in or doesn't exist")
-
-        if (
-            (await prisma.task.count({
-                where: { user: { email }, boardId, statusId },
-            })) > TASK_LIMIT
+    await (
+        await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
+            req,
+            res,
+            schema,
+            {
+                boardId: req.body.boardId,
+                roleFn: getTaskPermission,
+                action: 'add',
+            }
         )
-            return res
-                .status(500)
-                .send(
-                    'Task limit reached. You have reached the maximum number of Task (50). Please delete some existing task to create a new one.'
-                )
+    )
+        .success(async (params) => {
+            const { boardId, statusId, description, name } = params
+            const session = await isAuthenticated({ req, res, authOptions })
+            if (!session) return
+            const result = await prisma.task.create({
+                data: {
+                    name,
+                    description,
+                    elapsedTime: 0,
+                    estimatedTime: 0,
+                    board: {
+                        connect: {
+                            id: boardId,
+                        },
+                    },
+                    status: {
+                        connect: {
+                            id: statusId,
+                        },
+                    },
+                    user: {
+                        connect: {
+                            email: session.user!.email as string,
+                        },
+                    },
+                },
+            })
 
-        const result = await prisma.task.create({
-            data: {
-                name,
-                description,
-                elapsedTime: 0,
-                estimatedTime: 0,
-                board: {
-                    connect: {
-                        id: boardId,
-                    },
-                },
-                status: {
-                    connect: {
-                        id: statusId,
-                    },
-                },
-                user: {
-                    connect: {
-                        email,
-                    },
-                },
-            },
+            res.json(result)
         })
-
-        res.json(result)
-    })
+        .catch((errors) => onCallExceptions(res, errors))
 }
