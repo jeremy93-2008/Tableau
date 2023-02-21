@@ -136,7 +136,7 @@ export function ColumnTask(props: IColumnTaskProps) {
         <Container
             ref={drop}
             role={'Dustbin'}
-            bgColor={newColumn ? '#38B2AC99' : bg.primary}
+            bgColor={newColumn ? '#38B2AC99' : bg.columns}
             color="gray.100"
             borderRadius={10}
             flexDirection="column"
