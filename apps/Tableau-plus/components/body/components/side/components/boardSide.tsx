@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { useAtom, useSetAtom } from 'jotai'
+import { useAtom } from 'jotai'
 import { Flex, IconButton, Text, Tooltip } from '@chakra-ui/react'
 import { BoardList } from './boardList'
 import { BoardNew } from './boardNew'
@@ -14,7 +14,7 @@ export function BoardSide() {
     const { data: session } = useSession()
     const [selectedBoard, setBoard] = useAtom(BoardAtom)
 
-    const setIsOpenSidePanel = useSetAtom(SidePanelAtom)
+    const [isOpenSidePanel, setIsOpenSidePanel] = useAtom(SidePanelAtom)
 
     const [_refetchBoards, setRefetchBoard] = useAtom(RefetchBoardAtom)
 
@@ -54,7 +54,7 @@ export function BoardSide() {
         window.setTimeout(() => {
             setIsRefreshAnimate(false)
         }, 500)
-    }, [setIsRefreshAnimate])
+    }, [refetch])
 
     useEffect(() => {
         if (!data) return
@@ -64,6 +64,24 @@ export function BoardSide() {
         if (!updatedSelectedBoard) return
         setBoard(updatedSelectedBoard)
     }, [selectedBoard, data, setBoard])
+
+    useEffect(() => {
+        const handlePortalClick = (evt: MouseEvent) => {
+            if (
+                document
+                    .getElementById('boardside-container')!
+                    .contains(evt.target as Node)
+            )
+                return
+            setIsOpenSidePanel(false)
+        }
+        if (isOpenSidePanel) {
+            window.requestIdleCallback(() => {
+                window.addEventListener('click', handlePortalClick)
+            })
+        }
+        return () => window.removeEventListener('click', handlePortalClick)
+    }, [isOpenSidePanel, setIsOpenSidePanel])
 
     return (
         <Flex flexDirection="column" width="100%">

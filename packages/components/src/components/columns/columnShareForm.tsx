@@ -166,7 +166,10 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
                                     chakraStyles={{
                                         container: (provided) => ({
                                             ...provided,
-                                            width: '180px',
+                                            width: {
+                                                base: '100px',
+                                                lg: '180px',
+                                            },
                                         }),
                                         control: (provided) => ({
                                             ...provided,

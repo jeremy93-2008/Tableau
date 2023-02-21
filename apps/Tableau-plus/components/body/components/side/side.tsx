@@ -9,6 +9,7 @@ export function Side() {
     const isSidePanelOpen = useAtomValue(SidePanelAtom)
     return (
         <Flex
+            id="boardside-container"
             flex={1}
             bg="gray.100"
             color="gray.600"

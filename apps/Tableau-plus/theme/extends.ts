@@ -5,6 +5,7 @@ const theme = extendTheme({
         heading: `'Silom','Open Sans', sans-serif`,
         body: `'Roboto', sans-serif`,
     },
+    config: { initialColorMode: 'light', useSystemColorMode: true },
 })
 
 export default theme
