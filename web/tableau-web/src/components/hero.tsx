@@ -3,10 +3,10 @@ import { ScreenshotDark } from './assets/screenshot-dark'
 
 export function Hero() {
     return (
-        <div className="flex justify-between overflow-hidden h-[50vh] bg-gradient-to-tr from-[#319795] to-[#38B2AC] dark:from-teal-700 dark:to-teal-800">
+        <div className="flex justify-between overflow-hidden h-[50vh] min-h-[280px] bg-gradient-to-tr from-[#319795] to-[#38B2AC] dark:from-teal-700 dark:to-teal-800">
             <div className="flex flex-1 items-center justify-center">
-                <div className="flex flex-col mt-[-45px]">
-                    <div className="text-white text-5xl font-bold font-[Montserrat] w-[75vw] lg:w-[30vw]">
+                <div className="flex flex-col mt-10 lg:mt-0">
+                    <div className="text-white text-4xl xl:text-5xl font-bold font-[Montserrat] w-[75vw] lg:w-[30vw]">
                         <div className="flex">
                             Manage your tasks easily and collaboratively
                         </div>
@@ -24,7 +24,7 @@ export function Hero() {
                     </div>
                 </div>
             </div>
-            <div className="hidden mt-[-85px] lg:flex">
+            <div className="hidden mt-[-15px] lg:flex">
                 <Screenshot className="block dark:hidden" />
                 <ScreenshotDark className="hidden dark:block" />
             </div>

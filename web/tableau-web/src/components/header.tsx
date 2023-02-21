@@ -2,7 +2,7 @@ import { Icon } from './assets/icon'
 
 export function Header() {
     return (
-        <div className="h-[68px] flex dark:bg-teal-900 shadow-sm shadow-teal-600 justify-between items-center px-4 z-10">
+        <div className="relative h-[68px] flex dark:bg-teal-900 shadow-sm shadow-teal-600 justify-between items-center px-4 z-10">
             <div className="flex items-center">
                 <Icon />
                 <div className="ml-2 text-[#2C7A7B] dark:text-white text-xl font-bold">

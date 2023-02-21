@@ -8,7 +8,7 @@ export function Features() {
         <div
             id="features"
             className="flex flex-col justify-center items-center px-3 py-8 gap-6
-            lg:gap-0 lg:py-0 lg:h-[432px] lg:flex-row bg-gradient-to-t from-white from-[#E6F5F5] dark:from-teal-900 dark:to-teal-800"
+            lg:gap-0 lg:py-0 lg:h-[432px] lg:flex-row bg-gradient-to-t from-[#E6F5F5] to-white dark:from-teal-900 dark:to-teal-800"
         >
             <div className="flex flex-col items-center w-[320px] px-3">
                 <GridIcon className="dark:text-white" />
