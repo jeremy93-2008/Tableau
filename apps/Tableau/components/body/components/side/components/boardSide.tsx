@@ -83,7 +83,7 @@ export function BoardSide() {
             setIsOpenSidePanel(false)
         }
         if (isOpenSidePanel) {
-            window.requestIdleCallback(() => {
+            window.requestAnimationFrame(() => {
                 window.addEventListener('click', handlePortalClick)
             })
         }

@@ -22,7 +22,7 @@ export function useHighlightFinderTask(onAfterHighlight: (task: Task) => void) {
             if (!data) return
             setSelectedBoard(data.find((board) => board.id === task.boardId)!)
             // We wait until React finish to send us to the new selected board
-            window.requestIdleCallback(() => {
+            window.requestAnimationFrame(() => {
                 setHighlightTask(task)
                 if (onAfterHighlight) onAfterHighlight(task)
             })
