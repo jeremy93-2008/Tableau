@@ -1,4 +1,6 @@
-export function GridIcon() {
+import type * as React from 'react'
+
+export function GridIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
         <svg
             width="59"
@@ -6,6 +8,7 @@ export function GridIcon() {
             viewBox="0 0 59 59"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            {...props}
         >
             <path d="M0 0H58.51V58.51H0V0Z" fill="white" fill-opacity="0.01" />
             <path

@@ -1,14 +1,9 @@
 import { Screenshot } from './assets/screenshot'
+import { ScreenshotDark } from './assets/screenshot-dark'
 
 export function Hero() {
     return (
-        <div
-            className="flex justify-between overflow-hidden h-[50vh]"
-            style={{
-                background:
-                    'linear-gradient(258.92deg, #319795 -100.4%, #38B2AC 105.71%)',
-            }}
-        >
+        <div className="flex justify-between overflow-hidden h-[50vh] bg-gradient-to-tr from-[#319795] to-[#38B2AC] dark:from-teal-700 dark:to-teal-800">
             <div className="flex flex-1 items-center justify-center">
                 <div className="flex flex-col mt-[-45px]">
                     <div className="text-white text-5xl font-bold font-[Montserrat] w-[75vw] lg:w-[30vw]">
@@ -20,7 +15,8 @@ export function Hero() {
                         <a
                             href="https://tableau-jeremy93-2008.vercel.app/"
                             target="_blank"
-                            className="w-full lg:w-[25vw] bg-white text-[#38B2AC] text-center text-lg font-semibold cursor-pointer rounded-lg shadow-lg px-14 py-3 hover:scale-110 transition-transform"
+                            className="w-full lg:w-[25vw] bg-white text-[#38B2AC] dark:bg-teal-900 dark:text-gray-100 text-center text-lg font-semibold cursor-pointer
+                            rounded-lg shadow-lg px-14 py-3 hover:scale-110 transition-transform"
                             rel="noreferrer"
                         >
                             Go To Tableau
@@ -29,9 +25,8 @@ export function Hero() {
                 </div>
             </div>
             <div className="hidden mt-[-85px] lg:flex">
-                <Screenshot
-                    style={{ width: '55vw', minWidth: 'fit-content' }}
-                />
+                <Screenshot className="block dark:hidden" />
+                <ScreenshotDark className="hidden dark:block" />
             </div>
         </div>
     )
