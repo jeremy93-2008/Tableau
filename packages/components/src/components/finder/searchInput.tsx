@@ -16,6 +16,7 @@ import {
 import { IFinderSearchResult, IFinderSearchValues } from './index'
 import { UseMutateAsyncFunction } from '@tanstack/react-query'
 import { AxiosResponse } from 'axios'
+import { useThemeMode } from 'shared-hooks'
 
 interface ISearchInputProps {
     onClose: () => void
@@ -35,6 +36,8 @@ export function SearchInput(props: ISearchInputProps) {
     const { onClose, onOpen, mutateAsync, setResult, isLoading, isSuccess } =
         props
     const [searchText, setSearchText] = useState('')
+
+    const { bg, text } = useThemeMode()
 
     const handleClearText = useCallback(() => {
         setSearchText('')
@@ -78,12 +81,12 @@ export function SearchInput(props: ISearchInputProps) {
     return (
         <InputGroup>
             <InputLeftElement>
-                <SearchIcon color="gray.500" />
+                <SearchIcon color={text.search} />
             </InputLeftElement>
             <Input
                 variant="filled"
                 fontWeight="medium"
-                color="gray.600"
+                color={text.search}
                 width="25vw"
                 minWidth="300px"
                 _focusVisible={{ bgColor: 'white' }}
@@ -98,7 +101,7 @@ export function SearchInput(props: ISearchInputProps) {
                     <CloseIcon
                         onClick={handleClearText}
                         boxSize={3}
-                        color="gray.500"
+                        color={text.primary}
                         cursor="pointer"
                     />
                 </InputRightElement>

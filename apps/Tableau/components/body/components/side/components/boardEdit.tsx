@@ -22,7 +22,7 @@ import { BsFillPencilFill } from 'react-icons/bs'
 import { BoardEditForm, IBoardEditFormikValues } from './boardEditForm'
 import { useAtom } from 'jotai'
 import { RefetchBoardAtom } from 'shared-atoms'
-import { useTableauMutation } from 'shared-hooks'
+import { useTableauMutation, useThemeMode } from 'shared-hooks'
 
 interface IBoardEditProps {
     isDisabled: boolean
@@ -35,6 +35,8 @@ export function BoardEdit(props: IBoardEditProps) {
     const [refetchBoard] = useAtom(RefetchBoardAtom)
     const { data: session } = useSession()
     const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const { text, bg } = useThemeMode()
 
     const { mutateAsync } = useTableauMutation(
         (values: IBoardEditFormikValues) => {
@@ -79,14 +81,14 @@ export function BoardEdit(props: IBoardEditProps) {
                         </PopoverTrigger>
                     </Box>
                 </Tooltip>
-                <PopoverContent bg="gray.50" p={5}>
-                    <PopoverHeader color="gray.800" fontWeight="semibold">
+                <PopoverContent bg={bg.modal} p={5}>
+                    <PopoverHeader color={text.primary} fontWeight="semibold">
                         Edit current Board
                     </PopoverHeader>
                     <PopoverArrow />
                     <PopoverCloseButton />
                     <PopoverBody>
-                        <Stack color="gray.800" spacing={4}>
+                        <Stack color={text.primary} spacing={4}>
                             <BoardEditForm
                                 board={singleBoard}
                                 onClose={onClose}

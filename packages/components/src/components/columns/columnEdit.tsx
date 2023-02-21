@@ -19,7 +19,7 @@ import {
 import { useAtom } from 'jotai'
 import { FormikHelpers } from 'formik'
 import { RefetchBoardAtom } from 'shared-atoms'
-import { useTableauMutation } from 'shared-hooks'
+import { useTableauMutation, useThemeMode } from 'shared-hooks'
 import { ColumnEditForm, IColumnEditFormikValues } from './columnEditForm'
 import { BsFillPencilFill } from 'react-icons/bs'
 import { DeleteModal } from './modal/deleteModal'
@@ -40,6 +40,8 @@ export function ColumnEdit(props: IColumnEditProps) {
         onOpen: onOpenColumnDelete,
         onClose: onCloseColumnDelete,
     } = useDisclosure()
+
+    const { bg, text } = useThemeMode()
 
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
@@ -115,7 +117,7 @@ export function ColumnEdit(props: IColumnEditProps) {
                         </PopoverTrigger>
                     </Box>
                 </Tooltip>
-                <PopoverContent bg="gray.50" p={5} color="gray.800">
+                <PopoverContent bg={bg.primary} p={5} color={text.primary}>
                     <PopoverHeader fontWeight="semibold">
                         Edit Status Column
                     </PopoverHeader>

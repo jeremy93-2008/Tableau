@@ -19,7 +19,7 @@ import { AddIcon } from '@chakra-ui/icons'
 import { FormikHelpers } from 'formik'
 import { ColumnNewForm, IColumnNewFormikValues } from './columnNewForm'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
-import { useTableauMutation } from 'shared-hooks'
+import { useTableauMutation, useThemeMode } from 'shared-hooks'
 import { COLUMN_LIMIT } from 'shared-utils'
 import { noop } from '@chakra-ui/utils'
 
@@ -34,6 +34,8 @@ export function ColumnNew(props: IColumnNewProps) {
     const { isOpen, isDisabled, onOpen, onClose } = props
     const [selectedBoard] = useAtom(BoardAtom)
     const [refetchBoards] = useAtom(RefetchBoardAtom)
+
+    const { bg, text } = useThemeMode()
 
     const { mutateAsync } = useTableauMutation(
         (values: IColumnNewFormikValues) => {
@@ -83,7 +85,7 @@ export function ColumnNew(props: IColumnNewProps) {
                     </PopoverTrigger>
                 </Box>
             </Tooltip>
-            <PopoverContent bg="gray.50" p={5} color="gray.800">
+            <PopoverContent bg={bg.primary} p={5} color={text.primary}>
                 <PopoverHeader fontWeight="semibold">
                     Add new Status Column
                 </PopoverHeader>

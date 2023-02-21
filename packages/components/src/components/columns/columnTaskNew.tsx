@@ -20,7 +20,7 @@ import { ColumnTaskNewForm, ITaskNewFormikValues } from './columnTaskNewForm'
 import { FormikHelpers } from 'formik'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 import { IFullStatus } from '../../types/types'
-import { useTableauMutation } from 'shared-hooks'
+import { useTableauMutation, useThemeMode } from 'shared-hooks'
 import { useTaskPermission } from './hooks/useTaskPermission'
 
 interface IColumnTaskNewProps {
@@ -33,6 +33,8 @@ export function ColumnTaskNew(props: IColumnTaskNewProps) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [selectedBoard] = useAtom(BoardAtom)
     const [refetchBoards] = useAtom(RefetchBoardAtom)
+
+    const { bg, text } = useThemeMode()
 
     const taskPermission = useTaskPermission()
 
@@ -86,7 +88,7 @@ export function ColumnTaskNew(props: IColumnTaskNewProps) {
                     </Tooltip>
                 </Box>
             </PopoverTrigger>
-            <PopoverContent bg="gray.50" p={5} color="gray.800">
+            <PopoverContent bg={bg.primary} p={5} color={text.primary}>
                 <PopoverHeader fontWeight="semibold">
                     Add new Task
                 </PopoverHeader>

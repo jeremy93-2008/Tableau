@@ -19,7 +19,7 @@ import { ITaskEditFormikValues } from './taskEdit'
 import { RefetchBoardAtom } from 'shared-atoms'
 import { IBoardWithAllRelation, IFullStatus } from '../../types/types'
 import { ColumnTaskMove } from './columnTaskMove'
-import { useTableauMutation } from 'shared-hooks'
+import { useTableauMutation, useThemeMode } from 'shared-hooks'
 import { ColumnEdit } from './columnEdit'
 import { getScrollbarStyle } from 'shared-utils'
 import { useColumnPermission } from './hooks/useColumnPermission'
@@ -34,6 +34,8 @@ export function ColumnTask(props: IColumnTaskProps) {
     const { selectedBoard, statusBoard, newColumn } = props
     const refColumnStack = useRef<HTMLDivElement>()
     const [refetchBoards] = useAtom(RefetchBoardAtom)
+
+    const { bg } = useThemeMode()
 
     const userPermissionForColumn = useColumnPermission()
 
@@ -134,7 +136,7 @@ export function ColumnTask(props: IColumnTaskProps) {
         <Container
             ref={drop}
             role={'Dustbin'}
-            bgColor={newColumn ? '#38B2AC99' : 'teal.400'}
+            bgColor={newColumn ? '#38B2AC99' : bg.primary}
             color="gray.100"
             borderRadius={10}
             flexDirection="column"

@@ -5,9 +5,12 @@ import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
 import { BsFillPeopleFill } from 'react-icons/bs'
 import { ColumnShare } from './columnShare'
+import { useThemeMode } from 'shared-hooks'
 
 export function Columns() {
     const [selectedBoard] = useAtom(BoardAtom)
+
+    const { text } = useThemeMode()
 
     const onHScroll = useCallback((event: WheelEvent<HTMLDivElement>) => {
         const container = document.getElementById('columns-container')
@@ -32,7 +35,7 @@ export function Columns() {
                 pt={3}
                 height="32px"
             >
-                <Text color="gray.600" fontWeight="medium" fontSize="18px">
+                <Text color={text.primary} fontWeight="medium" fontSize="18px">
                     {selectedBoard!.name}
                 </Text>
                 <Flex alignItems="center">

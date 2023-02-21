@@ -1,20 +1,22 @@
 import React from 'react'
-import { Flex } from '@chakra-ui/react'
+import { Flex, useColorMode } from '@chakra-ui/react'
 import { BoardHead } from './components/boardHead'
 import { BoardSide } from './components/boardSide'
 import { useAtomValue } from 'jotai'
 import { SidePanelAtom } from 'shared-atoms'
+import { useThemeMode } from 'shared-hooks'
 
 export function Side() {
+    const { bg, text } = useThemeMode()
     const isSidePanelOpen = useAtomValue(SidePanelAtom)
     return (
         <Flex
             id="boardside-container"
             flex={1}
-            bg="gray.100"
-            color="gray.600"
+            bg={bg.secondary}
+            color={text.primary}
             borderRight="solid 1px"
-            borderColor="gray.400"
+            borderColor={bg.primary}
             flexDirection="column"
             alignItems="center"
             w="300px"

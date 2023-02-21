@@ -8,6 +8,7 @@ import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
 import { useSession } from 'next-auth/react'
 import { useBoardPermission } from '../hooks/useBoardPermission'
+import { useThemeMode } from 'shared-hooks'
 
 interface IBoardItemProps {
     board: IBoardWithAllRelation
@@ -16,6 +17,7 @@ interface IBoardItemProps {
 
 export function BoardItem(props: IBoardItemProps) {
     const { board, onItemClick } = props
+    const { bg, text } = useThemeMode()
     const [selectedBoard] = useAtom(BoardAtom)
     const { data: session } = useSession()
 
@@ -33,11 +35,11 @@ export function BoardItem(props: IBoardItemProps) {
     return (
         <Flex
             key={board.id}
-            color={board.id === selectedBoard?.id ? 'white' : 'gray.700'}
-            bgColor={board.id === selectedBoard?.id ? 'teal.400' : 'gray.100'}
+            color={board.id === selectedBoard?.id ? 'white' : text.primary}
+            bgColor={board.id === selectedBoard?.id ? 'teal.400' : bg.secondary}
             _hover={{
                 bgColor:
-                    board.id === selectedBoard?.id ? 'teal.500' : 'gray.200',
+                    board.id === selectedBoard?.id ? 'teal.500' : bg.tertiary,
             }}
             onClick={onItemClick ? () => onItemClick(board) : noop}
             display="flex"

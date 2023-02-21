@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import axios, { AxiosResponse } from 'axios'
 import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react'
-import { useTableauMutation } from 'shared-hooks'
+import { useTableauMutation, useThemeMode } from 'shared-hooks'
 import { Task } from '.prisma/client'
 import { TaskItem } from '../columns/taskItem'
 import { getScrollbarStyle } from 'shared-utils'
@@ -34,6 +34,8 @@ export function Finder() {
     const isOpen = isOpenDisclosure && status !== 'unauthenticated'
 
     const { handleHighlightTask } = useHighlightFinderTask(() => onClose())
+
+    const { bg } = useThemeMode()
 
     const { mutateAsync, isLoading, isSuccess } = useTableauMutation<
         AxiosResponse<IFinderSearchResult, unknown>,
@@ -94,7 +96,7 @@ export function Finder() {
             />
             <Flex
                 flexDirection="column"
-                bgColor="teal.500"
+                bgColor={bg.primary}
                 position="absolute"
                 width="35vw"
                 minWidth="580px"
@@ -114,7 +116,7 @@ export function Finder() {
                     display="block"
                     position="sticky"
                     top={0}
-                    bgColor="teal.500"
+                    bgColor={bg.primary}
                     fontWeight="medium"
                     fontSize={18}
                     px={8}

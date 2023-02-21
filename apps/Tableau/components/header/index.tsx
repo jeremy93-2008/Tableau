@@ -5,9 +5,11 @@ import { BiMenu } from 'react-icons/bi'
 import { useCallback } from 'react'
 import { useAtom } from 'jotai'
 import { SidePanelAtom } from 'shared-atoms'
+import { useThemeMode } from 'shared-hooks'
 
 export function Header() {
     const [isSidePanelOpen, setSidePanelOpen] = useAtom(SidePanelAtom)
+    const { text, bg } = useThemeMode()
 
     const onSideMenuClick = useCallback(() => {
         setSidePanelOpen(!isSidePanelOpen)
@@ -17,7 +19,7 @@ export function Header() {
         <Flex
             alignItems="center"
             justifyContent="space-between"
-            bg="teal.500"
+            bg={bg.primary}
             color="white"
             py="4"
             px="8"
@@ -38,7 +40,7 @@ export function Header() {
                             borderRadius="50%"
                             mr={2}
                             p={1}
-                            icon={<BiMenu color="#B2F5EA" size="32px" />}
+                            icon={<BiMenu color={text.primary} size="32px" />}
                         />
                     </Tooltip>
                 </Box>

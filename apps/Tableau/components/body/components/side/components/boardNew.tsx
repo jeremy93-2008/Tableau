@@ -20,7 +20,7 @@ import { AddIcon } from '@chakra-ui/icons'
 import { useSession } from 'next-auth/react'
 
 import { BoardNewForm, IBoardNewFormikValues } from './boardNewForm'
-import { useTableauMutation } from 'shared-hooks'
+import { useTableauMutation, useThemeMode } from 'shared-hooks'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { BOARD_LIMIT } from 'shared-utils'
 
@@ -33,6 +33,8 @@ export function BoardNew(props: IBoardNewProps) {
     const { boards, onAfterSubmit } = props
     const { data: session } = useSession()
     const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const { bg } = useThemeMode()
 
     const { mutateAsync } = useTableauMutation(
         (values: IBoardNewFormikValues) => {
@@ -83,7 +85,7 @@ export function BoardNew(props: IBoardNewProps) {
                         </PopoverTrigger>
                     </Box>
                 </Tooltip>
-                <PopoverContent bg="gray.50" p={5}>
+                <PopoverContent bg={bg.modal} p={5}>
                     <PopoverHeader fontWeight="semibold">
                         Create a new Board
                     </PopoverHeader>

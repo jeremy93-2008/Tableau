@@ -1,12 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useAtom } from 'jotai'
-import { Flex, IconButton, Text, Tooltip } from '@chakra-ui/react'
+import {
+    Button,
+    Flex,
+    IconButton,
+    Text,
+    Tooltip,
+    useColorMode,
+} from '@chakra-ui/react'
 import { BoardList } from './boardList'
 import { BoardNew } from './boardNew'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { BoardAtom, RefetchBoardAtom, SidePanelAtom } from 'shared-atoms'
-import { useTableauQuery } from 'shared-hooks'
+import { useTableauQuery, useThemeMode } from 'shared-hooks'
 import { BiRefresh } from 'react-icons/bi'
 import { getAnimation } from 'shared-utils'
 
@@ -17,6 +24,8 @@ export function BoardSide() {
     const [isOpenSidePanel, setIsOpenSidePanel] = useAtom(SidePanelAtom)
 
     const [_refetchBoards, setRefetchBoard] = useAtom(RefetchBoardAtom)
+
+    const { text } = useThemeMode()
 
     const { data, refetch, isRefetching } = useTableauQuery<
         IBoardWithAllRelation[]
@@ -105,7 +114,10 @@ export function BoardSide() {
                             isDisabled={!session}
                             animation={isRefreshAnimate ? spiningAnimation : ''}
                             pointerEvents={isRefreshAnimate ? 'none' : 'auto'}
-                            icon={<BiRefresh color="#666" size="22px" />}
+                            mr={2}
+                            icon={
+                                <BiRefresh color={text.primary} size="22px" />
+                            }
                         />
                     </Tooltip>
 
