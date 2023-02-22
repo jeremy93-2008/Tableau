@@ -35,7 +35,7 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
     const { data: session } = useSession()
     const [selectedBoard] = useAtom(BoardAtom)
 
-    const { bg } = useThemeMode()
+    const { bg, text } = useThemeMode()
 
     const { Option, options: optionsRole } = useShareRolesOptions(
         selectedBoard!
@@ -108,7 +108,7 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
     return (
         <Flex width="100%" flexDirection="column">
             <Text fontSize={12} fontWeight="medium">
-                Add a Collaborator{' '}
+                Add a Collaborator
             </Text>
             <Flex
                 width="100%"
@@ -150,22 +150,23 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
                         }),
                         option: (provided) => ({
                             ...provided,
-                            background: 'white',
-                            color: 'black',
+                            background: bg.modal,
+                            color: text.primary,
                             '&:hover': {
-                                background: 'teal.400',
-                                color: 'white',
+                                background: bg.modalHover,
+                                color: text.hover,
                             },
                         }),
                         menuList: (provided) => ({
                             ...provided,
                             zIndex: 100,
                             p: '8px',
-                            border: 'solid 1px lightgray',
+                            border: 'solid 1px',
+                            borderColor: bg.modal,
                             borderRadius: '10px',
                             width: '250px',
                             maxHeight: '550px',
-                            bgColor: 'white',
+                            bgColor: bg.modal,
                         }),
                     }}
                 />

@@ -1,14 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useAtom } from 'jotai'
-import {
-    Button,
-    Flex,
-    IconButton,
-    Text,
-    Tooltip,
-    useColorMode,
-} from '@chakra-ui/react'
+import { Flex, IconButton, Text, Tooltip } from '@chakra-ui/react'
 import { BoardList } from './boardList'
 import { BoardNew } from './boardNew'
 import { IBoardWithAllRelation } from '../../../../../types/types'
@@ -25,7 +18,7 @@ export function BoardSide() {
 
     const [_refetchBoards, setRefetchBoard] = useAtom(RefetchBoardAtom)
 
-    const { text } = useThemeMode()
+    const { bg, text } = useThemeMode()
 
     const { data, refetch, isRefetching } = useTableauQuery<
         IBoardWithAllRelation[]
@@ -115,6 +108,7 @@ export function BoardSide() {
                             animation={isRefreshAnimate ? spiningAnimation : ''}
                             pointerEvents={isRefreshAnimate ? 'none' : 'auto'}
                             mr={2}
+                            bgColor={bg.secondary}
                             icon={
                                 <BiRefresh color={text.primary} size="22px" />
                             }
