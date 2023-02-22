@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { Button, Flex, Tag, Text } from '@chakra-ui/react'
 import { useToast } from '@chakra-ui/react'
-import { Select } from 'chakra-react-select'
-import React, { useCallback, useMemo, useState } from 'react'
+import { GroupBase, Select, SelectInstance } from 'chakra-react-select'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import {
     IOptionsMenuItem,
     useShareRolesOptions,
@@ -13,6 +13,7 @@ import { FaUserPlus } from 'react-icons/fa'
 import { useTableauMutation, useTableauQuery, useThemeMode } from 'shared-hooks'
 import { User } from '.prisma/client'
 import { useSession } from 'next-auth/react'
+import { IFullBoardSharing } from './columnShare'
 
 type IShareMutationAddValue = {
     boardId: string
@@ -22,6 +23,7 @@ type IShareMutationAddValue = {
 }
 
 interface IColumnShareFormNewProps {
+    boardsSharedUser: IFullBoardSharing[]
     refetchSharedBoard: () => void
     permissions: {
         add: boolean
@@ -30,10 +32,21 @@ interface IColumnShareFormNewProps {
 }
 
 export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
-    const { refetchSharedBoard, permissions } = props
+    const { boardsSharedUser, refetchSharedBoard, permissions } = props
     const toast = useToast()
     const { data: session } = useSession()
     const [selectedBoard] = useAtom(BoardAtom)
+
+    const refSelectedUserDropdown = useRef<SelectInstance<
+        any,
+        false,
+        GroupBase<any>
+    > | null>(null)
+    const refSelectedRoleDropdown = useRef<SelectInstance<
+        any,
+        false,
+        GroupBase<any>
+    > | null>(null)
 
     const { bg, text, boxShadow } = useThemeMode()
 
@@ -54,14 +67,19 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
     const optionsUser = useMemo(() => {
         if (!data || !session || !session.user) return []
         const userList = data
-            .filter((user) => user.email !== session.user!.email)
+            .filter(
+                (user) =>
+                    !boardsSharedUser.find(
+                        (sharedUser) => sharedUser.user.email === user.email
+                    )
+            )
             .map((d) => ({
                 label: `${d.email} (${d.name})`,
                 value: d.email!,
             }))
         if (!inputText) return userList
         return [{ label: inputText, value: inputText }, ...userList]
-    }, [data, inputText, session])
+    }, [boardsSharedUser, data, inputText, session])
 
     const { mutateAsync: mutateAddAsync } = useTableauMutation(
         (value: IShareMutationAddValue) => {
@@ -94,15 +112,22 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
                 })
             window.setTimeout(() => {
                 refetchSharedBoard()
+                setInputText('')
+                setSelectedUser(undefined)
+                if (refSelectedUserDropdown.current)
+                    refSelectedUserDropdown.current.clearValue()
+                setSelectedRole(optionsRole[3])
             })
         })
     }, [
-        selectedRole,
-        selectedUser,
         selectedBoard,
+        selectedUser,
         mutateAddAsync,
-        refetchSharedBoard,
+        selectedRole.canEditSchema,
+        selectedRole.canEditContent,
         toast,
+        refetchSharedBoard,
+        optionsRole,
     ])
 
     return (
@@ -118,12 +143,14 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
                 cursor="pointer"
             >
                 <Select
+                    ref={refSelectedUserDropdown}
                     size="sm"
                     components={{
                         DropdownIndicator: () => null,
                         IndicatorSeparator: () => null,
                     }}
                     inputValue={inputText}
+                    value={selectedUser}
                     onInputChange={(val, actionMeta) => {
                         if (
                             actionMeta.action === 'input-blur' ||
@@ -131,6 +158,7 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
                         )
                             return
                         setInputText(val)
+                        if (!val) return setSelectedUser(undefined)
                         setSelectedUser({ label: val, value: val })
                     }}
                     onChange={(val) => setSelectedUser(val as IOptionsMenuItem)}
@@ -173,8 +201,9 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
                     }}
                 />
                 <Select
+                    ref={refSelectedRoleDropdown}
                     onChange={(val) => setSelectedRole(val as IOptionsMenuItem)}
-                    defaultValue={optionsRole[3]}
+                    value={selectedRole}
                     size="sm"
                     components={{ Option }}
                     options={optionsRole}
@@ -205,7 +234,9 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
                     }}
                 />
                 <Button
-                    isDisabled={!permissions?.add}
+                    isDisabled={
+                        !permissions?.add || !selectedUser || !selectedRole
+                    }
                     onClick={handleClickInvite}
                     colorScheme="teal"
                     leftIcon={<FaUserPlus />}

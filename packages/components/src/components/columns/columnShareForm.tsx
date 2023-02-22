@@ -114,6 +114,7 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
                 </Tag>
             )}
             <ColumnShareFormNew
+                boardsSharedUser={boardsSharedUser}
                 refetchSharedBoard={refetchSharedBoard}
                 permissions={permissions}
             />
