@@ -35,7 +35,7 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
     const { data: session } = useSession()
     const [selectedBoard] = useAtom(BoardAtom)
 
-    const { bg, text } = useThemeMode()
+    const { bg, text, boxShadow } = useThemeMode()
 
     const { Option, options: optionsRole } = useShareRolesOptions(
         selectedBoard!
@@ -115,6 +115,7 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
                 mb={5}
                 alignItems="center"
                 justifyContent="space-between"
+                cursor="pointer"
             >
                 <Select
                     size="sm"
@@ -151,7 +152,7 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
                         option: (provided) => ({
                             ...provided,
                             background: bg.modal,
-                            color: text.primary,
+                            color: text.contrast,
                             '&:hover': {
                                 background: bg.modalHover,
                                 color: text.hover,
@@ -167,6 +168,7 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
                             width: '250px',
                             maxHeight: '550px',
                             bgColor: bg.modal,
+                            boxShadow: boxShadow.primary,
                         }),
                     }}
                 />

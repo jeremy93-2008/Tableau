@@ -110,7 +110,7 @@ export function useShareRolesOptions(selectedBoard: IBoardWithAllRelation) {
                 py={2}
                 borderRadius={'5px'}
                 filter={isDisabled ? contrast.disabled : 'contrast(1)'}
-                cursor="pointer"
+                cursor={isDisabled ? 'default' : 'pointer'}
                 pointerEvents={isDisabled ? 'none' : 'auto'}
             >
                 <Flex alignItems="center">
