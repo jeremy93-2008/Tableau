@@ -9,6 +9,7 @@ export function useThemeMode() {
 
     const textPrimary = useColorModeValue('gray.600', 'gray.50')
     const textSearch = useColorModeValue('gray.700', 'gray.500')
+    const textSearchDisabled = useColorModeValue('gray.200', 'gray.500')
 
     return {
         bg: {
@@ -21,6 +22,7 @@ export function useThemeMode() {
         text: {
             primary: textPrimary,
             search: textSearch,
+            searchDisabled: textSearchDisabled,
         },
     }
 }

@@ -23,6 +23,7 @@ interface ISearchInputProps {
     onOpen: () => void
     isLoading: boolean
     isSuccess: boolean
+    isDisabled: boolean
     mutateAsync: UseMutateAsyncFunction<
         AxiosResponse<IFinderSearchResult, unknown>,
         unknown,
@@ -33,8 +34,15 @@ interface ISearchInputProps {
 }
 
 export function SearchInput(props: ISearchInputProps) {
-    const { onClose, onOpen, mutateAsync, setResult, isLoading, isSuccess } =
-        props
+    const {
+        onClose,
+        onOpen,
+        mutateAsync,
+        setResult,
+        isLoading,
+        isSuccess,
+        isDisabled,
+    } = props
     const [searchText, setSearchText] = useState('')
 
     const { bg, text } = useThemeMode()
@@ -81,9 +89,12 @@ export function SearchInput(props: ISearchInputProps) {
     return (
         <InputGroup>
             <InputLeftElement>
-                <SearchIcon color={text.search} />
+                <SearchIcon
+                    color={isDisabled ? text.searchDisabled : text.search}
+                />
             </InputLeftElement>
             <Input
+                isDisabled={isDisabled}
                 variant="filled"
                 fontWeight="medium"
                 color={text.search}

@@ -91,6 +91,9 @@ export function Finder() {
                 onOpen={onOpen}
                 isLoading={isLoading}
                 isSuccess={isSuccess}
+                isDisabled={
+                    status === 'unauthenticated' || status === 'loading'
+                }
                 mutateAsync={mutateAsync}
                 setResult={setResult}
             />
