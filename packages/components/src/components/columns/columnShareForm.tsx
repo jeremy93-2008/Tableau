@@ -138,6 +138,7 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
                                 zIndex={boardsSharedUser.length - idx}
                                 cursor="pointer"
                                 style={{ zIndex: -1 }}
+                                referrerPolicy="no-referrer"
                             />
                             <Flex flexDirection="column">
                                 <Text fontWeight="medium">

@@ -49,7 +49,7 @@ export function BoardNewForm({
         ) => {
             onNewBoardSubmit(values, actions)
         },
-        []
+        [onNewBoardSubmit]
     )
 
     return (

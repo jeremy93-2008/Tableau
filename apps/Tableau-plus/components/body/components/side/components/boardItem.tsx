@@ -52,12 +52,7 @@ export function BoardItem(props: IBoardItemProps) {
             py={4}
         >
             <Flex alignItems="center">
-                <Avatar
-                    name={board.name}
-                    src="https://bit.ly/broken-link"
-                    borderRadius="10px"
-                    mr={2}
-                >
+                <Avatar name={board.name} borderRadius="10px" mr={2}>
                     {!isCurrentUserBoardOwner && (
                         <Tooltip
                             label={`Board shared by ${board.user.name} (${board.user.email})`}
@@ -68,6 +63,7 @@ export function BoardItem(props: IBoardItemProps) {
                                 left={7}
                                 boxSize="1.5em"
                                 border="solid 2px teal"
+                                alt="Board shared by User"
                                 borderRadius="100%"
                                 src={board.user.image!}
                                 referrerPolicy="no-referrer"

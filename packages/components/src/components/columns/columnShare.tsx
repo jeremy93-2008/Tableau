@@ -66,6 +66,7 @@ export function ColumnShare() {
                                             ? 'solid 3px teal'
                                             : ''
                                     }
+                                    referrerPolicy="no-referrer"
                                 />
                             </Tooltip>
                         )

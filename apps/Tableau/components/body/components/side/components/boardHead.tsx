@@ -16,7 +16,6 @@ export function BoardHead() {
         >
             <Avatar
                 name={session?.user?.name ?? 'Anonymous'}
-                src="https://bit.ly/broken-link"
                 borderRadius="10px"
             />
             <Text fontWeight="bold" pl={2}>
