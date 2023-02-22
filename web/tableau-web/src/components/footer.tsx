@@ -9,8 +9,11 @@ export function Footer() {
                     Tableau
                 </div>
             </div>
-            <div className="text-white text-sm">
+            <div className="hidden sm:flex sm:items-center text-white text-sm">
                 Copyright &copy; Jeremy Auvray @ 2023
+            </div>
+            <div className="flex items-center sm:hidden text-white text-sm">
+                Jeremy Auvray
             </div>
         </div>
     )

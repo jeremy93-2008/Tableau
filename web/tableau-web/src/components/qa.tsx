@@ -2,7 +2,7 @@ import IconCaretDown from './assets/iconCaretDown'
 
 export function QA() {
     return (
-        <div id="qa" className="bg-teal-800 lg:h-82 px-6 pt-4">
+        <div id="qa" className="bg-teal-800 lg:h-[288px] px-6 pt-4">
             <h1 className="text-white text-xl font-semibold mb-6">QA</h1>
             <div className="flex flex-col mb-8 lg:flex-row lg:mb-0 justify-center px-8">
                 <div className="flex flex-col text-white mr-4">
