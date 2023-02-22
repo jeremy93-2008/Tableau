@@ -15,7 +15,7 @@ import {
     IOptionsMenuItem,
     useShareRolesOptions,
 } from './hooks/useShareRolesOptions'
-import { useTableauMutation } from 'shared-hooks'
+import { useTableauMutation, useThemeMode } from 'shared-hooks'
 import { ColumnShareFormNew } from './columnShareFormNew'
 import { useSession } from 'next-auth/react'
 import { DeleteModal } from './modal/deleteModal'
@@ -36,6 +36,8 @@ interface IColumnShareFormProps {
 export function ColumnShareForm(props: IColumnShareFormProps) {
     const { selectedBoard, boardsSharedUser, refetchSharedBoard } = props
     const { data: session } = useSession()
+
+    const { bg } = useThemeMode()
 
     const {
         isOpen: isDeleteModalOpen,
@@ -181,11 +183,12 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
                                         menuList: (provided) => ({
                                             ...provided,
                                             p: '8px',
-                                            border: 'solid 1px lightgray',
+                                            border: 'solid 1px',
+                                            borderColor: bg.modal,
                                             borderRadius: '10px',
                                             width: '250px',
                                             maxHeight: '550px',
-                                            bgColor: 'white',
+                                            bgColor: bg.modal,
                                         }),
                                     }}
                                 />

@@ -10,7 +10,7 @@ import {
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
 import { FaUserPlus } from 'react-icons/fa'
-import { useTableauMutation, useTableauQuery } from 'shared-hooks'
+import { useTableauMutation, useTableauQuery, useThemeMode } from 'shared-hooks'
 import { User } from '.prisma/client'
 import { useSession } from 'next-auth/react'
 
@@ -34,6 +34,8 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
     const toast = useToast()
     const { data: session } = useSession()
     const [selectedBoard] = useAtom(BoardAtom)
+
+    const { bg } = useThemeMode()
 
     const { Option, options: optionsRole } = useShareRolesOptions(
         selectedBoard!
@@ -190,11 +192,12 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
                         menuList: (provided) => ({
                             ...provided,
                             p: '8px',
-                            border: 'solid 1px lightgray',
+                            border: 'solid 1px',
+                            borderColor: bg.modal,
                             borderRadius: '10px',
                             width: '250px',
                             maxHeight: '550px',
-                            bgColor: 'white',
+                            bgColor: bg.modal,
                         }),
                     }}
                 />

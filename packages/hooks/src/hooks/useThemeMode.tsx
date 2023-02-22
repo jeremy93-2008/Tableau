@@ -11,6 +11,8 @@ export function useThemeMode() {
     const textSearch = useColorModeValue('gray.700', 'gray.500')
     const textSearchDisabled = useColorModeValue('gray.200', 'gray.500')
 
+    const contrastDisabled = useColorModeValue('contrast(2%)', 'contrast(70%)')
+
     return {
         bg: {
             primary: bgPrimary,
@@ -23,6 +25,9 @@ export function useThemeMode() {
             primary: textPrimary,
             search: textSearch,
             searchDisabled: textSearchDisabled,
+        },
+        contrast: {
+            disabled: contrastDisabled,
         },
     }
 }

@@ -10,6 +10,7 @@ import {
 } from 'react-icons/fa'
 import { GroupBase, OptionProps } from 'chakra-react-select'
 import { useSession } from 'next-auth/react'
+import { useThemeMode } from 'shared-hooks'
 
 export type IOptionsMenuItem = {
     label: string
@@ -21,7 +22,7 @@ export type IOptionsMenuItem = {
 
 export function useShareRolesOptions(selectedBoard: IBoardWithAllRelation) {
     const { data: session } = useSession()
-
+    const { text, bg, contrast } = useThemeMode()
     const options: IOptionsMenuItem[] = useMemo(
         () => [
             {
@@ -99,8 +100,8 @@ export function useShareRolesOptions(selectedBoard: IBoardWithAllRelation) {
             <Flex
                 onClick={props.innerProps.onClick}
                 flexDirection="column"
-                color={props.isSelected ? 'white' : ''}
-                bgColor={props.isSelected ? 'teal.600' : ''}
+                color={props.isSelected ? 'white' : text.primary}
+                bgColor={props.isSelected ? 'teal.600' : bg.modal}
                 _hover={{
                     bgColor: isDisabled ? '' : 'teal.500',
                     color: isDisabled ? '' : 'white',
@@ -108,7 +109,8 @@ export function useShareRolesOptions(selectedBoard: IBoardWithAllRelation) {
                 pl={2}
                 py={2}
                 borderRadius={'5px'}
-                filter={isDisabled ? 'contrast(2%)' : 'contrast(1)'}
+                filter={isDisabled ? contrast.disabled : 'contrast(1)'}
+                cursor="pointer"
                 pointerEvents={isDisabled ? 'none' : 'auto'}
             >
                 <Flex alignItems="center">
