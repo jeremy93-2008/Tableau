@@ -117,7 +117,7 @@ export function ColumnEdit(props: IColumnEditProps) {
                         </PopoverTrigger>
                     </Box>
                 </Tooltip>
-                <PopoverContent bg={bg.primary} p={5} color={text.primary}>
+                <PopoverContent bg={bg.modal} p={5} color={text.primary}>
                     <PopoverHeader fontWeight="semibold">
                         Edit Status Column
                     </PopoverHeader>

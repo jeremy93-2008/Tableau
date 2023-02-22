@@ -88,7 +88,7 @@ export function ColumnTaskNew(props: IColumnTaskNewProps) {
                     </Tooltip>
                 </Box>
             </PopoverTrigger>
-            <PopoverContent bg={bg.primary} p={5} color={text.primary}>
+            <PopoverContent bg={bg.modal} p={5} color={text.primary}>
                 <PopoverHeader fontWeight="semibold">
                     Add new Task
                 </PopoverHeader>
