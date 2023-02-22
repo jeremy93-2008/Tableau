@@ -4,6 +4,18 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import prisma from '../../../lib/prisma'
 import { randomBytes, randomUUID } from 'crypto'
 import { linkNewVerifiedUserAccount } from '../../../server/services/auth/linkNewVerifiedUserAccount'
+import { User } from '.prisma/client'
+
+declare module 'next-auth' {
+    interface Session {
+        user: {
+            name: string
+            email: string
+            image: string
+            isDarkMode: boolean
+        }
+    }
+}
 
 export const authOptions: AuthOptions = {
     adapter: PrismaAdapter(prisma),
@@ -16,6 +28,10 @@ export const authOptions: AuthOptions = {
     ],
     callbacks: {
         signIn: linkNewVerifiedUserAccount,
+        session: async ({ session, user }) => {
+            session.user.isDarkMode = (user as User).isDarkMode
+            return Promise.resolve(session)
+        },
     },
     session: {
         // Choose how you want to save the user session.

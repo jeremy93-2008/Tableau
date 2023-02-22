@@ -10,7 +10,10 @@ import {
 import { ExternalLinkIcon, MoonIcon, SunIcon } from '@chakra-ui/icons'
 import { signOut } from 'next-auth/react'
 import { Session } from 'next-auth'
-import { useThemeMode } from 'shared-hooks'
+import { useTableauMutation, useThemeMode } from 'shared-hooks'
+import { useCallback } from 'react'
+import axios from 'axios'
+import { reloadSession } from 'shared-utils'
 
 interface IUserModalProps {
     session: Session
@@ -20,6 +23,28 @@ export function UserModal(props: IUserModalProps) {
     const { session } = props
     const { colorMode, toggleColorMode } = useColorMode()
     const { bg } = useThemeMode()
+
+    const { mutateAsync, isLoading } = useTableauMutation(
+        (value: { email: string; isDarkMode: boolean }) => {
+            return axios.post(`api/user/setTheme`, value, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            })
+        }
+    )
+
+    const handleColorMode = useCallback(() => {
+        const isNewDarkMode = colorMode === 'light'
+        mutateAsync({
+            email: session.user!.email!,
+            isDarkMode: isNewDarkMode,
+        }).then(() => {
+            reloadSession()
+        })
+    }, [mutateAsync, session.user, colorMode])
+
     return (
         <Container
             onClick={(evt) => {
@@ -58,9 +83,10 @@ export function UserModal(props: IUserModalProps) {
                     Theme Color
                 </Text>
                 <IconButton
+                    isDisabled={isLoading}
                     colorScheme="teal"
-                    aria-label="Toggle light dark mode"
-                    onClick={toggleColorMode}
+                    aria-label="Toggle light/dark mode"
+                    onClick={handleColorMode}
                     icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
                 />
             </Flex>
