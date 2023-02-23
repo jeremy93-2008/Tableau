@@ -4,8 +4,8 @@ import { Flex } from '@chakra-ui/react'
 import { Header } from '../components/header'
 import { Body } from '../components/body'
 import { LoadingProvider } from 'shared-components'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import { DndProvider } from 'react-dnd'
+import { DndProvider } from 'react-dnd-multi-backend'
+import { HTML5toTouch } from 'rdndmb-html5-to-touch'
 import { useRefreshSession } from 'shared-hooks'
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
     return (
         <Flex>
             <Provider>
-                <DndProvider backend={HTML5Backend}>
+                <DndProvider options={HTML5toTouch}>
                     <LoadingProvider>
                         <Header />
                         <Body />
