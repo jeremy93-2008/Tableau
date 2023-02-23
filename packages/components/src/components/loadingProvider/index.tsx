@@ -38,7 +38,7 @@ export function LoadingProvider(props: ILoadingProviderProps) {
                     justifyContent="center"
                     alignItems="center"
                     top={0}
-                    zIndex={100}
+                    zIndex="popover"
                 >
                     <Spinner width="80px" height="80px" color="teal.200" />
                 </Flex>

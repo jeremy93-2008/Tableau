@@ -81,7 +81,7 @@ export function BoardEdit(props: IBoardEditProps) {
                         </PopoverTrigger>
                     </Box>
                 </Tooltip>
-                <PopoverContent bg={bg.modal} p={5}>
+                <PopoverContent bg={bg.modal} zIndex="popover" p={5}>
                     <PopoverHeader color="gray.800" fontWeight="semibold">
                         Edit current Board
                     </PopoverHeader>
