@@ -103,7 +103,7 @@ Tableau App is a powerful tool that helps teams visualize, analyze and share boa
 
 To access the board, please follow these steps:
 
-    Click on the following link: https://tableau-jeremy93-2008.vercel.app/
+    Click on the following link: https://tableau-beta.vercel.app/
     Log in to your Tableau account with the email that you was invite or create a new one
     Once you are logged in, you will be able to view and edit the board.
 

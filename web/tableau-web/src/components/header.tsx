@@ -35,7 +35,7 @@ export function Header() {
                     Tableau Plus
                 </a>
                 <a
-                    href="https://tableau-jeremy93-2008.vercel.app/"
+                    href="https://tableau-beta.vercel.app/"
                     target="_blank"
                     className="bg-[#38B2AC] text-white font-semibold rounded-md px-4 py-2 hover:bg-teal-600 hover:dark:bg-teal-700 transition-colors"
                     rel="noreferrer"
@@ -45,7 +45,7 @@ export function Header() {
             </div>
             <div className="items-center flex lg:hidden">
                 <a
-                    href="https://tableau-jeremy93-2008.vercel.app/"
+                    href="https://tableau-beta.vercel.app/"
                     target="_blank"
                     className="bg-[#38B2AC] text-white font-semibold rounded-md px-4 py-2 hover:bg-[#319795] transition-colors"
                     rel="noreferrer"

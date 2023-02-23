@@ -13,7 +13,7 @@ export function Hero() {
                     </div>
                     <div className="flex mt-10">
                         <a
-                            href="https://tableau-jeremy93-2008.vercel.app/"
+                            href="https://tableau-beta.vercel.app/"
                             target="_blank"
                             className="w-full lg:w-[25vw] bg-white text-[#38B2AC] dark:bg-teal-900 dark:text-gray-100 text-center text-lg font-semibold cursor-pointer
                             rounded-lg shadow-lg px-14 py-3 hover:scale-110 transition-transform"
