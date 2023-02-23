@@ -24,7 +24,8 @@ export function BoardSide() {
         IBoardWithAllRelation[]
     >(['api/board/list'], {
         enabled: !!session,
-        refetchInterval: 6000,
+        refetchInterval: 60000,
+        refetchIntervalInBackground: false,
     })
 
     const onAfterSubmit = useCallback(() => {
