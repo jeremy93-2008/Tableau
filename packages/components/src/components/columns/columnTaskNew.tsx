@@ -75,6 +75,7 @@ export function ColumnTaskNew(props: IColumnTaskNewProps) {
                         }
                     >
                         <Button
+                            data-cy="taskAdd"
                             colorScheme="teal"
                             width="100%"
                             isDisabled={!taskPermission?.add ?? false}
@@ -89,6 +90,7 @@ export function ColumnTaskNew(props: IColumnTaskNewProps) {
                 </Box>
             </PopoverTrigger>
             <PopoverContent
+                data-cy="taskAddForm"
                 bg={bg.modal}
                 zIndex="popover"
                 p={5}

@@ -109,6 +109,7 @@ export function BoardEditForm({
                         </Button>
 
                         <Button
+                            data-cy="boardEditSave"
                             colorScheme={props.isValid ? 'teal' : 'red'}
                             isDisabled={!props.isValid}
                             type="submit"

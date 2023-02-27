@@ -107,6 +107,7 @@ export function ColumnEditForm(props: IColumnEditProps) {
                         <ButtonGroup display="flex" justifyContent="flex-start">
                             <Tooltip label="Delete this column">
                                 <IconButton
+                                    data-cy="columnDeleteSave"
                                     onClick={() => onOpenDeleteModal()}
                                     aria-label="Delete a Column"
                                     icon={<BsTrashFill />}
@@ -118,6 +119,7 @@ export function ColumnEditForm(props: IColumnEditProps) {
                         <ButtonGroup display="flex" justifyContent="flex-end">
                             <Button onClick={onClose}>Cancel</Button>
                             <Button
+                                data-cy="columnEditSave"
                                 type="submit"
                                 colorScheme={props.isValid ? 'teal' : 'red'}
                                 mr={1}

@@ -1,0 +1,50 @@
+describe('Tableau Task Flow', () => {
+    it('Successfully Add a Task', () => {
+        cy.visit('http://localhost:3000')
+        cy.login()
+        cy.visit('http://localhost:3000')
+        cy.get('[data-cy=boardItem]').first().click()
+        cy.get('[data-cy=columnItem]').first().click()
+        cy.get('[data-cy=taskAdd]').first().click()
+        cy.get('[data-cy=taskAddForm] form [name=name]')
+            .clear()
+            .type('Testing Task')
+        cy.get('[data-cy=buttonAddSave]').click()
+        cy.get('[data-cy=taskItem] [data-cy=taskTitle]').contains(
+            'Testing Task'
+        )
+    })
+    it('Successfully Edit a Task', () => {
+        cy.visit('http://localhost:3000')
+        cy.login()
+        cy.visit('http://localhost:3000')
+        cy.get('[data-cy=boardItem]').first().click()
+        cy.get('[data-cy=taskItem]').first().click()
+        cy.get('[data-cy=taskEdit]').first().click()
+        cy.get('[data-cy=taskEditForm] form [name=name]')
+            .clear()
+            .type('Testing Task Edited')
+        cy.get('[data-cy=buttonEditSave]').click()
+        cy.get('[data-cy=taskItem] [data-cy=taskTitle]').contains(
+            'Testing Task Edited'
+        )
+    })
+    it('Successfully Perform Visual Test when Task are created', () => {
+        cy.visit('http://localhost:3000')
+        cy.login()
+        cy.visit('http://localhost:3000')
+        cy.wait(4000)
+        cy.matchImageSnapshot('tableau-board_task_state')
+    })
+    it('Successfully Delete a Task', () => {
+        cy.visit('http://localhost:3000')
+        cy.login()
+        cy.visit('http://localhost:3000')
+        cy.get('[data-cy=boardItem]').first().click()
+        cy.get('[data-cy=taskItem]').first().click()
+        cy.get('[data-cy=taskEdit]').first().click()
+        cy.get('[data-cy=buttonEditDelete]').click()
+        cy.get('[data-cy=modalDeleteButton]').click()
+        cy.get('[data-cy=taskItem]').should('not.exist')
+    })
+})

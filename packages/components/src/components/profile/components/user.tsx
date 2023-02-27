@@ -26,6 +26,7 @@ export function User(props: IUserProps) {
     return (
         <>
             <Button
+                data-cy="currentUser"
                 onClick={(evt) => {
                     setUserOpen(!isUserOpen)
                     evt.stopPropagation()

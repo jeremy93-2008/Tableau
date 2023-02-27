@@ -78,6 +78,8 @@ export function ColumnTaskMove(props: IColumnTaskMoveProps) {
             {currentIndexColumn! > 0 && (
                 <Tooltip label="Move Column to the Left">
                     <IconButton
+                        data-cy="columnMoveLeft"
+                        data-order={currentIndexColumn}
                         onClick={handleColumnMove('subtract')}
                         size="sm"
                         colorScheme="teal"
@@ -90,6 +92,7 @@ export function ColumnTaskMove(props: IColumnTaskMoveProps) {
             {currentIndexColumn! < orderedColumns!.length - 1 && (
                 <Tooltip label="Move Column to the Right">
                     <IconButton
+                        data-cy="columnMoveRight"
                         onClick={handleColumnMove('add')}
                         size="sm"
                         ml={2}

@@ -105,6 +105,7 @@ export function ColumnEdit(props: IColumnEditProps) {
                                 {(isHoveringColumn || isOpen) && (
                                     <Tooltip label="Edit this column">
                                         <IconButton
+                                            data-cy="columnEdit"
                                             aria-label={'Edit this column'}
                                             colorScheme="teal"
                                             size="sm"
@@ -118,6 +119,7 @@ export function ColumnEdit(props: IColumnEditProps) {
                     </Box>
                 </Tooltip>
                 <PopoverContent
+                    data-cy="columnEditForm"
                     bg={bg.modal}
                     zIndex="popover"
                     p={5}

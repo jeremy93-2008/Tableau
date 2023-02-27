@@ -145,6 +145,7 @@ export function TaskEditForm(props: ITaskEditForm) {
                                 justifyContent="flex-start"
                             >
                                 <Button
+                                    data-cy="buttonEditDelete"
                                     onClick={() => onOpenModal()}
                                     leftIcon={<BsTrashFill />}
                                     colorScheme="red"
@@ -158,7 +159,12 @@ export function TaskEditForm(props: ITaskEditForm) {
                                 justifyContent="flex-end"
                             >
                                 <Button onClick={onClose}>Cancel</Button>
-                                <Button type="submit" colorScheme="teal" mr={1}>
+                                <Button
+                                    data-cy="buttonEditSave"
+                                    type="submit"
+                                    colorScheme="teal"
+                                    mr={1}
+                                >
                                     Save
                                 </Button>
                             </ButtonGroup>

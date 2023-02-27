@@ -5,6 +5,7 @@ import { ExternalLinkIcon } from '@chakra-ui/icons'
 export function Signin() {
     return (
         <Button
+            data-cy="signIn"
             colorScheme="teal"
             rightIcon={<ExternalLinkIcon />}
             onClick={() =>

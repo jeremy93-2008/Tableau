@@ -45,6 +45,7 @@ export function BoardDelete(props: IBoardDeleteProps) {
         <>
             <Tooltip label="Delete current board">
                 <IconButton
+                    data-cy="boardDelete"
                     onClick={() => onOpen()}
                     colorScheme="teal"
                     isDisabled={isDisabled}

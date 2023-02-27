@@ -50,3 +50,7 @@ pnpm-debug.log*
 
 .env.production
 
+videos
+instrumented
+coverage
+.nyc_output

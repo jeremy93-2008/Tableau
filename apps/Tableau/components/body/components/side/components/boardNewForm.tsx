@@ -101,6 +101,7 @@ export function BoardNewForm({
                         </Button>
 
                         <Button
+                            data-cy="boardAddSave"
                             colorScheme={props.isValid ? 'teal' : 'red'}
                             isDisabled={!props.isValid}
                             type="submit"

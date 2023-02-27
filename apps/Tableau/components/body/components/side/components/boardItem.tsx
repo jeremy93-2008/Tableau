@@ -34,6 +34,7 @@ export function BoardItem(props: IBoardItemProps) {
     const isCurrentUserBoardOwner = getIsBoardOwner(board)
     return (
         <Flex
+            data-cy="boardItem"
             key={board.id}
             color={board.id === selectedBoard?.id ? 'white' : text.primary}
             bgColor={board.id === selectedBoard?.id ? 'teal.400' : bg.secondary}

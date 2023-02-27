@@ -134,8 +134,8 @@ export function ColumnTask(props: IColumnTaskProps) {
 
     return (
         <Container
+            data-cy="columnItem"
             ref={drop}
-            role={'Dustbin'}
             bgColor={newColumn ? '#38B2AC99' : bg.columns}
             color="gray.100"
             borderRadius={10}

@@ -70,6 +70,7 @@ export function ColumnNew(props: IColumnNewProps) {
                 <Box>
                     <PopoverTrigger>
                         <Flex
+                            data-cy="columnAdd"
                             onClick={() => onOpen()}
                             flexDirection="column"
                             justifyContent="center"
@@ -86,6 +87,7 @@ export function ColumnNew(props: IColumnNewProps) {
                 </Box>
             </Tooltip>
             <PopoverContent
+                data-cy="columnAddForm"
                 bg={bg.modal}
                 zIndex="popover"
                 p={5}

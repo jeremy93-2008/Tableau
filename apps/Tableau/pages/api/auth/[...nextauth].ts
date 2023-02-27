@@ -24,6 +24,7 @@ export const authOptions: AuthOptions = {
             clientId: process.env.AUTH0_CLIENT_ID!,
             clientSecret: process.env.AUTH0_CLIENT_SECRET!,
             issuer: process.env.AUTH0_ISSUER,
+            checks: process.env.NODE_ENV === 'development' ? 'none' : 'state',
         }),
     ],
     callbacks: {

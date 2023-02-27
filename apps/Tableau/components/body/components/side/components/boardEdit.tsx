@@ -70,6 +70,7 @@ export function BoardEdit(props: IBoardEditProps) {
                     <Box>
                         <PopoverTrigger>
                             <IconButton
+                                data-cy="boardEdit"
                                 onClick={(evt) => evt.stopPropagation()}
                                 colorScheme="teal"
                                 isDisabled={isDisabled}
@@ -81,7 +82,12 @@ export function BoardEdit(props: IBoardEditProps) {
                         </PopoverTrigger>
                     </Box>
                 </Tooltip>
-                <PopoverContent bg={bg.modal} zIndex="popover" p={5}>
+                <PopoverContent
+                    data-cy="boardEditForm"
+                    bg={bg.modal}
+                    zIndex="popover"
+                    p={5}
+                >
                     <PopoverHeader color={text.primary} fontWeight="semibold">
                         Edit current Board
                     </PopoverHeader>

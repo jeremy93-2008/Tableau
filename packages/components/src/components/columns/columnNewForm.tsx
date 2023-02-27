@@ -107,6 +107,7 @@ export function ColumnNewForm(props: IColumnNewProps) {
                         </Button>
 
                         <Button
+                            data-cy="columnAddSave"
                             colorScheme={props.isValid ? 'teal' : 'red'}
                             isDisabled={!props.isValid}
                             type="submit"

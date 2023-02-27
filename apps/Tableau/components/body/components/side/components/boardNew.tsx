@@ -75,6 +75,7 @@ export function BoardNew(props: IBoardNewProps) {
                     <Box>
                         <PopoverTrigger>
                             <IconButton
+                                data-cy="boardAdd"
                                 aria-label="Add new board"
                                 icon={<AddIcon />}
                                 isDisabled={
@@ -85,7 +86,12 @@ export function BoardNew(props: IBoardNewProps) {
                         </PopoverTrigger>
                     </Box>
                 </Tooltip>
-                <PopoverContent bg={bg.modal} zIndex="popover" p={5}>
+                <PopoverContent
+                    data-cy="boardAddForm"
+                    bg={bg.modal}
+                    zIndex="popover"
+                    p={5}
+                >
                     <PopoverHeader fontWeight="semibold">
                         Create a new Board
                     </PopoverHeader>

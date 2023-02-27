@@ -94,7 +94,7 @@ export function TaskEdit(props: ITaskEditProps) {
             <ModalContent>
                 <ModalHeader>Edit your task</ModalHeader>
                 <ModalCloseButton />
-                <ModalBody pb={6}>
+                <ModalBody data-cy="taskEditForm" pb={6}>
                     <TaskEditForm
                         task={task}
                         status={status}

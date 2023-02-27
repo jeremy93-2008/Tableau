@@ -78,6 +78,7 @@ export function TaskItemOrder(props: ITaskItemWithOrderingProps) {
 
     return (
         <Flex
+            data-cy="taskItem"
             ref={drop}
             flexDirection="column"
             alignItems="center"

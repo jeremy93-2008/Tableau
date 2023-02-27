@@ -49,6 +49,7 @@ export function DeleteModal(props: ITaskEditFormModalDeleteProps) {
                             Cancel
                         </Button>
                         <Button
+                            data-cy="modalDeleteButton"
                             colorScheme="red"
                             onClick={() => onSubmit()}
                             ml={3}

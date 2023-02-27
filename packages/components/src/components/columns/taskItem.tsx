@@ -89,7 +89,11 @@ export function TaskItem(props: ITaskItemProps) {
             >
                 <Box minHeight="65px">
                     <Tooltip label={task.name}>
-                        <Text noOfLines={1} fontWeight="bold">
+                        <Text
+                            data-cy="taskTitle"
+                            noOfLines={1}
+                            fontWeight="bold"
+                        >
                             {task.name}
                         </Text>
                     </Tooltip>
@@ -120,6 +124,7 @@ export function TaskItem(props: ITaskItemProps) {
                     <Tooltip label="Edit current Task">
                         {
                             <IconButton
+                                data-cy="taskEdit"
                                 onClick={() => onOpen()}
                                 colorScheme="teal"
                                 isDisabled={isDisabled}
