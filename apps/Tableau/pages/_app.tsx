@@ -7,6 +7,7 @@ import { SessionProvider } from 'next-auth/react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import theme from '../theme/extends'
 import { defaultQueryFn } from 'shared-utils'
+import { HashRouterProvider } from 'shared-hooks'
 
 // Create a client
 const queryClient = new QueryClient({
@@ -22,9 +23,11 @@ export default function App({
     return (
         <ChakraProvider theme={theme}>
             <SessionProvider session={session}>
-                <QueryClientProvider client={queryClient}>
-                    <Component {...pageProps} />
-                </QueryClientProvider>
+                <HashRouterProvider>
+                    <QueryClientProvider client={queryClient}>
+                        <Component {...pageProps} />
+                    </QueryClientProvider>
+                </HashRouterProvider>
             </SessionProvider>
         </ChakraProvider>
     )

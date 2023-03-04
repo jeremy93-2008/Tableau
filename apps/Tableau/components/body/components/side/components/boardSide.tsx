@@ -6,7 +6,11 @@ import { BoardList } from './boardList'
 import { BoardNew } from './boardNew'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { BoardAtom, RefetchBoardAtom, SidePanelAtom } from 'shared-atoms'
-import { useTableauQuery, useThemeMode } from 'shared-hooks'
+import {
+    useTableauHashUpdate,
+    useTableauQuery,
+    useThemeMode,
+} from 'shared-hooks'
 import { BiRefresh } from 'react-icons/bi'
 import { getAnimation } from 'shared-utils'
 
@@ -19,6 +23,12 @@ export function BoardSide() {
     const [_refetchBoards, setRefetchBoard] = useAtom(RefetchBoardAtom)
 
     const { bg, text } = useThemeMode()
+
+    const { onBoardUpdate } = useTableauHashUpdate()
+
+    onBoardUpdate((entry, path) => {
+        console.log(entry, path)
+    })
 
     const { data, refetch, isRefetching } = useTableauQuery<
         IBoardWithAllRelation[]
