@@ -17,7 +17,7 @@ import { getAnimation } from 'shared-utils'
 import { useHighlightTaskItem } from './hooks/useHighlightTaskItem'
 import { noop } from '@chakra-ui/utils'
 import { useTableauTaskHashUpdate } from './hooks/useTableauTaskHashUpdate'
-import { useTableauHash } from 'shared-hooks'
+import { useTableauRoute } from 'shared-hooks'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
 
@@ -67,7 +67,7 @@ export function TaskItem(props: ITaskItemProps) {
         setHoveringTask(false)
     }, [isHoveringTask, setHoveringTask])
 
-    const { pushBoard, pushTask } = useTableauHash()
+    const { pushBoard, pushTask } = useTableauRoute()
 
     const onTaskEdit = useCallback(
         (routeToPush?: 'no-push') => {

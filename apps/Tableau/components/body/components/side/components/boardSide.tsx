@@ -6,7 +6,7 @@ import { BoardList } from './boardList'
 import { BoardNew } from './boardNew'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { BoardAtom, RefetchBoardAtom, SidePanelAtom } from 'shared-atoms'
-import { useTableauHash, useTableauQuery, useThemeMode } from 'shared-hooks'
+import { useTableauQuery, useTableauRoute, useThemeMode } from 'shared-hooks'
 import { BiRefresh } from 'react-icons/bi'
 import { getAnimation } from 'shared-utils'
 import { useTableauBoardHashUpdate } from '../hooks/useTableauBoardHashUpdate'
@@ -14,7 +14,7 @@ import { useTableauBoardHashUpdate } from '../hooks/useTableauBoardHashUpdate'
 export function BoardSide() {
     const { data: session } = useSession()
 
-    const { pushBoard } = useTableauHash()
+    const { pushBoard } = useTableauRoute()
 
     const [selectedBoard, setSelectedBoard] = useAtom(BoardAtom)
     const [isOpenSidePanel, setIsOpenSidePanel] = useAtom(SidePanelAtom)

@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useAtom } from 'jotai'
 import { IBoardWithAllRelation } from 'shared-components'
-import { useTableauHash } from 'shared-hooks'
+import { useTableauHashUpdate, useTableauRoute } from 'shared-hooks'
 import { HashEntryAtom } from 'shared-atoms'
 import { useToast } from '@chakra-ui/react'
 
@@ -10,7 +10,8 @@ export function useTableauBoardHashUpdate(
     onItemClick: (board: IBoardWithAllRelation, pushToRoute?: 'no-push') => void
 ) {
     const toast = useToast()
-    const { onHashUpdate, pushReset } = useTableauHash()
+    const { onHashUpdate } = useTableauHashUpdate('updateBoardsAndTask')
+    const { pushReset } = useTableauRoute()
     const [pendingEntry, setPendingEntry] = useAtom(HashEntryAtom)
 
     onHashUpdate((entry, path) => {

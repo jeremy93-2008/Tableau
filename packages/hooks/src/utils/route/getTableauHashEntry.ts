@@ -1,5 +1,5 @@
 import { IHashRouteEntry } from '../../providers/route/HashRouterProvider'
-import { ITableauHashRouteEntry } from '../../hooks/route/useTableauHash'
+import { ITableauHashRouteEntry } from '../../hooks/route/useTableauHashUpdate'
 
 export function getTableauHashEntry(
     type: 'board' | 'task' | null,
