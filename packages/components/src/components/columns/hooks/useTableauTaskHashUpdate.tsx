@@ -34,5 +34,13 @@ export function useTableauTaskHashUpdate(
         if (pendingEntry.task !== task.id) return
         onTaskEdit('no-push')
         setPendingEntry(null)
-    }, [onTaskEdit, pendingEntry, setPendingEntry, task.id])
+    }, [
+        onTaskEdit,
+        pendingEntry,
+        pushBoard,
+        selectedBoard,
+        setPendingEntry,
+        task.id,
+        toast,
+    ])
 }

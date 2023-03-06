@@ -38,5 +38,12 @@ export function useTableauBoardHashUpdate(
             return pushReset()
         }
         onItemClick(boardToSelect, 'no-push')
-    }, [pendingEntry, listOfBoards, onItemClick, pushReset, toast])
+    }, [
+        pendingEntry,
+        listOfBoards,
+        onItemClick,
+        pushReset,
+        toast,
+        setPendingEntry,
+    ])
 }

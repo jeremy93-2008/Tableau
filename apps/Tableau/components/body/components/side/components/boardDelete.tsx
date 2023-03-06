@@ -3,10 +3,10 @@ import axios from 'axios'
 import { IconButton, Tooltip, useDisclosure } from '@chakra-ui/react'
 import { BsTrashFill } from 'react-icons/bs'
 import { DeleteModal } from 'shared-components'
-import { useTableauMutation } from 'shared-hooks'
+import { useTableauHash, useTableauMutation } from 'shared-hooks'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { useAtom } from 'jotai'
-import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
+import { BoardAtom, HashEntryAtom, RefetchBoardAtom } from 'shared-atoms'
 
 interface IBoardDeleteProps {
     isDisabled: boolean
@@ -17,7 +17,8 @@ interface IBoardDeleteProps {
 export function BoardDelete(props: IBoardDeleteProps) {
     const { isVisible, isDisabled, singleBoard } = props
 
-    const [_selectedBoard, setSelectedBoard] = useAtom(BoardAtom)
+    const [selectedBoard, setSelectedBoard] = useAtom(BoardAtom)
+    const [_pendingHashEntry, setPendingHashEntry] = useAtom(HashEntryAtom)
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -33,20 +34,37 @@ export function BoardDelete(props: IBoardDeleteProps) {
         }
     )
 
+    const { pushReset } = useTableauHash()
+
     const onBoardDelete = useCallback(() => {
         mutateAsync(singleBoard).then(() => {
             onClose()
-            setSelectedBoard(null)
             refetchBoards.fetch()
+            if (selectedBoard?.id !== singleBoard.id) return
+            setPendingHashEntry(null)
+            pushReset()
+            setSelectedBoard(null)
         })
-    }, [mutateAsync, singleBoard, onClose, refetchBoards, setSelectedBoard])
+    }, [
+        mutateAsync,
+        singleBoard,
+        onClose,
+        refetchBoards,
+        selectedBoard?.id,
+        setPendingHashEntry,
+        pushReset,
+        setSelectedBoard,
+    ])
 
     return (
         <>
             <Tooltip label="Delete current board">
                 <IconButton
                     data-cy="boardDelete"
-                    onClick={() => onOpen()}
+                    onClick={(evt) => {
+                        onOpen()
+                        evt.stopPropagation()
+                    }}
                     colorScheme="teal"
                     isDisabled={isDisabled}
                     _hover={

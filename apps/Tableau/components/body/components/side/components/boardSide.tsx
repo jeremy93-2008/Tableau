@@ -16,7 +16,7 @@ export function BoardSide() {
 
     const { pushBoard } = useTableauHash()
 
-    const [selectedBoard, setBoard] = useAtom(BoardAtom)
+    const [selectedBoard, setSelectedBoard] = useAtom(BoardAtom)
     const [isOpenSidePanel, setIsOpenSidePanel] = useAtom(SidePanelAtom)
     const [_refetchBoards, setRefetchBoard] = useAtom(RefetchBoardAtom)
 
@@ -37,7 +37,7 @@ export function BoardSide() {
     const onItemClick = useCallback(
         (board: IBoardWithAllRelation, pushToRoute?: 'no-push') => {
             if (selectedBoard?.id === board.id) return
-            setBoard(board)
+            setSelectedBoard(board)
             setRefetchBoard({ fetch: onAfterSubmit })
             setIsOpenSidePanel(false)
             if (pushToRoute === 'no-push') return
@@ -45,7 +45,7 @@ export function BoardSide() {
         },
         [
             selectedBoard?.id,
-            setBoard,
+            setSelectedBoard,
             setRefetchBoard,
             onAfterSubmit,
             setIsOpenSidePanel,
@@ -72,8 +72,8 @@ export function BoardSide() {
             (d) => d.id === selectedBoard?.id
         )
         if (!updatedSelectedBoard) return
-        setBoard(updatedSelectedBoard)
-    }, [selectedBoard, data, setBoard])
+        setSelectedBoard(updatedSelectedBoard)
+    }, [selectedBoard, data, setSelectedBoard])
 
     useEffect(() => {
         const handlePortalClick = (evt: MouseEvent) => {
