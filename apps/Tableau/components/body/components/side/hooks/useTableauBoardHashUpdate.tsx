@@ -10,7 +10,9 @@ export function useTableauBoardHashUpdate(
     onItemClick: (board: IBoardWithAllRelation, pushToRoute?: 'no-push') => void
 ) {
     const toast = useToast()
-    const { onHashUpdate } = useTableauHashUpdate('updateBoardsAndTask')
+    const { onHashUpdate } = useTableauHashUpdate(
+        'UPDATE_ROUTE_BOARDS_TASKS_HASH'
+    )
     const [selectedBoard] = useAtom(BoardAtom)
     const { pushReset, pushBoard } = useTableauRoute()
     const [pendingEntry, setPendingEntry] = useAtom(HashEntryAtom)
@@ -29,12 +31,10 @@ export function useTableauBoardHashUpdate(
                 title: 'Board not found',
                 description: 'The url provided is not a valid board',
                 status: 'error',
-                duration: 4000,
+                duration: 9000,
                 isClosable: true,
             })
             setPendingEntry(null)
-            if (selectedBoard && selectedBoard.id !== pendingEntry.board)
-                return pushBoard(selectedBoard)
             return pushReset()
         }
         if (!boardToSelect) {

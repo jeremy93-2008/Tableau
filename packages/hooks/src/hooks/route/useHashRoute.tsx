@@ -4,6 +4,8 @@ import {
     IHashRouteEntry,
 } from '../../providers/route/HashRouterProvider'
 
+export const HASH_URL_EMPTY = '#/'
+
 export function useHashRoute() {
     const hashRouterCtx = useContext(DefaultHashRouterCtx)
 

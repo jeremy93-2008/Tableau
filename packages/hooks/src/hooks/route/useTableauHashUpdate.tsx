@@ -1,7 +1,10 @@
-import { useHashRoute } from './useHashRoute'
+import { HASH_URL_EMPTY, useHashRoute } from './useHashRoute'
 import { useRef } from 'react'
 import { checkTableauInput } from '../../utils/route/checkTableauInput'
 import { getTableauHashEntry } from '../../utils/route/getTableauHashEntry'
+import { useAtom } from 'jotai'
+import { BoardAtom, HashEntryAtom } from 'shared-atoms'
+import { useTableauRoute } from './useTableauRoute'
 
 export type ITableauHashRouteEntry = {
     board: string
@@ -13,6 +16,10 @@ export function useTableauHashUpdate(key?: string) {
     const refTableauUpdate = useRef<
         Map<string, (entry: ITableauHashRouteEntry, path: string) => void>
     >(new Map([]))
+
+    const { pushReset } = useTableauRoute()
+    const [_selectedBoard, setSelectedBoard] = useAtom(BoardAtom)
+    const [_pendingHashEntry, setPendingHashEntry] = useAtom(HashEntryAtom)
 
     const onHashUpdate = (
         fn: (entry: ITableauHashRouteEntry, path: string) => void
@@ -36,6 +43,17 @@ export function useTableauHashUpdate(key?: string) {
         const tableauEntry = getTableauHashEntry(type, entry)
         emitUpdate(tableauEntry, path)
     }, key ?? emitUpdate.toString())
+
+    //We check any other invalid possible route to redirect it to the empty hash state
+    onUpdate((entry, path) => {
+        const type = checkTableauInput(entry)
+        if (type) return
+        if (path === HASH_URL_EMPTY) {
+            setPendingHashEntry(null)
+            return setSelectedBoard(null)
+        }
+        pushReset()
+    }, 'INVALID_ROUTE_EMPTY_HASH')
 
     return {
         onHashUpdate,

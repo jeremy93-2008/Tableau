@@ -26,7 +26,7 @@ export function useTableauTaskHashUpdate(
                     title: 'Task not found',
                     description: 'The url provided is not a valid task',
                     status: 'error',
-                    duration: 4000,
+                    duration: 9000,
                     isClosable: true,
                     id: 'task-notfound',
                 })
