@@ -95,6 +95,7 @@ export function ColumnShare() {
                                 selectedBoard={selectedBoard!}
                                 boardsSharedUser={boardsSharedUser!}
                                 refetchSharedBoard={refetch}
+                                onClose={onClose}
                             />
                         </ModalBody>
                     </LoadingProvider>

@@ -7,14 +7,14 @@ export function useTableauRoute() {
     const { push } = useHashRoute()
     const pushBoard = useCallback(
         (board: IBoardWithAllRelation) => {
-            push(`b/${board.id}`)
+            push(`board/${board.id}`)
         },
         [push]
     )
 
     const pushTask = useCallback(
         (task: Task) => {
-            push(`b/${task.boardId}/t/${task.id}`)
+            push(`board/${task.boardId}/task/${task.id}`)
         },
         [push]
     )

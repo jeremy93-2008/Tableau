@@ -78,7 +78,7 @@ export function TaskItem(props: ITaskItemProps) {
         [onOpen, pushTask, task]
     )
 
-    useTableauTaskHashUpdate(task, onTaskEdit)
+    useTableauTaskHashUpdate(task, onTaskEdit, () => onClose())
 
     const handleRefTaskContainer = (element: HTMLDivElement) => {
         isDisabled ? noop() : drag(element)

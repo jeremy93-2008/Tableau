@@ -15,11 +15,13 @@ import {
     IOptionsMenuItem,
     useShareRolesOptions,
 } from './hooks/useShareRolesOptions'
-import { useTableauMutation, useThemeMode } from 'shared-hooks'
+import { useTableauMutation, useTableauRoute, useThemeMode } from 'shared-hooks'
 import { ColumnShareFormNew } from './columnShareFormNew'
 import { useSession } from 'next-auth/react'
 import { DeleteModal } from './modal/deleteModal'
 import { useShareRolesPermission } from './hooks/useShareRolesPermission'
+import { useAtom } from 'jotai'
+import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 
 type IShareMutationEditValue = {
     id: string
@@ -31,10 +33,14 @@ interface IColumnShareFormProps {
     selectedBoard: IBoardWithAllRelation
     boardsSharedUser: IFullBoardSharing[]
     refetchSharedBoard: () => void
+    onClose: () => void
 }
 
 export function ColumnShareForm(props: IColumnShareFormProps) {
-    const { selectedBoard, boardsSharedUser, refetchSharedBoard } = props
+    const { selectedBoard, boardsSharedUser, refetchSharedBoard, onClose } =
+        props
+    const [_selectedBoard, setSelectedBoard] = useAtom(BoardAtom)
+    const [refetchBoards] = useAtom(RefetchBoardAtom)
     const { data: session } = useSession()
 
     const { bg } = useThemeMode()
@@ -74,16 +80,27 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
     const { Option, options, getBoardSharingRoleByUser } =
         useShareRolesOptions(selectedBoard)
 
+    const { pushReset } = useTableauRoute()
+
     const handleDeleteUserSharingPermission = useCallback(
         (userBoardShared: IFullBoardSharing) => () => {
             onDeleteModalClose()
             mutateDeleteAsync({ id: userBoardShared.id }).then(() => {
                 window.setTimeout(() => {
                     refetchSharedBoard()
+                    refetchBoards.fetch()
+                    setSelectedBoard(null)
+                    pushReset()
+                    onClose()
                 })
             })
         },
-        [mutateDeleteAsync, onDeleteModalClose, refetchSharedBoard]
+        [
+            mutateDeleteAsync,
+            onDeleteModalClose,
+            refetchBoards,
+            refetchSharedBoard,
+        ]
     )
 
     const handleChangePermission = useCallback(

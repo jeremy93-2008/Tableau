@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useAtom } from 'jotai'
 import { IBoardWithAllRelation } from 'shared-components'
 import { useTableauHashUpdate, useTableauRoute } from 'shared-hooks'
-import { HashEntryAtom } from 'shared-atoms'
+import { BoardAtom, HashEntryAtom } from 'shared-atoms'
 import { useToast } from '@chakra-ui/react'
 
 export function useTableauBoardHashUpdate(
@@ -11,7 +11,8 @@ export function useTableauBoardHashUpdate(
 ) {
     const toast = useToast()
     const { onHashUpdate } = useTableauHashUpdate('updateBoardsAndTask')
-    const { pushReset } = useTableauRoute()
+    const [selectedBoard] = useAtom(BoardAtom)
+    const { pushReset, pushBoard } = useTableauRoute()
     const [pendingEntry, setPendingEntry] = useAtom(HashEntryAtom)
 
     onHashUpdate((entry, path) => {
@@ -32,6 +33,8 @@ export function useTableauBoardHashUpdate(
                 isClosable: true,
             })
             setPendingEntry(null)
+            if (selectedBoard && selectedBoard.id !== pendingEntry.board)
+                return pushBoard(selectedBoard)
             return pushReset()
         }
         if (!boardToSelect) {
@@ -39,6 +42,7 @@ export function useTableauBoardHashUpdate(
             return pushReset()
         }
         onItemClick(boardToSelect, 'no-push')
+        if (!pendingEntry.task) setPendingEntry(null)
     }, [
         pendingEntry,
         listOfBoards,

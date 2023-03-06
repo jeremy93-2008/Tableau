@@ -7,7 +7,8 @@ import { useTableauRoute } from 'shared-hooks'
 
 export function useTableauTaskHashUpdate(
     task: Task,
-    onTaskEdit: (routeToPush?: 'no-push') => void
+    onTaskEdit: (routeToPush?: 'no-push') => void,
+    onCloseModal: () => void
 ) {
     const toast = useToast()
     const { pushBoard } = useTableauRoute()
@@ -18,6 +19,7 @@ export function useTableauTaskHashUpdate(
         if (!selectedBoard) return
         if (!pendingEntry) return
         if (!pendingEntry.task) return
+        if (selectedBoard.id !== pendingEntry.board) return
         if (!selectedBoard?.Task.find((t) => t.id === pendingEntry.task)) {
             if (!toast.isActive('task-notfound'))
                 toast({
@@ -31,10 +33,12 @@ export function useTableauTaskHashUpdate(
             setPendingEntry(null)
             pushBoard(selectedBoard)
         }
+        onCloseModal()
         if (pendingEntry.task !== task.id) return
         onTaskEdit('no-push')
         setPendingEntry(null)
     }, [
+        onCloseModal,
         onTaskEdit,
         pendingEntry,
         pushBoard,
