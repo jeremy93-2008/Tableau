@@ -6,7 +6,8 @@ import {
     useMemo,
     useRef,
 } from 'react'
-import { parsePath } from '../utils/parsePath'
+import { parsePath } from '../../utils/parsePath'
+import { useHashHistory } from '../../hooks/route/useHashHistory'
 
 export type IHashRouterCtx = {
     history: IHashRouteEntry[]
@@ -30,7 +31,6 @@ export function HashRouterProvider(props: PropsWithChildren) {
     const refSubscription = useRef<Map<string | symbol, Function>>(new Map([]))
 
     const subscribe = useCallback((fn: Function, key: string | symbol) => {
-        if (refSubscription.current.has(key)) return
         refSubscription.current.set(key, fn)
     }, [])
 
@@ -51,14 +51,20 @@ export function HashRouterProvider(props: PropsWithChildren) {
         [subscribe]
     )
 
+    const history = useHashHistory(ctxValue.history)
+
     const handleHashChange = useCallback(() => {
         const val = parsePath(location.hash)
+
+        const lastHistory = history.last()
+        if (lastHistory && lastHistory.path === location.hash) return
+
         ctxValue.path = location.hash
         ctxValue.entry = { path: location.hash, values: val }
         ctxValue.history.push({ path: location.hash, values: val })
 
         emitUpdate(ctxValue.entry, ctxValue.path)
-    }, [ctxValue, emitUpdate])
+    }, [ctxValue, emitUpdate, history])
 
     useEffect(() => {
         handleHashChange()

@@ -1,13 +1,14 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { Flex } from '@chakra-ui/react'
 import { IBoardWithAllRelation } from '../../../../../types/types'
-import { useAtom } from 'jotai'
-import { BoardAtom } from 'shared-atoms'
 import { BoardItem } from './boardItem'
 
 interface IBoardListProps {
     listOfBoards?: IBoardWithAllRelation[]
-    onItemClick?: (board: IBoardWithAllRelation) => void
+    onItemClick?: (
+        board: IBoardWithAllRelation,
+        pushToRoute?: 'no-push'
+    ) => void
 }
 
 export function BoardList(props: IBoardListProps) {

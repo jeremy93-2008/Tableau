@@ -6,29 +6,21 @@ import { BoardList } from './boardList'
 import { BoardNew } from './boardNew'
 import { IBoardWithAllRelation } from '../../../../../types/types'
 import { BoardAtom, RefetchBoardAtom, SidePanelAtom } from 'shared-atoms'
-import {
-    useTableauHashUpdate,
-    useTableauQuery,
-    useThemeMode,
-} from 'shared-hooks'
+import { useTableauHash, useTableauQuery, useThemeMode } from 'shared-hooks'
 import { BiRefresh } from 'react-icons/bi'
 import { getAnimation } from 'shared-utils'
+import { useHashBoard } from '../hooks/useHashBoard'
 
 export function BoardSide() {
     const { data: session } = useSession()
+
+    const { pushBoard } = useTableauHash()
+
     const [selectedBoard, setBoard] = useAtom(BoardAtom)
-
     const [isOpenSidePanel, setIsOpenSidePanel] = useAtom(SidePanelAtom)
-
     const [_refetchBoards, setRefetchBoard] = useAtom(RefetchBoardAtom)
 
     const { bg, text } = useThemeMode()
-
-    const { onBoardUpdate } = useTableauHashUpdate()
-
-    onBoardUpdate((entry, path) => {
-        console.log(entry, path)
-    })
 
     const { data, refetch, isRefetching } = useTableauQuery<
         IBoardWithAllRelation[]
@@ -43,20 +35,25 @@ export function BoardSide() {
     }, [refetch])
 
     const onItemClick = useCallback(
-        (board: IBoardWithAllRelation) => {
+        (board: IBoardWithAllRelation, pushToRoute?: 'no-push') => {
             if (selectedBoard?.id === board.id) return
             setBoard(board)
             setRefetchBoard({ fetch: onAfterSubmit })
             setIsOpenSidePanel(false)
+            if (pushToRoute === 'no-push') return
+            pushBoard(board)
         },
         [
-            selectedBoard,
+            selectedBoard?.id,
             setBoard,
             setRefetchBoard,
             onAfterSubmit,
             setIsOpenSidePanel,
+            pushBoard,
         ]
     )
+
+    useHashBoard(data, onItemClick)
 
     const [isRefreshAnimate, setIsRefreshAnimate] = useState(false)
     const { spiningAnimation } = getAnimation()
