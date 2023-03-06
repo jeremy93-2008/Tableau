@@ -16,6 +16,10 @@ import { IFullStatus } from '../../types/types'
 import { getAnimation } from 'shared-utils'
 import { useHighlightTaskItem } from './hooks/useHighlightTaskItem'
 import { noop } from '@chakra-ui/utils'
+import { useTableauTaskHashUpdate } from './hooks/useTableauTaskHashUpdate'
+import { useTableauHash } from 'shared-hooks'
+import { useAtom } from 'jotai'
+import { BoardAtom } from 'shared-atoms'
 
 interface ITaskItemProps {
     task: Task
@@ -30,6 +34,8 @@ export function TaskItem(props: ITaskItemProps) {
     const { task, status, isDisabled, readonly, noHighlightIt, style } = props
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [isHoveringTask, setHoveringTask] = useState(false)
+
+    const [selectedBoard] = useAtom(BoardAtom)
 
     const taskContainer = useRef<HTMLDivElement>()
     const { bounceAnimation } = getAnimation()
@@ -60,6 +66,19 @@ export function TaskItem(props: ITaskItemProps) {
         if (!isHoveringTask) return
         setHoveringTask(false)
     }, [isHoveringTask, setHoveringTask])
+
+    const { pushBoard, pushTask } = useTableauHash()
+
+    const onTaskEdit = useCallback(
+        (routeToPush?: 'no-push') => {
+            onOpen()
+            if (routeToPush === 'no-push') return
+            pushTask(task)
+        },
+        [onOpen, pushTask, task]
+    )
+
+    useTableauTaskHashUpdate(task, onTaskEdit)
 
     const handleRefTaskContainer = (element: HTMLDivElement) => {
         isDisabled ? noop() : drag(element)
@@ -125,7 +144,7 @@ export function TaskItem(props: ITaskItemProps) {
                         {
                             <IconButton
                                 data-cy="taskEdit"
-                                onClick={() => onOpen()}
+                                onClick={() => onTaskEdit()}
                                 colorScheme="teal"
                                 isDisabled={isDisabled}
                                 bgColor="teal.600"
@@ -147,7 +166,11 @@ export function TaskItem(props: ITaskItemProps) {
                 {isOpen && (
                     <TaskEdit
                         isOpen={isOpen}
-                        onClose={onClose}
+                        onClose={() => {
+                            onClose()
+                            if (!selectedBoard) return
+                            pushBoard(selectedBoard)
+                        }}
                         task={task}
                         status={status!}
                     />

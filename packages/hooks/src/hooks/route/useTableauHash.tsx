@@ -3,6 +3,7 @@ import { useCallback, useRef } from 'react'
 import { checkTableauInput } from '../../utils/route/checkTableauInput'
 import { getTableauHashEntry } from '../../utils/route/getTableauHashEntry'
 import { IBoardWithAllRelation } from 'shared-components'
+import { Task } from '@prisma/client'
 
 export type ITableauHashRouteEntry = {
     board: string
@@ -11,25 +12,14 @@ export type ITableauHashRouteEntry = {
 
 export function useTableauHash() {
     const { push, onUpdate } = useHashRoute()
-    const refBoardUpdate = useRef<
-        Map<string, (entry: ITableauHashRouteEntry, path: string) => void>
-    >(new Map([]))
-    const refTaskUpdate = useRef<
+    const refTableauUpdate = useRef<
         Map<string, (entry: ITableauHashRouteEntry, path: string) => void>
     >(new Map([]))
 
-    const onHashBoardUpdate = useCallback(
+    const onHashUpdate = useCallback(
         (fn: (entry: ITableauHashRouteEntry, path: string) => void) => {
             const key = fn.toString()
-            refBoardUpdate.current.set(key, fn)
-        },
-        []
-    )
-
-    const onHashTaskUpdate = useCallback(
-        (fn: (entry: ITableauHashRouteEntry, path: string) => void) => {
-            const key = fn.toString()
-            refTaskUpdate.current.set(key, fn)
+            refTableauUpdate.current.set(key, fn)
         },
         []
     )
@@ -37,10 +27,10 @@ export function useTableauHash() {
     const emitUpdate = (tableauEntry: ITableauHashRouteEntry, path: string) => {
         if (!tableauEntry) return
         if (tableauEntry.board && !tableauEntry.task)
-            return refBoardUpdate.current.forEach((fn) =>
+            return refTableauUpdate.current.forEach((fn) =>
                 fn(tableauEntry, path)
             )
-        return refTaskUpdate.current.forEach((fn) => fn(tableauEntry, path))
+        return refTableauUpdate.current.forEach((fn) => fn(tableauEntry, path))
     }
 
     onUpdate((entry, path) => {
@@ -57,9 +47,21 @@ export function useTableauHash() {
         [push]
     )
 
+    const pushTask = useCallback(
+        (task: Task) => {
+            push(`b/${task.boardId}/t/${task.id}`)
+        },
+        [push]
+    )
+
+    const pushReset = useCallback(() => {
+        push('')
+    }, [push])
+
     return {
-        onHashBoardUpdate,
-        onHashTaskUpdate,
+        onHashUpdate,
         pushBoard,
+        pushTask,
+        pushReset,
     }
 }

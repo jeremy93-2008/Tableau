@@ -1,4 +1,5 @@
 export { BoardAtom } from './atoms/boardAtom'
+export { HashEntryAtom } from './atoms/hashEntryAtom'
 export { RefetchBoardAtom } from './atoms/refetchBoardAtom'
 export { RefetchBoardSharedAtom } from './atoms/refetchBoardSharedAtom'
 export { LoadingAtom } from './atoms/loadingAtom'

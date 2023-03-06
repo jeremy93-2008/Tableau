@@ -9,7 +9,7 @@ import { BoardAtom, RefetchBoardAtom, SidePanelAtom } from 'shared-atoms'
 import { useTableauHash, useTableauQuery, useThemeMode } from 'shared-hooks'
 import { BiRefresh } from 'react-icons/bi'
 import { getAnimation } from 'shared-utils'
-import { useHashBoard } from '../hooks/useHashBoard'
+import { useTableauBoardHashUpdate } from '../hooks/useTableauBoardHashUpdate'
 
 export function BoardSide() {
     const { data: session } = useSession()
@@ -53,7 +53,7 @@ export function BoardSide() {
         ]
     )
 
-    useHashBoard(data, onItemClick)
+    useTableauBoardHashUpdate(data, onItemClick)
 
     const [isRefreshAnimate, setIsRefreshAnimate] = useState(false)
     const { spiningAnimation } = getAnimation()
