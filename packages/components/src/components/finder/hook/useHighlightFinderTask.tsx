@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react'
-import { useTableauQuery } from 'shared-hooks'
+import { useTableauQuery, useTableauRoute } from 'shared-hooks'
 import { IBoardWithAllRelation } from '../../../types/types'
 import { useCallback, useTransition } from 'react'
 import { useAtom } from 'jotai'
@@ -9,6 +9,9 @@ import { Task } from '.prisma/client'
 export function useHighlightFinderTask(onAfterHighlight: (task: Task) => void) {
     const [_selectedBoard, setSelectedBoard] = useAtom(BoardAtom)
     const [_highlightTask, setHighlightTask] = useAtom(HighlightTaskAtom)
+
+    const { pushBoard } = useTableauRoute()
+
     const { data: session } = useSession()
 
     const { data, refetch, isRefetching } = useTableauQuery<
@@ -20,7 +23,11 @@ export function useHighlightFinderTask(onAfterHighlight: (task: Task) => void) {
     const handleHighlightTask = useCallback(
         (task: Task) => () => {
             if (!data) return
-            setSelectedBoard(data.find((board) => board.id === task.boardId)!)
+            const newSelectedBoard = data.find(
+                (board) => board.id === task.boardId
+            )
+            if (!newSelectedBoard) return
+            pushBoard(newSelectedBoard)
             // We wait until React finish to send us to the new selected board
             window.requestAnimationFrame(() => {
                 setHighlightTask(task)

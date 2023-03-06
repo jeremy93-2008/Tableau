@@ -5,18 +5,30 @@ import { NoBoard } from './components/noBoard'
 import { Columns } from 'shared-components'
 import { BoardAtom } from 'shared-atoms'
 import { useSession } from 'next-auth/react'
-import { useThemeMode } from 'shared-hooks'
+import { useTableauRoute, useThemeMode } from 'shared-hooks'
+import { HASH_URL_EMPTY } from 'shared-hooks'
 
 export function Board() {
     const { status } = useSession()
-    const [selectedBoard, setSelectedBoard] = useAtom(BoardAtom)
-
+    const [selectedBoard] = useAtom(BoardAtom)
+    const { pushReset } = useTableauRoute()
     const { bg } = useThemeMode()
 
     useEffect(() => {
-        if (status === 'unauthenticated' && selectedBoard !== null)
-            setSelectedBoard(null)
-    }, [status, selectedBoard, setSelectedBoard])
+        const handleUnauthenticatedState = () => {
+            if (
+                status === 'unauthenticated' &&
+                location.hash !== HASH_URL_EMPTY
+            )
+                pushReset()
+        }
+        if (status === 'unauthenticated' && selectedBoard !== null) pushReset()
+        handleUnauthenticatedState()
+        window.addEventListener('hashchange', handleUnauthenticatedState)
+
+        return () =>
+            window.removeEventListener('hashchange', handleUnauthenticatedState)
+    }, [status, selectedBoard, pushReset])
 
     return (
         <Flex

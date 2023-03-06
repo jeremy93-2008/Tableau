@@ -43,7 +43,6 @@ export function BoardDelete(props: IBoardDeleteProps) {
             if (selectedBoard?.id !== singleBoard.id) return
             setPendingHashEntry(null)
             pushReset()
-            setSelectedBoard(null)
         })
     }, [
         mutateAsync,

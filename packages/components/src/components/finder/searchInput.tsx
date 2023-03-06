@@ -112,7 +112,7 @@ export function SearchInput(props: ISearchInputProps) {
                     <CloseIcon
                         onClick={handleClearText}
                         boxSize={3}
-                        color={text.primary}
+                        color={text.search}
                         cursor="pointer"
                     />
                 </InputRightElement>

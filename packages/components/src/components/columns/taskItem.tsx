@@ -71,14 +71,13 @@ export function TaskItem(props: ITaskItemProps) {
 
     const onTaskEdit = useCallback(
         (routeToPush?: 'no-push') => {
-            onOpen()
-            if (routeToPush === 'no-push') return
+            if (routeToPush === 'no-push') return onOpen()
             pushTask(task)
         },
         [onOpen, pushTask, task]
     )
 
-    useTableauTaskHashUpdate(task, onTaskEdit, () => onClose())
+    useTableauTaskHashUpdate(task, readonly, onTaskEdit, () => onClose())
 
     const handleRefTaskContainer = (element: HTMLDivElement) => {
         isDisabled ? noop() : drag(element)

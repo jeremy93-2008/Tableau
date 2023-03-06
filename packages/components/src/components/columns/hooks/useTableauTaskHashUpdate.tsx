@@ -7,6 +7,7 @@ import { useTableauRoute } from 'shared-hooks'
 
 export function useTableauTaskHashUpdate(
     task: Task,
+    readonly: boolean | undefined,
     onTaskEdit: (routeToPush?: 'no-push') => void,
     onCloseModal: () => void
 ) {
@@ -16,6 +17,7 @@ export function useTableauTaskHashUpdate(
     const [pendingEntry, setPendingEntry] = useAtom(HashEntryAtom)
 
     useEffect(() => {
+        if (readonly) return
         if (!selectedBoard) return
         if (!pendingEntry) return
         if (!pendingEntry.task) return

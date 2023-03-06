@@ -35,17 +35,14 @@ export function BoardSide() {
     }, [refetch])
 
     const onItemClick = useCallback(
-        (board: IBoardWithAllRelation, pushToRoute?: 'no-push') => {
+        (board: IBoardWithAllRelation) => {
             if (selectedBoard?.id === board.id) return
-            setSelectedBoard(board)
             setRefetchBoard({ fetch: onAfterSubmit })
             setIsOpenSidePanel(false)
-            if (pushToRoute === 'no-push') return
             pushBoard(board)
         },
         [
             selectedBoard?.id,
-            setSelectedBoard,
             setRefetchBoard,
             onAfterSubmit,
             setIsOpenSidePanel,
@@ -53,7 +50,7 @@ export function BoardSide() {
         ]
     )
 
-    useTableauBoardHashUpdate(data, onItemClick)
+    useTableauBoardHashUpdate(data)
 
     const [isRefreshAnimate, setIsRefreshAnimate] = useState(false)
     const { spiningAnimation } = getAnimation()

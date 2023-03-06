@@ -6,15 +6,14 @@ import { BoardAtom, HashEntryAtom } from 'shared-atoms'
 import { useToast } from '@chakra-ui/react'
 
 export function useTableauBoardHashUpdate(
-    listOfBoards: IBoardWithAllRelation[] | undefined,
-    onItemClick: (board: IBoardWithAllRelation, pushToRoute?: 'no-push') => void
+    listOfBoards: IBoardWithAllRelation[] | undefined
 ) {
     const toast = useToast()
     const { onHashUpdate } = useTableauHashUpdate(
         'UPDATE_ROUTE_BOARDS_TASKS_HASH'
     )
-    const [selectedBoard] = useAtom(BoardAtom)
-    const { pushReset, pushBoard } = useTableauRoute()
+    const [selectedBoard, setSelectedBoard] = useAtom(BoardAtom)
+    const { pushReset } = useTableauRoute()
     const [pendingEntry, setPendingEntry] = useAtom(HashEntryAtom)
 
     onHashUpdate((entry, path) => {
@@ -41,14 +40,19 @@ export function useTableauBoardHashUpdate(
             setPendingEntry(null)
             return pushReset()
         }
-        onItemClick(boardToSelect, 'no-push')
+        if (
+            !selectedBoard ||
+            (selectedBoard && selectedBoard.id !== boardToSelect.id)
+        )
+            setSelectedBoard(boardToSelect)
         if (!pendingEntry.task) setPendingEntry(null)
     }, [
         pendingEntry,
         listOfBoards,
-        onItemClick,
         pushReset,
         toast,
         setPendingEntry,
+        setSelectedBoard,
+        selectedBoard,
     ])
 }

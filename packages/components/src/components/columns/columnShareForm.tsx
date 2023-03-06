@@ -89,7 +89,6 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
                 window.setTimeout(() => {
                     refetchSharedBoard()
                     refetchBoards.fetch()
-                    setSelectedBoard(null)
                     pushReset()
                     onClose()
                 })

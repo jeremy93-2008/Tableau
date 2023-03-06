@@ -10,7 +10,7 @@ import {
 import { ExternalLinkIcon, MoonIcon, SunIcon } from '@chakra-ui/icons'
 import { signOut } from 'next-auth/react'
 import { Session } from 'next-auth'
-import { useTableauMutation, useThemeMode } from 'shared-hooks'
+import { useTableauMutation, useTableauRoute, useThemeMode } from 'shared-hooks'
 import { useCallback } from 'react'
 import axios from 'axios'
 import { reloadSession } from 'shared-utils'
@@ -21,6 +21,8 @@ interface IUserModalProps {
 
 export function UserModal(props: IUserModalProps) {
     const { session } = props
+
+    const { pushReset } = useTableauRoute()
     const { colorMode, toggleColorMode } = useColorMode()
     const { bg } = useThemeMode()
 
@@ -96,6 +98,7 @@ export function UserModal(props: IUserModalProps) {
                 rightIcon={<ExternalLinkIcon />}
                 onClick={(evt) => {
                     signOut().then()
+                    pushReset()
                     evt.stopPropagation()
                 }}
             >
