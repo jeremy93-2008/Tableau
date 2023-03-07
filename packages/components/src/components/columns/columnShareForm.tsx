@@ -51,17 +51,18 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
         onClose: onDeleteModalClose,
     } = useDisclosure()
 
-    const { mutateAsync: mutateDeleteAsync } = useTableauMutation(
-        (value: Partial<IShareMutationEditValue>) => {
-            return axios.post(`api/share/delete`, value, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            })
-        },
-        { noLoading: true }
-    )
+    const { mutateAsync: mutateDeleteAsync, isLoading: isDeleteLoading } =
+        useTableauMutation(
+            (value: Partial<IShareMutationEditValue>) => {
+                return axios.post(`api/share/delete`, value, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                    },
+                })
+            },
+            { noLoading: true }
+        )
 
     const { mutateAsync: mutateEditAsync } = useTableauMutation(
         (value: IShareMutationEditValue) => {
@@ -221,7 +222,7 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
                                         isDisabled={
                                             !permissions.userBoardSharing.get(
                                                 userBoardShared.id
-                                            )!.delete
+                                            )!.delete || isDeleteLoading
                                         }
                                         onClick={() => onDeleteModalOpen()}
                                     />

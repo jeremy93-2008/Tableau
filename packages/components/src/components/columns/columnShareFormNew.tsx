@@ -81,7 +81,7 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
         return [{ label: inputText, value: inputText }, ...userList]
     }, [boardsSharedUser, data, inputText, session])
 
-    const { mutateAsync: mutateAddAsync } = useTableauMutation(
+    const { mutateAsync: mutateAddAsync, isLoading } = useTableauMutation(
         (value: IShareMutationAddValue) => {
             return axios.post(`api/share/add`, value, {
                 headers: {
@@ -235,7 +235,10 @@ export function ColumnShareFormNew(props: IColumnShareFormNewProps) {
                 />
                 <Button
                     isDisabled={
-                        !permissions?.add || !selectedUser || !selectedRole
+                        !permissions?.add ||
+                        !selectedUser ||
+                        !selectedRole ||
+                        isLoading
                     }
                     onClick={handleClickInvite}
                     colorScheme="teal"
