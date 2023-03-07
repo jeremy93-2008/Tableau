@@ -12,4 +12,6 @@ export { HashRouterProvider } from './providers/route/HashRouterProvider'
 
 export { type ITableauHashRouteEntry } from './hooks/route/useTableauHashUpdate'
 
+export { checkTableauInput } from './utils/route/checkTableauInput'
+
 export { HASH_URL_EMPTY } from './hooks/route/useHashRoute'

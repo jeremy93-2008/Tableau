@@ -7,12 +7,15 @@ import { BoardAtom } from 'shared-atoms'
 import { useSession } from 'next-auth/react'
 import { useTableauRoute, useThemeMode } from 'shared-hooks'
 import { HASH_URL_EMPTY } from 'shared-hooks'
+import { useTableauResetHashUpdate } from './hooks/useTableauResetHashUpdate'
 
 export function Board() {
     const { status } = useSession()
     const [selectedBoard] = useAtom(BoardAtom)
     const { pushReset } = useTableauRoute()
     const { bg } = useThemeMode()
+
+    const { onHashUpdate } = useTableauResetHashUpdate()
 
     useEffect(() => {
         const handleUnauthenticatedState = () => {
@@ -24,11 +27,11 @@ export function Board() {
         }
         if (status === 'unauthenticated' && selectedBoard !== null) pushReset()
         handleUnauthenticatedState()
-        window.addEventListener('hashchange', handleUnauthenticatedState)
 
-        return () =>
-            window.removeEventListener('hashchange', handleUnauthenticatedState)
-    }, [status, selectedBoard, pushReset])
+        onHashUpdate(() => {
+            handleUnauthenticatedState()
+        })
+    }, [status, selectedBoard, pushReset, onHashUpdate])
 
     return (
         <Flex

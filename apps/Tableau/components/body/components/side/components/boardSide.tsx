@@ -50,8 +50,6 @@ export function BoardSide() {
         ]
     )
 
-    useTableauBoardHashUpdate(data)
-
     const [isRefreshAnimate, setIsRefreshAnimate] = useState(false)
     const { spiningAnimation } = getAnimation()
 
@@ -89,6 +87,8 @@ export function BoardSide() {
         }
         return () => window.removeEventListener('click', handlePortalClick)
     }, [isOpenSidePanel, setIsOpenSidePanel])
+
+    useTableauBoardHashUpdate(data)
 
     return (
         <Flex flexDirection="column" width="100%">

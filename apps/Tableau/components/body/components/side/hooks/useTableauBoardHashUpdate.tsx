@@ -9,14 +9,14 @@ export function useTableauBoardHashUpdate(
     listOfBoards: IBoardWithAllRelation[] | undefined
 ) {
     const toast = useToast()
-    const { onHashUpdate } = useTableauHashUpdate(
+    const { onTableauHashUpdate } = useTableauHashUpdate(
         'UPDATE_ROUTE_BOARDS_TASKS_HASH'
     )
     const [selectedBoard, setSelectedBoard] = useAtom(BoardAtom)
     const { pushReset } = useTableauRoute()
     const [pendingEntry, setPendingEntry] = useAtom(HashEntryAtom)
 
-    onHashUpdate((entry, path) => {
+    onTableauHashUpdate((entry, path) => {
         setPendingEntry(entry)
     })
 
