@@ -54,3 +54,6 @@ videos
 instrumented
 coverage
 .nyc_output
+
+package-lock.json
+.idea

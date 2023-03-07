@@ -9,7 +9,6 @@ services:
     volumes:
       - ./apps/Tableau:/monorepo/apps/Tableau
       - ./packages:/monorepo/packages
-      - ./node_modules:/monorepo/node_modules
       - ./apps/Tableau/.next:/monorepo/Tableau/.next
     depends_on:
       postgres:
