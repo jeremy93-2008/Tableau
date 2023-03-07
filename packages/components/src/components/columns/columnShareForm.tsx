@@ -89,16 +89,20 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
                 window.setTimeout(() => {
                     refetchSharedBoard()
                     refetchBoards.fetch()
-                    pushReset()
+                    if (userBoardShared.user.email === session?.user.email)
+                        pushReset()
                     onClose()
                 })
             })
         },
         [
             mutateDeleteAsync,
+            onClose,
             onDeleteModalClose,
+            pushReset,
             refetchBoards,
             refetchSharedBoard,
+            session?.user.email,
         ]
     )
 
