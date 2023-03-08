@@ -1,14 +1,25 @@
 import { Formik, FormikHelpers } from 'formik'
 import { TextInput } from '../textInput'
 import {
+    Box,
     Button,
     ButtonGroup,
     Flex,
+    IconButton,
+    Popover,
+    PopoverArrow,
+    PopoverBody,
+    PopoverCloseButton,
+    PopoverContent,
+    PopoverHeader,
+    PopoverTrigger,
+    Stack,
     Text,
+    Tooltip,
     useDisclosure,
     VStack,
 } from '@chakra-ui/react'
-import { WarningIcon } from '@chakra-ui/icons'
+import { AddIcon, WarningIcon } from '@chakra-ui/icons'
 import React, { useCallback, useMemo } from 'react'
 import * as Yup from 'yup'
 import { ITaskEditFormikValues } from './taskEdit'
@@ -16,6 +27,9 @@ import { Task } from '.prisma/client'
 import { IFullStatus } from '../../types/types'
 import { BsTrashFill } from 'react-icons/bs'
 import { DeleteModal } from './modal/deleteModal'
+import { Select } from 'chakra-react-select'
+import { BOARD_LIMIT } from 'shared-utils'
+import { BoardNewForm } from 'tableau/components/body/components/side/components/boardNewForm'
 
 interface ITaskEditForm {
     task: Task
@@ -46,6 +60,7 @@ export function TaskEditForm(props: ITaskEditForm) {
             elapsedTime: task.elapsedTime || 0,
             estimatedTime: task.estimatedTime || 0,
             order: task.order || 999,
+            assignedUserId: task.assignedUserId ?? undefined,
         }),
         [task, status]
     )
@@ -60,6 +75,7 @@ export function TaskEditForm(props: ITaskEditForm) {
                 statusId: Yup.string().required('Status Id is required'),
                 elapsedTime: Yup.number(),
                 estimatedTime: Yup.number(),
+                assignedUserId: Yup.string().nullable(),
             }),
         []
     )
@@ -83,6 +99,42 @@ export function TaskEditForm(props: ITaskEditForm) {
             >
                 {(props) => (
                     <form onSubmit={props.handleSubmit}>
+                        <Flex
+                            position="absolute"
+                            top={5}
+                            right={20}
+                            flexDirection="column"
+                        >
+                            <Popover
+                                isLazy
+                                isOpen={false}
+                                onOpen={() => {}}
+                                onClose={onClose}
+                            >
+                                <Tooltip label={''}>
+                                    <Box>
+                                        <PopoverTrigger>
+                                            <Button
+                                                aria-label="Add assigned user"
+                                                leftIcon={<AddIcon />}
+                                            >
+                                                Not Assigned
+                                            </Button>
+                                        </PopoverTrigger>
+                                    </Box>
+                                </Tooltip>
+                                <PopoverContent zIndex="popover" p={5}>
+                                    <PopoverHeader fontWeight="semibold">
+                                        Create a new Board
+                                    </PopoverHeader>
+                                    <PopoverArrow />
+                                    <PopoverCloseButton />
+                                    <PopoverBody>
+                                        <Stack spacing={4}>Hola</Stack>
+                                    </PopoverBody>
+                                </PopoverContent>
+                            </Popover>
+                        </Flex>
                         <TextInput
                             label="Name"
                             name="name"

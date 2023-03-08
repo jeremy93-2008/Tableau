@@ -15,6 +15,7 @@ const schema = z.object({
     statusId: z.string().cuid(),
     elapsedTime: z.number(),
     estimatedTime: z.number(),
+    assignedUserId: z.string().nullable(),
 })
 
 export default async function handler(
@@ -41,7 +42,17 @@ export default async function handler(
                 elapsedTime,
                 estimatedTime,
                 statusId,
+                assignedUserId,
             } = params
+
+            const assignedUserConnect = assignedUserId
+                ? {
+                      connect: {
+                          id: assignedUserId,
+                      },
+                  }
+                : undefined
+
             const result = await prisma.task.update({
                 where: {
                     id,
@@ -56,6 +67,7 @@ export default async function handler(
                             id: statusId,
                         },
                     },
+                    assignedUser: assignedUserConnect,
                 },
             })
 

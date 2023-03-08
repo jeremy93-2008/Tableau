@@ -19,11 +19,13 @@ model Task {
   statusId      String
   board         Board       @relation(fields: [boardId], references: [id])
   boardId       String
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User        @relation("User", fields: [userId], references: [id], onDelete: Cascade)
   userId        String
   order         Int         @default(1)
   estimatedTime Int?
   elapsedTime   Int?
+  assignedUserId String?
+  assignedUser   User?       @relation("AssignedUser", fields: [assignedUserId], references: [id], onDelete: Cascade)
 }
 
 model Board {
@@ -102,7 +104,8 @@ model User {
   image            String?
   accounts         Account[]
   sessions         Session[]
-  Task             Task[]
+  Task             Task[]             @relation("User")
+  TaskAssigned     Task[]             @relation("AssignedUser")
   Board            Board[]
   BoardUserSharing BoardUserSharing[]
   isDarkMode       Boolean            @default(false)
