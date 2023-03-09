@@ -27,9 +27,7 @@ import { Task } from '.prisma/client'
 import { IFullStatus } from '../../types/types'
 import { BsTrashFill } from 'react-icons/bs'
 import { DeleteModal } from './modal/deleteModal'
-import { Select } from 'chakra-react-select'
-import { BOARD_LIMIT } from 'shared-utils'
-import { BoardNewForm } from 'tableau/components/body/components/side/components/boardNewForm'
+import { TaskEditFormAssignedUser } from './taskEditFormAssignedUser'
 
 interface ITaskEditForm {
     task: Task
@@ -101,39 +99,22 @@ export function TaskEditForm(props: ITaskEditForm) {
                     <form onSubmit={props.handleSubmit}>
                         <Flex
                             position="absolute"
-                            top={5}
-                            right={20}
+                            top={4}
+                            right="85px"
                             flexDirection="column"
                         >
-                            <Popover
-                                isLazy
-                                isOpen={false}
-                                onOpen={() => {}}
-                                onClose={onClose}
-                            >
-                                <Tooltip label={''}>
-                                    <Box>
-                                        <PopoverTrigger>
-                                            <Button
-                                                aria-label="Add assigned user"
-                                                leftIcon={<AddIcon />}
-                                            >
-                                                Not Assigned
-                                            </Button>
-                                        </PopoverTrigger>
-                                    </Box>
-                                </Tooltip>
-                                <PopoverContent zIndex="popover" p={5}>
-                                    <PopoverHeader fontWeight="semibold">
-                                        Create a new Board
-                                    </PopoverHeader>
-                                    <PopoverArrow />
-                                    <PopoverCloseButton />
-                                    <PopoverBody>
-                                        <Stack spacing={4}>Hola</Stack>
-                                    </PopoverBody>
-                                </PopoverContent>
-                            </Popover>
+                            <TaskEditFormAssignedUser
+                                assignedUserId={props.values.assignedUserId}
+                                setAssignedUser={(
+                                    assignedUserId: string | null
+                                ) => {
+                                    props.setValues({
+                                        ...props.values,
+                                        assignedUserId:
+                                            assignedUserId ?? undefined,
+                                    })
+                                }}
+                            />
                         </Flex>
                         <TextInput
                             label="Name"
