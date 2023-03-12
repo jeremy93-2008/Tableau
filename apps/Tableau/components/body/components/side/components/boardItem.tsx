@@ -12,10 +12,7 @@ import { useThemeMode } from 'shared-hooks'
 
 interface IBoardItemProps {
     board: IBoardWithAllRelation
-    onItemClick?: (
-        board: IBoardWithAllRelation,
-        pushToRoute?: 'no-push'
-    ) => void
+    onItemClick?: (board: IBoardWithAllRelation, noPush?: boolean) => void
 }
 
 export function BoardItem(props: IBoardItemProps) {

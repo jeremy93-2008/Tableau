@@ -36,7 +36,9 @@ export default async function handler(
                         include: {
                             Status: { include: { status: true } },
                             user: true,
-                            Task: true,
+                            Task: {
+                                include: { user: true, assignedUser: true },
+                            },
                         },
                     },
                 },

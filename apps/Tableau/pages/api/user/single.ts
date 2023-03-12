@@ -7,7 +7,8 @@ import { Authenticate } from '../../../server/api/Authenticate'
 type ISchemaParams = z.infer<typeof schema>
 
 const schema = z.object({
-    email: z.string().email(),
+    id: z.string().cuid().nullable(),
+    email: z.string().email().nullable(),
 })
 
 export default async function handler(
@@ -18,14 +19,17 @@ export default async function handler(
         await Authenticate.Get<typeof schema, ISchemaParams>(req, res, schema)
     )
         .success(async (params) => {
-            const result = await prisma.user.findUnique({
+            const result = await prisma.user.findMany({
                 where: {
-                    email: params.email,
+                    OR: [
+                        { id: params.id ?? '' },
+                        { email: params.email ?? '' },
+                    ],
                 },
                 include: { accounts: true, sessions: true },
             })
 
-            res.json(result)
+            res.json(result[0])
         })
         .catch((errors) => onCallExceptions(res, errors))
 }

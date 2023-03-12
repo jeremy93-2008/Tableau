@@ -21,6 +21,8 @@ export function useThemeMode() {
         '0 5px 10px rgba(0,0,0,0.6)'
     )
 
+    const borderTeal = useColorModeValue('#54d6d0', '#026060')
+
     return {
         bg: {
             primary: bgPrimary,
@@ -42,6 +44,9 @@ export function useThemeMode() {
         },
         boxShadow: {
             primary: boxShadow,
+        },
+        border: {
+            teal: borderTeal,
         },
     }
 }

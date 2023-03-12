@@ -44,6 +44,7 @@ export function useTableauTaskHashUpdate(
         onTaskEdit,
         pendingEntry,
         pushBoard,
+        readonly,
         selectedBoard,
         setPendingEntry,
         task.id,

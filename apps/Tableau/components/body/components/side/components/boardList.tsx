@@ -5,10 +5,7 @@ import { BoardItem } from './boardItem'
 
 interface IBoardListProps {
     listOfBoards?: IBoardWithAllRelation[]
-    onItemClick?: (
-        board: IBoardWithAllRelation,
-        pushToRoute?: 'no-push'
-    ) => void
+    onItemClick?: (board: IBoardWithAllRelation, noPush?: boolean) => void
 }
 
 export function BoardList(props: IBoardListProps) {

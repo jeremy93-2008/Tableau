@@ -8,7 +8,6 @@ import React, {
 } from 'react'
 import axios from 'axios'
 import { Container, Flex, Text, useDisclosure, VStack } from '@chakra-ui/react'
-import { Task } from '.prisma/client'
 import { ColumnNew } from './columnNew'
 import { ColumnTaskNew } from './columnTaskNew'
 import { useAtom } from 'jotai'
@@ -17,7 +16,11 @@ import { useDrop } from 'react-dnd'
 import { TaskItemType } from 'shared-utils'
 import { ITaskEditFormikValues } from './taskEdit'
 import { RefetchBoardAtom } from 'shared-atoms'
-import { IBoardWithAllRelation, IFullStatus } from '../../types/types'
+import {
+    IBoardWithAllRelation,
+    IFullStatus,
+    IFullTask,
+} from '../../types/types'
 import { ColumnTaskMove } from './columnTaskMove'
 import { useTableauMutation, useThemeMode } from 'shared-hooks'
 import { ColumnEdit } from './columnEdit'
@@ -70,7 +73,7 @@ export function ColumnTask(props: IColumnTaskProps) {
     )
 
     const onDropTaskItem = useCallback(
-        ({ task }: { task: Task }) => {
+        ({ task }: { task: IFullTask }) => {
             if (!statusBoard || !statusBoard.status.name) return
             if (statusBoard.id === task.statusId) return
             mutateTaskEditAsync({
@@ -91,7 +94,7 @@ export function ColumnTask(props: IColumnTaskProps) {
     )
 
     const onDropHoverItem = useCallback(
-        ({ task }: { task: Task }) => {
+        ({ task }: { task: IFullTask }) => {
             if (!statusBoard || !statusBoard.status.name) return
             if (statusBoard.id === task.statusId) return
             setDropColumnAllowed(true)

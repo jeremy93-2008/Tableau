@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { useDrag } from 'react-dnd'
 import {
+    Avatar,
     Box,
     Flex,
     IconButton,
@@ -17,12 +18,13 @@ import { getAnimation } from 'shared-utils'
 import { useHighlightTaskItem } from './hooks/useHighlightTaskItem'
 import { noop } from '@chakra-ui/utils'
 import { useTableauTaskHashUpdate } from './hooks/useTableauTaskHashUpdate'
-import { useTableauRoute } from 'shared-hooks'
+import { useTableauRoute, useThemeMode } from 'shared-hooks'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
+import { IFullTask } from 'tableau/types/types'
 
 interface ITaskItemProps {
-    task: Task
+    task: IFullTask
     status?: IFullStatus
     readonly?: boolean
     noHighlightIt?: boolean
@@ -38,6 +40,9 @@ export function TaskItem(props: ITaskItemProps) {
     const [selectedBoard] = useAtom(BoardAtom)
 
     const taskContainer = useRef<HTMLDivElement>()
+
+    const { border } = useThemeMode()
+
     const { bounceAnimation } = getAnimation()
 
     const { isCurrentTaskHighlighted } = useHighlightTaskItem(
@@ -87,6 +92,7 @@ export function TaskItem(props: ITaskItemProps) {
     return (
         <Flex
             ref={handleRefTaskContainer}
+            position="relative"
             className="board-item-container"
             bgColor={isCurrentTaskHighlighted ? 'yellow.400' : 'teal.600'}
             color={isCurrentTaskHighlighted ? 'black' : 'gray.100'}
@@ -174,6 +180,28 @@ export function TaskItem(props: ITaskItemProps) {
                         status={status!}
                     />
                 )}
+            </Flex>
+            <Flex
+                position="absolute"
+                right={-2}
+                bottom={-2}
+                className="board-item-actions"
+            >
+                <Tooltip
+                    label={
+                        task.assignedUser
+                            ? `Assigned to ${task.assignedUser?.name}`
+                            : 'Not assigned'
+                    }
+                >
+                    <Avatar
+                        width={readonly ? 8 : 10}
+                        height={readonly ? 8 : 10}
+                        border={`solid 3px ${border.teal}`}
+                        src={task.assignedUser?.image ?? ''}
+                        name={task.assignedUser?.name ?? ''}
+                    />
+                </Tooltip>
             </Flex>
         </Flex>
     )

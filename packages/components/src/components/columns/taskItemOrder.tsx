@@ -9,10 +9,10 @@ import { Box, Flex } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { useTableauMutation, useReorderDnDEntity } from 'shared-hooks'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
-import { useTaskPermission } from './hooks/useTaskPermission'
+import { IFullTask } from 'tableau/types/types'
 
 interface ITaskItemWithOrderingProps {
-    task?: Task
+    task?: IFullTask
     status: IFullStatus
     isDisabled?: boolean
 }
@@ -40,7 +40,7 @@ export function TaskItemOrder(props: ITaskItemWithOrderingProps) {
 
     const { reorderEntity } = useReorderDnDEntity(orderedTasks, currentTask)
 
-    const onDropTaskItem = ({ task: nextTask }: { task: Task }) => {
+    const onDropTaskItem = ({ task: nextTask }: { task: IFullTask }) => {
         if (nextTask.statusId !== status.id || nextTask.id === currentTask?.id)
             return
         const newOrderedTasks = reorderEntity(nextTask)

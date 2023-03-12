@@ -35,11 +35,11 @@ export function BoardSide() {
     }, [refetch])
 
     const onItemClick = useCallback(
-        (board: IBoardWithAllRelation) => {
+        (board: IBoardWithAllRelation, noPush?: boolean) => {
             if (selectedBoard?.id === board.id) return
             setRefetchBoard({ fetch: onAfterSubmit })
             setIsOpenSidePanel(false)
-            pushBoard(board)
+            if (!noPush) pushBoard(board)
         },
         [
             selectedBoard?.id,
@@ -88,7 +88,7 @@ export function BoardSide() {
         return () => window.removeEventListener('click', handlePortalClick)
     }, [isOpenSidePanel, setIsOpenSidePanel])
 
-    useTableauBoardHashUpdate(data)
+    useTableauBoardHashUpdate(data, onItemClick)
 
     return (
         <Flex flexDirection="column" width="100%">

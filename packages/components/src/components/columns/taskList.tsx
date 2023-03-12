@@ -3,9 +3,10 @@ import { Task } from '.prisma/client'
 import { IFullStatus } from '../../types/types'
 import { TaskItemOrder } from './taskItemOrder'
 import { useTaskPermission } from './hooks/useTaskPermission'
+import { IFullTask } from 'tableau/types/types'
 
 interface ITaskListProps {
-    tasks: Task[]
+    tasks: IFullTask[]
     status: IFullStatus
 }
 
