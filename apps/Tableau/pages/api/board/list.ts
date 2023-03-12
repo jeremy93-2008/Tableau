@@ -16,34 +16,36 @@ export default async function handler(
 ) {
     await (
         await Authenticate.Get<typeof schema, ISchemaParams>(req, res, schema)
-    ).success(async () => {
-        const session = await getServerSession(req, res, authOptions)
-        const email = session?.user?.email ?? ''
-        const userEntry = await prisma.user.findFirst({
-            where: { email: { equals: email } },
-        })
+    )
+        .success(async () => {
+            const session = await getServerSession(req, res, authOptions)
+            const email = session?.user?.email ?? ''
+            const userEntry = await prisma.user.findFirst({
+                where: { email: { equals: email } },
+            })
 
-        if (!userEntry)
-            return res
-                .status(500)
-                .send("The user doesn't exist in the database")
+            if (!userEntry)
+                return res
+                    .status(500)
+                    .send("The user doesn't exist in the database")
 
-        const result = await prisma.boardUserSharing.findMany({
-            where: { user: { email } },
-            include: {
-                board: {
-                    include: {
-                        Status: { include: { status: true } },
-                        user: true,
-                        Task: {
-                            include: { user: true, assignedUser: true },
+            const result = await prisma.boardUserSharing.findMany({
+                where: { user: { email } },
+                include: {
+                    board: {
+                        include: {
+                            Status: { include: { status: true } },
+                            user: true,
+                            Task: {
+                                include: { user: true, assignedUser: true },
+                            },
                         },
                     },
                 },
-            },
-            orderBy: { board: { name: 'desc' } },
-        })
+                orderBy: { board: { name: 'desc' } },
+            })
 
-        res.json(result.map((r) => r.board))
-    })
+            res.json(result.map((r) => r.board))
+        })
+        .catch((errors) => onCallExceptions(res, errors))
 }
