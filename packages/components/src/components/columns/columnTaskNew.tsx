@@ -31,7 +31,6 @@ interface IColumnTaskNewProps {
 export function ColumnTaskNew(props: IColumnTaskNewProps) {
     const { isVisible, status } = props
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const [selectedBoard] = useAtom(BoardAtom)
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
     const { bg, text } = useThemeMode()

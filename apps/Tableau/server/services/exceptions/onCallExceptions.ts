@@ -11,11 +11,17 @@ export function onCallExceptions(
         errors.checkError.message
             ? errors.checkError
             : { status: 500, message: 'Something go wrong' }
+
+    const simpleMessage = errors.inputError?.name
+        ? 'HTTP 400 Bad Request: Something go wrong with the variables that you send'
+        : checkError.message
+
+    const message =
+        process.env.NODE_ENV === 'development'
+            ? `${errors.stackTrace}`
+            : simpleMessage
+
     return res
         .status(errors.inputError?.name ? 400 : checkError.status)
-        .send(
-            errors.inputError?.name
-                ? 'HTTP 400 Bad Request: Something go wrong with the variables that you send'
-                : checkError.message
-        )
+        .send(message)
 }

@@ -4,6 +4,7 @@ import { z } from 'zod'
 export type IErrorPromiseReject<TParams> = {
     inputError: z.ZodError<TParams>
     checkError: { status: number; message: string }
+    stackTrace?: string
 }
 
 export function Procedure<TParams>(options: { req: NextApiRequest }) {
@@ -58,13 +59,20 @@ export function Procedure<TParams>(options: { req: NextApiRequest }) {
             return objChaining
         },
         success: async (onSuccess: (params: TParams) => Promise<void>) => {
-            if (isInputCorrect && isCheck) return onSuccess(params!)
-            return new Promise((resolve, reject) =>
-                reject({
-                    inputError,
-                    checkError,
-                } as IErrorPromiseReject<TParams>)
-            )
+            try {
+                if (isInputCorrect && isCheck) return await onSuccess(params!)
+                throw new Error(
+                    'Input is Incorrect Or Check Function return false'
+                )
+            } catch (e) {
+                return new Promise((resolve, reject) =>
+                    reject({
+                        inputError,
+                        checkError,
+                        stackTrace: e,
+                    } as IErrorPromiseReject<TParams>)
+                )
+            }
         },
     }
 
