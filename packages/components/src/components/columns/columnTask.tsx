@@ -85,6 +85,9 @@ export function ColumnTask(props: IColumnTaskProps) {
                 elapsedTime: task.elapsedTime || 0,
                 statusId: statusBoard.id,
                 order: (taskLength ?? 998) + 1,
+                assignedUserId: (task.assignedUserId ?? null) as
+                    | string
+                    | undefined,
             }).then(() => {
                 setDropColumnAllowed(false)
                 refetchBoards.fetch()
@@ -143,9 +146,8 @@ export function ColumnTask(props: IColumnTaskProps) {
             color="gray.100"
             borderRadius={10}
             flexDirection="column"
-            minW={280}
-            w={280}
-            mr={4}
+            minW={300}
+            w={300}
             ml={2}
             onMouseEnter={onMouseEnterColumn}
             onMouseLeave={onMouseLeaveColumn}
@@ -195,7 +197,7 @@ export function ColumnTask(props: IColumnTaskProps) {
                             overflowY="hidden"
                             overflowX="hidden"
                             pt={'10px'}
-                            px={'8px'}
+                            px={'16px'}
                             mt={4}
                             _hover={{
                                 overflowY: 'auto',

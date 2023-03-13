@@ -42,6 +42,9 @@ export default async function handler(
                     description,
                     elapsedTime: 0,
                     estimatedTime: 0,
+                    order: await prisma.task.count({
+                        where: { user: { email: session.user.email } },
+                    }),
                     board: {
                         connect: {
                             id: boardId,
