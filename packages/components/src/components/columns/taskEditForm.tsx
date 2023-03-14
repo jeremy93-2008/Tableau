@@ -4,7 +4,9 @@ import {
     Button,
     ButtonGroup,
     Flex,
+    IconButton,
     Text,
+    Tooltip,
     useDisclosure,
     VStack,
 } from '@chakra-ui/react'
@@ -13,13 +15,14 @@ import React, { useCallback, useMemo } from 'react'
 import * as Yup from 'yup'
 import { ITaskEditFormikValues } from './taskEdit'
 import { Task } from '.prisma/client'
-import { IFullStatus } from '../../types/types'
+import { IFullStatus, IFullTask } from '../../types/types'
 import { BsTrashFill } from 'react-icons/bs'
 import { DeleteModal } from './modal/deleteModal'
 import { TaskEditFormAssignedUser } from './taskEditFormAssignedUser'
+import { TaskEditFormChecklistGroup } from './taskEditFormChecklistGroup'
 
 interface ITaskEditForm {
-    task: Task
+    task: IFullTask
     status: IFullStatus
     onTaskEditSubmit: (
         values: ITaskEditFormikValues,
@@ -137,26 +140,47 @@ export function TaskEditForm(props: ITaskEditForm) {
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
                         />
-                        <VStack mb={4} />
-                        <TextInput
-                            type="number"
-                            min={0}
-                            label="Elapsed Time"
-                            name="elapsedTime"
-                            value={props.values.elapsedTime}
-                            onChange={props.handleChange}
-                            onBlur={props.handleBlur}
-                        />
-                        <VStack mb={4} />
-                        <TextInput
-                            type="number"
-                            min={0}
-                            label="Estimated Time"
-                            name="estimatedTime"
-                            value={props.values.estimatedTime}
-                            onChange={props.handleChange}
-                            onBlur={props.handleBlur}
-                        />
+                        <Flex mt={4}>
+                            <Flex>
+                                <Text fontWeight="medium" mr={2}>
+                                    Checklists
+                                </Text>
+                                <Tooltip label="Add a Checklist group">
+                                    <IconButton
+                                        aria-label="Add a CheckList group"
+                                        icon={<AddIcon />}
+                                        size="xs"
+                                    />
+                                </Tooltip>
+                            </Flex>
+                            <Flex>
+                                {task.checklistsGroup.map((group) => (
+                                    <TaskEditFormChecklistGroup
+                                        checklistGroup={group}
+                                    />
+                                ))}
+                            </Flex>
+                        </Flex>
+                        <Flex mt={4} gap={2}>
+                            <TextInput
+                                type="number"
+                                min={0}
+                                label="Elapsed Time"
+                                name="elapsedTime"
+                                value={props.values.elapsedTime}
+                                onChange={props.handleChange}
+                                onBlur={props.handleBlur}
+                            />
+                            <TextInput
+                                type="number"
+                                min={0}
+                                label="Estimated Time"
+                                name="estimatedTime"
+                                value={props.values.estimatedTime}
+                                onChange={props.handleChange}
+                                onBlur={props.handleBlur}
+                            />
+                        </Flex>
                         <ButtonGroup
                             display="flex"
                             justifyContent="space-between"

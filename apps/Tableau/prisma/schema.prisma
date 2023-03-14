@@ -11,21 +11,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Checklist {
+  id               String         @id @default(cuid())
+  name             String
+  checked          Boolean
+  assignedUserId   String
+  assignedUser     User           @relation(fields: [assignedUserId], references: [id], onDelete: Cascade)
+  checklistGroupId String
+  checklistGroup   ChecklistGroup @relation(fields: [checklistGroupId], references: [id], onDelete: Cascade)
+}
+
+model ChecklistGroup {
+  id         String      @id @default(cuid())
+  name       String
+  checklists Checklist[]
+  taskId     String
+  task       Task        @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
 model Task {
-  id            String      @id @default(cuid())
-  name          String
-  description   String?
-  status        StatusBoard @relation(fields: [statusId], references: [id])
-  statusId      String
-  board         Board       @relation(fields: [boardId], references: [id])
-  boardId       String
-  user          User        @relation("User", fields: [userId], references: [id], onDelete: Cascade)
-  userId        String
-  order         Int         @default(1)
-  estimatedTime Int?
-  elapsedTime   Int?
-  assignedUserId String?
-  assignedUser   User?       @relation("AssignedUser", fields: [assignedUserId], references: [id], onDelete: Cascade)
+  id              String           @id @default(cuid())
+  name            String
+  description     String?
+  status          StatusBoard      @relation(fields: [statusId], references: [id])
+  statusId        String
+  board           Board            @relation(fields: [boardId], references: [id])
+  boardId         String
+  user            User             @relation("User", fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  order           Int              @default(1)
+  estimatedTime   Int?
+  elapsedTime     Int?
+  assignedUserId  String?
+  assignedUser    User?            @relation("AssignedUser", fields: [assignedUserId], references: [id], onDelete: Cascade)
+  checklistsGroup ChecklistGroup[]
 }
 
 model Board {
@@ -97,18 +116,19 @@ model Session {
 }
 
 model User {
-  id               String             @id @default(cuid())
-  name             String?
-  email            String?            @unique
-  emailVerified    DateTime?
-  image            String?
-  accounts         Account[]
-  sessions         Session[]
-  Task             Task[]             @relation("User")
-  TaskAssigned     Task[]             @relation("AssignedUser")
-  Board            Board[]
-  BoardUserSharing BoardUserSharing[]
-  isDarkMode       Boolean            @default(false)
+  id                String             @id @default(cuid())
+  name              String?
+  email             String?            @unique
+  emailVerified     DateTime?
+  image             String?
+  accounts          Account[]
+  sessions          Session[]
+  Task              Task[]             @relation("User")
+  TaskAssigned      Task[]             @relation("AssignedUser")
+  ChecklistAssigned Checklist[]
+  Board             Board[]
+  BoardUserSharing  BoardUserSharing[]
+  isDarkMode        Boolean            @default(false)
 }
 
 model VerificationToken {
