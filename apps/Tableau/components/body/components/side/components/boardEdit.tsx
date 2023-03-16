@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 
 import { useSession } from 'next-auth/react'
-import { IBoardWithAllRelation } from '../../../../../types/types'
+import { IBoardWithAllRelation } from 'shared-types'
 import { BsFillPencilFill } from 'react-icons/bs'
 import { BoardEditForm, IBoardEditFormikValues } from './boardEditForm'
 import { useAtom } from 'jotai'

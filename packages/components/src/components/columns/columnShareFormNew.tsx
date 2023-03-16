@@ -13,7 +13,7 @@ import { FaUserPlus } from 'react-icons/fa'
 import { useTableauMutation, useTableauQuery, useThemeMode } from 'shared-hooks'
 import { User } from '.prisma/client'
 import { useSession } from 'next-auth/react'
-import { IFullBoardSharing } from './columnShare'
+import { IFullBoardSharing } from 'shared-types'
 
 type IShareMutationAddValue = {
     boardId: string

@@ -13,7 +13,7 @@ import axios from 'axios'
 import { useAtom } from 'jotai'
 import { RefetchBoardAtom } from 'shared-atoms'
 import { TaskEditForm } from './taskEditForm'
-import { IFullStatus } from '../../types/types'
+import { IFullStatus, IFullTask } from 'shared-types'
 import { useTableauMutation } from 'shared-hooks'
 
 export type ITaskEditFormikValues = {
@@ -29,7 +29,7 @@ export type ITaskEditFormikValues = {
 }
 
 interface ITaskEditProps {
-    task: Task
+    task: IFullTask
     status: IFullStatus
     isOpen: boolean
     onClose: () => void

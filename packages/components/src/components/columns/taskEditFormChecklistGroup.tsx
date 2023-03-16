@@ -1,4 +1,4 @@
-import { IFullCheckListGroup } from '../../types/types'
+import { IFullCheckListGroup } from 'shared-types'
 import { Flex } from '@chakra-ui/react'
 
 interface ITaskEditFormChecklistGroupProps {

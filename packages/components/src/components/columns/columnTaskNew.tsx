@@ -19,7 +19,7 @@ import { AddIcon } from '@chakra-ui/icons'
 import { ColumnTaskNewForm, ITaskNewFormikValues } from './columnTaskNewForm'
 import { FormikHelpers } from 'formik'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
-import { IFullStatus } from '../../types/types'
+import { IFullStatus } from 'shared-types'
 import { useTableauMutation, useThemeMode } from 'shared-hooks'
 import { useTaskPermission } from './hooks/useTaskPermission'
 

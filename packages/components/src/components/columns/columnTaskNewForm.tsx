@@ -6,7 +6,7 @@ import { Formik, FormikHelpers } from 'formik'
 import { TextInput } from '../textInput'
 import { Button, ButtonGroup, Flex, Text } from '@chakra-ui/react'
 import { WarningIcon } from '@chakra-ui/icons'
-import { IFullStatus } from '../../types/types'
+import { IFullStatus } from 'shared-types'
 
 export type ITaskNewFormikValues = {
     name: string

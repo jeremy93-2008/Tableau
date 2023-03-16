@@ -9,7 +9,7 @@ import {
     Tooltip,
     useDisclosure,
 } from '@chakra-ui/react'
-import { IBoardWithAllRelation, IFullBoardSharing } from '../../types/types'
+import { IBoardWithAllRelation, IFullBoardSharing } from 'shared-types'
 import { ActionMeta, Select, SingleValue } from 'chakra-react-select'
 import {
     IOptionsMenuItem,

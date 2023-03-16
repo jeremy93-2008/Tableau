@@ -16,11 +16,7 @@ import { useDrop } from 'react-dnd'
 import { TaskItemType } from 'shared-utils'
 import { ITaskEditFormikValues } from './taskEdit'
 import { RefetchBoardAtom } from 'shared-atoms'
-import {
-    IBoardWithAllRelation,
-    IFullStatus,
-    IFullTask,
-} from '../../types/types'
+import { IBoardWithAllRelation, IFullStatus, IFullTask } from 'shared-types'
 import { ColumnTaskMove } from './columnTaskMove'
 import { useTableauMutation, useThemeMode } from 'shared-hooks'
 import { ColumnEdit } from './columnEdit'

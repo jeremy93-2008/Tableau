@@ -18,7 +18,7 @@ import { FaUserAlt, FaUserCircle } from 'react-icons/fa'
 import { useTableauQuery } from 'shared-hooks'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
-import { IFullBoardSharing } from './columnShare'
+import { IFullBoardSharing } from 'shared-types'
 
 interface ITaskEditFormAssignedUserProps {
     assignedUserId?: string

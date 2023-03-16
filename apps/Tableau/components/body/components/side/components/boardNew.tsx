@@ -21,7 +21,7 @@ import { useSession } from 'next-auth/react'
 
 import { BoardNewForm, IBoardNewFormikValues } from './boardNewForm'
 import { useTableauMutation, useThemeMode } from 'shared-hooks'
-import { IBoardWithAllRelation } from '../../../../../types/types'
+import { IBoardWithAllRelation } from 'shared-types'
 import { BOARD_LIMIT } from 'shared-utils'
 
 interface IBoardNewProps {

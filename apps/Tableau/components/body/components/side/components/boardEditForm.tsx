@@ -4,7 +4,7 @@ import * as Yup from 'yup'
 import { TextInput } from 'shared-components'
 import { Button, ButtonGroup, Flex, Text } from '@chakra-ui/react'
 import { WarningIcon } from '@chakra-ui/icons'
-import { IBoardWithAllRelation } from '../../../../../types/types'
+import { IBoardWithAllRelation } from 'shared-types'
 
 export type IBoardEditFormikValues = {
     id: string

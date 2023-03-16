@@ -6,9 +6,3 @@ export { Profile } from './components/profile'
 export { TextInput } from './components/textInput'
 export { LoadingProvider } from './components/loadingProvider'
 export { Icon } from './components/icon'
-
-export {
-    type IBoardWithAllRelation,
-    type IFullStatus,
-    type IFullBoardSharing,
-} from './types/types'

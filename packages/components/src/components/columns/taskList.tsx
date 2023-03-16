@@ -1,9 +1,8 @@
 import React from 'react'
 import { Task } from '.prisma/client'
-import { IFullStatus } from '../../types/types'
+import { IFullStatus, IFullTask } from 'shared-types'
 import { TaskItemOrder } from './taskItemOrder'
 import { useTaskPermission } from './hooks/useTaskPermission'
-import { IFullTask } from 'tableau/types/types'
 
 interface ITaskListProps {
     tasks: IFullTask[]

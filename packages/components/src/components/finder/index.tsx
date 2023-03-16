@@ -15,7 +15,7 @@ import { SearchInput } from './searchInput'
 import { RiEmotionSadLine } from 'react-icons/ri'
 import { useHighlightFinderTask } from './hook/useHighlightFinderTask'
 import { useSession } from 'next-auth/react'
-import { IFullTask } from '../../types/types'
+import { IFullTask } from 'shared-types'
 
 export type IFinderSearchResult = Record<IFinderSearchType, IFullTask[]>
 

@@ -11,7 +11,7 @@ import React, { useCallback, useMemo } from 'react'
 import { Formik, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
 import { TextInput } from '../textInput'
-import { IFullStatus } from '../../types/types'
+import { IFullStatus } from 'shared-types'
 import { BsTrashFill } from 'react-icons/bs'
 
 export type IColumnEditFormikValues = {

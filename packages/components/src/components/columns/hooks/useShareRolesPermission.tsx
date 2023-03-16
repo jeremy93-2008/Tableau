@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { IFullBoardSharing } from '../../../types/types'
+import { IFullBoardSharing } from 'shared-types'
 import { useTableauQuery } from 'shared-hooks'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'

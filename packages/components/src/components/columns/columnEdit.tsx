@@ -23,7 +23,7 @@ import { useTableauMutation, useThemeMode } from 'shared-hooks'
 import { ColumnEditForm, IColumnEditFormikValues } from './columnEditForm'
 import { BsFillPencilFill } from 'react-icons/bs'
 import { DeleteModal } from './modal/deleteModal'
-import { IFullStatus } from '../../types/types'
+import { IFullStatus } from 'shared-types'
 
 interface IColumnEditProps {
     statusBoard: IFullStatus

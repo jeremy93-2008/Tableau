@@ -6,7 +6,7 @@ import * as Yup from 'yup'
 import { TextInput } from '../textInput'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
-import { IFullStatus } from '../../types/types'
+import { IFullStatus } from 'shared-types'
 
 export type IColumnNewFormikValues = {
     id: string | undefined

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex } from '@chakra-ui/react'
-import { IBoardWithAllRelation } from '../../../../../types/types'
+import { IBoardWithAllRelation } from 'shared-types'
 import { BoardItem } from './boardItem'
 
 interface IBoardListProps {

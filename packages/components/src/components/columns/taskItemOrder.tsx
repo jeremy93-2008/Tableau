@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { Task } from '.prisma/client'
-import { IFullStatus } from '../../types/types'
+import { IFullStatus } from 'shared-types'
 import { TaskItem } from './taskItem'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useDrop } from 'react-dnd'
@@ -9,7 +9,7 @@ import { Box, Flex } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { useTableauMutation, useReorderDnDEntity } from 'shared-hooks'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
-import { IFullTask } from 'tableau/types/types'
+import { IFullTask } from 'shared-types'
 
 interface ITaskItemWithOrderingProps {
     task?: IFullTask

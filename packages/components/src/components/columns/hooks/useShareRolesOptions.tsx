@@ -1,4 +1,4 @@
-import { IBoardWithAllRelation, IFullBoardSharing } from '../../../types/types'
+import { IBoardWithAllRelation, IFullBoardSharing } from 'shared-types'
 import { useCallback, useMemo } from 'react'
 import { Flex, Text } from '@chakra-ui/react'
 import {

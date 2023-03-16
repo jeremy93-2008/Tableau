@@ -1,5 +1,5 @@
 import { useTableauQuery } from 'shared-hooks'
-import { IBoardWithAllRelation } from '../../../../../types/types'
+import { IBoardWithAllRelation } from 'shared-types'
 
 export function useBoardPermission(board: IBoardWithAllRelation) {
     const { data } = useTableauQuery<{

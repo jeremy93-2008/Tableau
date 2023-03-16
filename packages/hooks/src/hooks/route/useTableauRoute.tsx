@@ -1,6 +1,6 @@
 import { useHashRoute } from './useHashRoute'
 import { useCallback } from 'react'
-import { IBoardWithAllRelation } from 'shared-components'
+import { IBoardWithAllRelation } from 'shared-types'
 import { Task } from '@prisma/client'
 
 export function useTableauRoute() {

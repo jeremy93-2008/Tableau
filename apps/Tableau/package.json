@@ -58,6 +58,7 @@
     "shared-hooks": "*",
     "shared-libs": "*",
     "shared-utils": "*",
+    "shared-types": "*",
     "yup": "^0.32.11",
     "zod": "^3.20.6"
   },

@@ -3,7 +3,7 @@ import { useAtom } from 'jotai'
 import { useTableauHashUpdate, useTableauRoute } from 'shared-hooks'
 import { BoardAtom, HashEntryAtom } from 'shared-atoms'
 import { useToast } from '@chakra-ui/react'
-import { IBoardWithAllRelation } from '../../../../../types/types'
+import { IBoardWithAllRelation } from 'shared-types'
 
 export function useTableauBoardHashUpdate(
     listOfBoards: IBoardWithAllRelation[] | undefined,
