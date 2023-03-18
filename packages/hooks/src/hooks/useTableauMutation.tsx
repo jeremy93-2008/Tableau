@@ -7,7 +7,7 @@ import {
     UseMutationOptions,
     UseMutationResult,
 } from '@tanstack/react-query'
-import { useToast } from '@chakra-ui/react'
+import { Text, useToast } from '@chakra-ui/react'
 import { LoadingAtom } from 'shared-atoms'
 import { MutateOptions } from '@tanstack/query-core/src/types'
 import { AxiosError } from 'axios'
@@ -74,7 +74,18 @@ export function useTableauMutation<TData, TVariables>(
                     }))
                     toast({
                         title: e.response!.statusText,
-                        description: e.response!.data as string,
+                        description:
+                            typeof e.response!.data === 'string' ? (
+                                e.response!.data
+                            ) : (
+                                <Text whiteSpace="pre-wrap">
+                                    {JSON.stringify(
+                                        e.response!.data,
+                                        undefined,
+                                        4
+                                    )}
+                                </Text>
+                            ),
                         status: 'error',
                         duration: 9000,
                         isClosable: true,

@@ -60,10 +60,7 @@ export function Procedure<TParams>(options: { req: NextApiRequest }) {
         },
         success: async (onSuccess: (params: TParams) => Promise<void>) => {
             try {
-                if (isInputCorrect && isCheck) return await onSuccess(params!)
-                throw new Error(
-                    'Input is Incorrect Or Check Function return false'
-                )
+                return await onSuccess(params!)
             } catch (e) {
                 return new Promise((resolve, reject) =>
                     reject({

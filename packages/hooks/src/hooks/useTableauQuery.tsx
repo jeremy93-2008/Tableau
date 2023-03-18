@@ -6,7 +6,7 @@ import { LoadingAtom } from 'shared-atoms'
 import { useSession } from 'next-auth/react'
 import { reloadSession } from 'shared-utils'
 import { AxiosError } from 'axios'
-import { useToast } from '@chakra-ui/react'
+import { Text, useToast } from '@chakra-ui/react'
 
 export function useTableauQuery<TData>(
     queryKey: QueryKey,
@@ -24,7 +24,14 @@ export function useTableauQuery<TData>(
             reloadSession()
             toast({
                 title: e.response!.statusText,
-                description: e.response!.data as string,
+                description:
+                    typeof e.response!.data === 'string' ? (
+                        e.response!.data
+                    ) : (
+                        <Text whiteSpace="pre-wrap">
+                            {JSON.stringify(e.response!.data, undefined, 4)}
+                        </Text>
+                    ),
                 status: 'error',
                 duration: 9000,
                 isClosable: true,

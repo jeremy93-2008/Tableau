@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { Formik, FormikHelpers } from 'formik'
 import { TextInput } from '../textInput'
 import {
@@ -20,6 +21,7 @@ import { BsTrashFill } from 'react-icons/bs'
 import { DeleteModal } from './modal/deleteModal'
 import { TaskEditFormAssignedUser } from './taskEditFormAssignedUser'
 import { TaskEditFormChecklistGroup } from './taskEditFormChecklistGroup'
+import { TaskEditFormChecklistField } from './taskEditFormChecklistField'
 
 interface ITaskEditForm {
     task: IFullTask
@@ -108,113 +110,110 @@ export function TaskEditForm(props: ITaskEditForm) {
                                 }}
                             />
                         </Flex>
-                        <TextInput
-                            label="Name"
-                            name="name"
-                            value={props.values.name}
-                            onChange={props.handleChange}
-                            onBlur={props.handleBlur}
-                            style={
-                                props.errors.name
-                                    ? {
-                                          backgroundColor:
-                                              'var(--chakra-colors-red-200)',
-                                      }
-                                    : {}
-                            }
-                        />
-                        {props.errors.name ? (
-                            <Flex alignItems="center" color="red.500" ml="2">
-                                <WarningIcon />
-                                <Text fontSize="13px" m="1">
-                                    Task Name is required
-                                </Text>
-                            </Flex>
-                        ) : null}
-                        <VStack mb={4} />
-                        <TextInput
-                            type="textarea"
-                            label="Description"
-                            name="description"
-                            value={props.values.description}
-                            onChange={props.handleChange}
-                            onBlur={props.handleBlur}
-                        />
-                        <Flex mt={4}>
-                            <Flex>
-                                <Text fontWeight="medium" mr={2}>
-                                    Checklists
-                                </Text>
-                                <Tooltip label="Add a Checklist group">
-                                    <IconButton
-                                        aria-label="Add a CheckList group"
-                                        icon={<AddIcon />}
-                                        size="xs"
+                        <Flex maxH="65vh" flexDirection="column">
+                            <Flex
+                                minH={0}
+                                flex={1}
+                                onWheel={(evt) => evt.stopPropagation()}
+                                overflowY="auto"
+                                flexDirection="column"
+                            >
+                                <TextInput
+                                    label="Name"
+                                    name="name"
+                                    value={props.values.name}
+                                    onChange={props.handleChange}
+                                    onBlur={props.handleBlur}
+                                    style={
+                                        props.errors.name
+                                            ? {
+                                                  backgroundColor:
+                                                      'var(--chakra-colors-red-200)',
+                                              }
+                                            : {}
+                                    }
+                                />
+                                {props.errors.name ? (
+                                    <Flex
+                                        alignItems="center"
+                                        color="red.500"
+                                        ml="2"
+                                    >
+                                        <WarningIcon />
+                                        <Text fontSize="13px" m="1">
+                                            Task Name is required
+                                        </Text>
+                                    </Flex>
+                                ) : null}
+                                <VStack mb={4} />
+                                <TextInput
+                                    type="textarea"
+                                    label="Description"
+                                    name="description"
+                                    value={props.values.description}
+                                    onChange={props.handleChange}
+                                    onBlur={props.handleBlur}
+                                />
+                                <Flex mt={4}>
+                                    <TaskEditFormChecklistField task={task} />
+                                </Flex>
+                                <Flex mt={4} gap={2}>
+                                    <TextInput
+                                        type="number"
+                                        min={0}
+                                        label="Elapsed Time"
+                                        name="elapsedTime"
+                                        value={props.values.elapsedTime}
+                                        onChange={props.handleChange}
+                                        onBlur={props.handleBlur}
                                     />
-                                </Tooltip>
-                            </Flex>
-                            <Flex>
-                                {task.checklistsGroup.map((group) => (
-                                    <TaskEditFormChecklistGroup
-                                        checklistGroup={group}
+                                    <TextInput
+                                        type="number"
+                                        min={0}
+                                        label="Estimated Time"
+                                        name="estimatedTime"
+                                        value={props.values.estimatedTime}
+                                        onChange={props.handleChange}
+                                        onBlur={props.handleBlur}
                                     />
-                                ))}
+                                </Flex>
                             </Flex>
-                        </Flex>
-                        <Flex mt={4} gap={2}>
-                            <TextInput
-                                type="number"
-                                min={0}
-                                label="Elapsed Time"
-                                name="elapsedTime"
-                                value={props.values.elapsedTime}
-                                onChange={props.handleChange}
-                                onBlur={props.handleBlur}
-                            />
-                            <TextInput
-                                type="number"
-                                min={0}
-                                label="Estimated Time"
-                                name="estimatedTime"
-                                value={props.values.estimatedTime}
-                                onChange={props.handleChange}
-                                onBlur={props.handleBlur}
-                            />
-                        </Flex>
-                        <ButtonGroup
-                            display="flex"
-                            justifyContent="space-between"
-                            mt="6"
-                        >
                             <ButtonGroup
                                 display="flex"
-                                justifyContent="flex-start"
+                                flex="0"
+                                justifyContent="space-between"
+                                mt="6"
                             >
-                                <Button
-                                    data-cy="buttonEditDelete"
-                                    onClick={() => onOpenModal()}
-                                    leftIcon={<BsTrashFill />}
-                                    colorScheme="red"
-                                    mr={1}
+                                <ButtonGroup
+                                    display="flex"
+                                    justifyContent="flex-start"
                                 >
-                                    Delete
-                                </Button>
-                            </ButtonGroup>
-                            <ButtonGroup
-                                display="flex"
-                                justifyContent="flex-end"
-                            >
-                                <Button onClick={onClose}>Cancel</Button>
-                                <Button
-                                    data-cy="buttonEditSave"
-                                    type="submit"
-                                    colorScheme="teal"
-                                    mr={1}
+                                    <Button
+                                        data-cy="buttonEditDelete"
+                                        onClick={() => onOpenModal()}
+                                        leftIcon={<BsTrashFill />}
+                                        colorScheme="red"
+                                        mr={1}
+                                    >
+                                        Delete
+                                    </Button>
+                                </ButtonGroup>
+                                <ButtonGroup
+                                    display="flex"
+                                    justifyContent="flex-end"
                                 >
-                                    Save
-                                </Button>
+                                    <Button onClick={onClose}>Cancel</Button>
+                                    <Button
+                                        data-cy="buttonEditSave"
+                                        type="submit"
+                                        colorScheme="teal"
+                                        mr={1}
+                                    >
+                                        Save
+                                    </Button>
+                                </ButtonGroup>
                             </ButtonGroup>
-                        </ButtonGroup>
+                        </Flex>
                     </form>
                 )}
             </Formik>
