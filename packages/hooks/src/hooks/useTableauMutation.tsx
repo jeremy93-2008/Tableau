@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useAtom, useSetAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 import { MutationFunction } from '@tanstack/query-core'
 import {
     UseMutateAsyncFunction,

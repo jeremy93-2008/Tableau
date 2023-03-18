@@ -1,17 +1,14 @@
-import axios from 'axios'
 import { Formik, FormikHelpers } from 'formik'
 import { TextInput } from '../textInput'
 import {
     Button,
     ButtonGroup,
     Flex,
-    IconButton,
     Text,
-    Tooltip,
     useDisclosure,
     VStack,
 } from '@chakra-ui/react'
-import { AddIcon, WarningIcon } from '@chakra-ui/icons'
+import { WarningIcon } from '@chakra-ui/icons'
 import React, { useCallback, useMemo } from 'react'
 import * as Yup from 'yup'
 import { ITaskEditFormikValues } from './taskEdit'
@@ -20,7 +17,6 @@ import { IFullStatus, IFullTask } from 'shared-types'
 import { BsTrashFill } from 'react-icons/bs'
 import { DeleteModal } from './modal/deleteModal'
 import { TaskEditFormAssignedUser } from './taskEditFormAssignedUser'
-import { TaskEditFormChecklistGroup } from './taskEditFormChecklistGroup'
 import { TaskEditFormChecklistField } from './taskEditFormChecklistField'
 
 interface ITaskEditForm {
