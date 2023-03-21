@@ -12,6 +12,7 @@ import { LoadingAtom } from 'shared-atoms'
 import { MutateOptions } from '@tanstack/query-core/src/types'
 import { AxiosError } from 'axios'
 import { reloadSession } from 'shared-utils'
+import { ErrorDescription } from 'shared-components/src/components/error'
 
 export function useTableauMutation<TData, TVariables>(
     mutationFn: MutationFunction<TData, TVariables>,
@@ -74,18 +75,7 @@ export function useTableauMutation<TData, TVariables>(
                     }))
                     toast({
                         title: e.response!.statusText,
-                        description:
-                            typeof e.response!.data === 'string' ? (
-                                e.response!.data
-                            ) : (
-                                <Text whiteSpace="pre-wrap">
-                                    {JSON.stringify(
-                                        e.response!.data,
-                                        undefined,
-                                        4
-                                    )}
-                                </Text>
-                            ),
+                        description: <ErrorDescription error={e} />,
                         status: 'error',
                         duration: 9000,
                         isClosable: true,

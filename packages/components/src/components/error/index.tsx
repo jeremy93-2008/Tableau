@@ -1,0 +1,1 @@
+export { ErrorDescription } from './errorDescription'

@@ -5,7 +5,8 @@ import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import { LoadingAtom } from 'shared-atoms'
 import { reloadSession } from 'shared-utils'
 import { AxiosError } from 'axios'
-import { Text, useToast } from '@chakra-ui/react'
+import { useToast } from '@chakra-ui/react'
+import { ErrorDescription } from 'shared-components/src/components/error'
 
 export function useTableauQuery<TData>(
     queryKey: QueryKey,
@@ -23,14 +24,7 @@ export function useTableauQuery<TData>(
             reloadSession()
             toast({
                 title: e.response!.statusText,
-                description:
-                    typeof e.response!.data === 'string' ? (
-                        e.response!.data
-                    ) : (
-                        <Text whiteSpace="pre-wrap">
-                            {JSON.stringify(e.response!.data, undefined, 4)}
-                        </Text>
-                    ),
+                description: <ErrorDescription error={e} />,
                 status: 'error',
                 duration: 9000,
                 isClosable: true,
