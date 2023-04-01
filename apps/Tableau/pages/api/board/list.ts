@@ -41,7 +41,13 @@ export default async function handler(
                                     user: true,
                                     assignedUser: true,
                                     checklistsGroup: {
-                                        include: { checklists: true },
+                                        include: {
+                                            checklists: {
+                                                orderBy: {
+                                                    id: 'asc',
+                                                },
+                                            },
+                                        },
                                     },
                                 },
                             },

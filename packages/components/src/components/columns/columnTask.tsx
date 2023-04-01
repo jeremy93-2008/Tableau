@@ -145,6 +145,7 @@ export function ColumnTask(props: IColumnTaskProps) {
             minW={300}
             w={300}
             ml={2}
+            mr={2}
             onMouseEnter={onMouseEnterColumn}
             onMouseLeave={onMouseLeaveColumn}
             filter={`hue-rotate(${

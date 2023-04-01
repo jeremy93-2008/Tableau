@@ -61,12 +61,12 @@ export function Procedure<TParams>(options: { req: NextApiRequest }) {
         success: async (onSuccess: (params: TParams) => Promise<void>) => {
             try {
                 return await onSuccess(params!)
-            } catch (e) {
+            } catch (err) {
                 return new Promise((resolve, reject) =>
                     reject({
                         inputError,
                         checkError,
-                        stackTrace: e,
+                        stackTrace: err,
                     } as IErrorPromiseReject<TParams>)
                 )
             }

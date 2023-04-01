@@ -1,17 +1,18 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
-import { Authenticate } from '../../../server/api/Authenticate'
+import { NextApiRequest, NextApiResponse } from 'next'
 import { getTaskPermission } from 'shared-libs'
+import prisma from '../../../lib/prisma'
+import { Authenticate } from '../../../server/api/Authenticate'
+import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
 
 type ISchemaParams = z.infer<typeof schema>
 
 const schema = z.object({
+    id: z.string(),
     boardId: z.string(),
-    name: z.string(),
-    email: z.string(),
-    checklistGroupId: z.string(),
+    name: z.optional(z.string()),
+    email: z.optional(z.string()),
+    checked: z.optional(z.boolean()),
 })
 
 export default async function handler(
@@ -31,14 +32,13 @@ export default async function handler(
         )
     )
         .success(async (params) => {
-            const { name, email, checklistGroupId } = params
+            const { id, name, checked } = params
 
-            const result = await prisma.checklist.create({
+            const result = await prisma.checklist.update({
+                where: { id },
                 data: {
-                    name,
-                    checked: false,
-                    assignedUser: { connect: { email } },
-                    checklistGroup: { connect: { id: checklistGroupId } },
+                    name: name ?? undefined,
+                    checked: checked ?? undefined,
                 },
             })
 

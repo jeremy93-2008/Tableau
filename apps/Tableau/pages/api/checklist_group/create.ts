@@ -10,8 +10,7 @@ type ISchemaParams = z.infer<typeof schema>
 const schema = z.object({
     boardId: z.string(),
     name: z.string(),
-    email: z.string(),
-    checklistGroupId: z.string(),
+    taskId: z.string(),
 })
 
 export default async function handler(
@@ -31,15 +30,10 @@ export default async function handler(
         )
     )
         .success(async (params) => {
-            const { name, email, checklistGroupId } = params
+            const { name, taskId } = params
 
-            const result = await prisma.checklist.create({
-                data: {
-                    name,
-                    checked: false,
-                    assignedUser: { connect: { email } },
-                    checklistGroup: { connect: { id: checklistGroupId } },
-                },
+            const result = await prisma.checklistGroup.create({
+                data: { name, taskId },
             })
 
             res.json(result)

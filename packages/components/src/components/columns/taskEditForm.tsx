@@ -159,7 +159,7 @@ export function TaskEditForm(props: ITaskEditForm) {
                                         min={0}
                                         label="Elapsed Time"
                                         name="elapsedTime"
-                                        value={props.values.elapsedTime}
+                                        value={props.values.elapsedTime.toString()}
                                         onChange={props.handleChange}
                                         onBlur={props.handleBlur}
                                     />
@@ -168,7 +168,7 @@ export function TaskEditForm(props: ITaskEditForm) {
                                         min={0}
                                         label="Estimated Time"
                                         name="estimatedTime"
-                                        value={props.values.estimatedTime}
+                                        value={props.values.estimatedTime.toString()}
                                         onChange={props.handleChange}
                                         onBlur={props.handleBlur}
                                     />

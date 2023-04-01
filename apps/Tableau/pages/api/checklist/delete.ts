@@ -1,17 +1,15 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
-import { Authenticate } from '../../../server/api/Authenticate'
+import { NextApiRequest, NextApiResponse } from 'next'
 import { getTaskPermission } from 'shared-libs'
+import prisma from '../../../lib/prisma'
+import { Authenticate } from '../../../server/api/Authenticate'
+import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
 
 type ISchemaParams = z.infer<typeof schema>
 
 const schema = z.object({
+    id: z.string(),
     boardId: z.string(),
-    name: z.string(),
-    email: z.string(),
-    checklistGroupId: z.string(),
 })
 
 export default async function handler(
@@ -31,15 +29,10 @@ export default async function handler(
         )
     )
         .success(async (params) => {
-            const { name, email, checklistGroupId } = params
+            const { id } = params
 
-            const result = await prisma.checklist.create({
-                data: {
-                    name,
-                    checked: false,
-                    assignedUser: { connect: { email } },
-                    checklistGroup: { connect: { id: checklistGroupId } },
-                },
+            const result = await prisma.checklist.delete({
+                where: { id },
             })
 
             res.json(result)

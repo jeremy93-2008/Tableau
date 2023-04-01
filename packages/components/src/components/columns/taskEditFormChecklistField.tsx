@@ -15,7 +15,7 @@ import { InputModal } from './modal/inputModal'
 import { useAtom } from 'jotai'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 
-export type ICheckListEditFormikValues = {
+export type ICheckListGroupEditFormikValues = {
     id?: string
     boardId: string
     name: string
@@ -37,8 +37,8 @@ export function TaskEditFormChecklistField(
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const { mutateAsync } = useTableauMutation(
-        (values: ICheckListEditFormikValues) => {
-            return axios.post(`api/checklist/create`, values, {
+        (values: ICheckListGroupEditFormikValues) => {
+            return axios.post(`api/checklist_group/create`, values, {
                 headers: {
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
@@ -63,11 +63,11 @@ export function TaskEditFormChecklistField(
                 onClose()
             })
         },
-        [mutateAsync, refetchBoards, task.id]
+        [mutateAsync, onClose, refetchBoards, selectedBoard, task.id]
     )
 
     return (
-        <Flex flexDirection="column">
+        <Flex pr={3} width="100%" flexDirection="column">
             <Flex>
                 <Text fontWeight="medium" mr={2}>
                     Checklists
