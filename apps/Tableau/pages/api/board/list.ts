@@ -48,6 +48,9 @@ export default async function handler(
                                                 },
                                             },
                                         },
+                                        orderBy: {
+                                            id: 'asc',
+                                        },
                                     },
                                 },
                             },

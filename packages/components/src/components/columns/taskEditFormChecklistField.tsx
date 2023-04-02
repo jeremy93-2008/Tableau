@@ -14,12 +14,23 @@ import { IFullTask } from 'shared-types'
 import { InputModal } from './modal/inputModal'
 import { useAtom } from 'jotai'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
+import { z } from 'zod'
 
-export type ICheckListGroupEditFormikValues = {
-    id?: string
+export type ICheckListGroupCreateFormikValues = {
     boardId: string
     name: string
     taskId: string
+}
+
+export type ICheckListGroupEditFormikValues = {
+    id: string
+    boardId: string
+    name?: string
+}
+
+export type ICheckListGroupDeleteFormikValues = {
+    id: string
+    boardId: string
 }
 
 interface ITaskEditFormChecklistFieldProps {
@@ -37,7 +48,7 @@ export function TaskEditFormChecklistField(
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const { mutateAsync } = useTableauMutation(
-        (values: ICheckListGroupEditFormikValues) => {
+        (values: ICheckListGroupCreateFormikValues) => {
             return axios.post(`api/checklist_group/create`, values, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -86,6 +97,7 @@ export function TaskEditFormChecklistField(
                     title={'Add a Checklist Group'}
                     description={'Name'}
                     onSubmit={onSubmitAddGroup}
+                    validationValueSchema={z.string().min(3)}
                 />
             </Flex>
             <Flex flexDirection="column" mt={2} ml={3}>

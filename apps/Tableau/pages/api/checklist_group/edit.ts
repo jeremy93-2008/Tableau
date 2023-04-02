@@ -8,9 +8,9 @@ import { getTaskPermission } from 'shared-libs'
 type ISchemaParams = z.infer<typeof schema>
 
 const schema = z.object({
+    id: z.string().cuid(),
     boardId: z.string(),
     name: z.string().min(3),
-    taskId: z.string(),
 })
 
 export default async function handler(
@@ -30,10 +30,11 @@ export default async function handler(
         )
     )
         .success(async (params) => {
-            const { name, taskId } = params
+            const { id, name } = params
 
-            const result = await prisma.checklistGroup.create({
-                data: { name, taskId },
+            const result = await prisma.checklistGroup.update({
+                where: { id },
+                data: { name },
             })
 
             res.json(result)

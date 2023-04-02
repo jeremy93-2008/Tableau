@@ -4,6 +4,7 @@ import {
     Flex,
     IconButton,
     Text,
+    Tooltip,
     useDisclosure,
 } from '@chakra-ui/react'
 import React, { useCallback } from 'react'
@@ -20,6 +21,7 @@ import { InputModal } from './modal/inputModal'
 
 import { BsFillPencilFill, BsTrashFill } from 'react-icons/bs'
 import { DeleteModal } from './modal/deleteModal'
+import { z } from 'zod'
 
 interface ITaskEditFormChecklistItemProps {
     checklist: Checklist
@@ -34,6 +36,16 @@ export function TaskEditFormChecklistItem(
     const [refetchBoard] = useAtom(RefetchBoardAtom)
 
     const { data: session } = useSession()
+
+    const [isHover, setIsHover] = React.useState(false)
+
+    const onMouseEnter = useCallback(() => {
+        setIsHover(true)
+    }, [])
+
+    const onMouseLeave = useCallback(() => {
+        setIsHover(false)
+    }, [])
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -118,6 +130,8 @@ export function TaskEditFormChecklistItem(
 
     return (
         <Flex
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
             flex={1}
             width="100%"
             justifyContent="space-between"
@@ -135,25 +149,32 @@ export function TaskEditFormChecklistItem(
                     {checklist.name}
                 </Text>
             </Checkbox>
-            <IconButton
-                aria-label={'Edit Checklist Item'}
-                icon={<BsFillPencilFill />}
-                size="xs"
-                w={'22px'}
-                h={'22px'}
-                variant={'ghost'}
-                onClick={onOpen}
-            />
-            <IconButton
-                aria-label={'Delete Checklist Item'}
-                icon={<BsTrashFill />}
-                size="xs"
-                w={'22px'}
-                h={'22px'}
-                variant={'ghost'}
-                onClick={onDeleteModalOpen}
-                _hover={{ bgColor: 'red.500' }}
-            />
+            <Tooltip label="Edit Checklist Item">
+                <IconButton
+                    visibility={isHover ? 'visible' : 'hidden'}
+                    aria-label={'Edit Checklist Item'}
+                    icon={<BsFillPencilFill />}
+                    size="xs"
+                    w={'22px'}
+                    h={'22px'}
+                    variant={'ghost'}
+                    onClick={onOpen}
+                />
+            </Tooltip>
+            <Tooltip label="Delete Checklist Item">
+                <IconButton
+                    visibility={isHover ? 'visible' : 'hidden'}
+                    aria-label={'Delete Checklist Item'}
+                    icon={<BsTrashFill />}
+                    size="xs"
+                    w={'22px'}
+                    h={'22px'}
+                    variant={'ghost'}
+                    onClick={onDeleteModalOpen}
+                    _hover={{ bgColor: 'red.500' }}
+                />
+            </Tooltip>
+
             <InputModal
                 isOpen={isOpen}
                 onClose={onClose}
@@ -161,6 +182,7 @@ export function TaskEditFormChecklistItem(
                 description={'Name'}
                 onSubmit={onSubmitEdit}
                 defaultValue={checklist.name}
+                validationValueSchema={z.string().min(3)}
             />
             <DeleteModal
                 title="Delete Chwcklist Item"
