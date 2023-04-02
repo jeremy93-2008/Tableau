@@ -75,15 +75,6 @@ export function InputModal(props: ITaskEditFormModalInputProps) {
                 .join('\\n')
             setHasError(true)
             setErrorMessages(message)
-            if (toast.isActive('invalid-input')) return
-            return toast({
-                id: 'invalid-input',
-                title: 'Invalid input',
-                description: message,
-                status: 'error',
-                duration: 3000,
-                isClosable: true,
-            })
         }
         onSubmit(value)
     }, [onSubmit, toast, validationValueSchema, value])
