@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ZodAny } from 'zod'
-import { hasPostMethod } from '../services/validation/hasPostMethod'
-import { isAuthenticated } from '../services/auth/isAuthenticated'
-import { authOptions } from '../../pages/api/auth/[...nextauth]'
+import { hasPostMethod } from './validation/hasPostMethod'
+import { isAuthenticated } from './isAuthenticated'
+import { authOptions } from '../../../pages/api/auth/[...nextauth]'
 import { ErrorMessage } from 'shared-utils'
 import { getBoardPermission, IKeyPermission, Procedure } from 'shared-libs'
-import { hasUserPermission } from '../services/validation/hasUserPermission'
+import { hasUserPermission } from './validation/hasUserPermission'
 
 export async function AuthPostPermissionProcedure<ISchema, ISchemaValueParams>(
     req: NextApiRequest,

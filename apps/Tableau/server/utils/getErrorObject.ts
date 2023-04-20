@@ -1,5 +1,4 @@
-import { IErrorPromiseReject } from 'shared-libs/src/procedure'
-
+import { IErrorPromiseReject } from 'shared-libs'
 export function getErrorObject(errors: IErrorPromiseReject<any>) {
     const checkError =
         errors.checkError &&

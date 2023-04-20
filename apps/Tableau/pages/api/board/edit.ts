@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
+import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { getBoardPermission } from 'shared-libs'
-import { Authenticate } from '../../../server/api/Authenticate'
+import { Authenticate } from '../../../server/next/auth/Authenticate'
 
 type ISchemaParams = z.infer<typeof schema>
 

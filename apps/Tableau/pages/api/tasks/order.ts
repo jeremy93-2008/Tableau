@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
-import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
+import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { z } from 'zod'
 import { columnMoveValidation } from '../column/move'
 import { getBoardIdFromTaskId } from '../../../server/prisma/getBoardIdFromTaskId'
 import { getTaskPermission } from 'shared-libs'
-import { Authenticate } from '../../../server/api/Authenticate'
+import { Authenticate } from '../../../server/next/auth/Authenticate'
 
 type ISchemaParams = z.infer<typeof schema>
 

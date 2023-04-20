@@ -2,12 +2,12 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { authOptions } from '../auth/[...nextauth]'
 import { editShareablePermissionCb, Procedure } from 'shared-libs'
-import { hasPostMethod } from '../../../server/services/validation/hasPostMethod'
-import { isAuthenticated } from '../../../server/services/auth/isAuthenticated'
+import { hasPostMethod } from '../../../server/next/auth/validation/hasPostMethod'
+import { isAuthenticated } from '../../../server/next/auth/isAuthenticated'
 import { ErrorMessage } from 'shared-utils'
-import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
+import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { z } from 'zod'
-import { Authenticate } from '../../../server/api/Authenticate'
+import { Authenticate } from '../../../server/next/auth/Authenticate'
 
 type ISchemaParams = z.infer<typeof schema>
 

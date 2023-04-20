@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ZodAny } from 'zod'
-import { isAuthenticated } from '../services/auth/isAuthenticated'
-import { authOptions } from '../../pages/api/auth/[...nextauth]'
+import { isAuthenticated } from './isAuthenticated'
+import { authOptions } from '../../../pages/api/auth/[...nextauth]'
 import { ErrorMessage } from 'shared-utils'
 import { Procedure } from 'shared-libs'
-import { hasGetMethod } from '../services/validation/hasGetMethod'
+import { hasGetMethod } from './validation/hasGetMethod'
 
 export async function AuthGetProcedure<ISchema, ISchemaValueParams>(
     req: NextApiRequest,

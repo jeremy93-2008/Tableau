@@ -1,4 +1,4 @@
-import { getUserPermissionTable } from '../auth/getUserPermissionTable'
+import { getUserPermissionTable } from '../../../prisma/getUserPermissionTable'
 import { ErrorMessage } from 'shared-utils'
 import { Session } from 'next-auth'
 import { BoardUserSharing } from '@prisma/client'

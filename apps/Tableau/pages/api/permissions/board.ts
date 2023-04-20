@@ -3,10 +3,10 @@ import prisma from '../../../lib/prisma'
 import { authOptions } from '../auth/[...nextauth]'
 import { getBoardPermission, withAuth } from 'shared-libs'
 import { z } from 'zod'
-import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
-import { isAuthenticated } from '../../../server/services/auth/isAuthenticated'
+import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
+import { isAuthenticated } from '../../../server/next/auth/isAuthenticated'
 import { Session } from 'next-auth'
-import { Authenticate } from '../../../server/api/Authenticate'
+import { Authenticate } from '../../../server/next/auth/Authenticate'
 
 type ISchemaParams = z.infer<typeof schema>
 

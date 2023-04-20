@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
-import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
-import { Authenticate } from '../../../server/api/Authenticate'
+import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
+import { Authenticate } from '../../../server/next/auth/Authenticate'
 import prisma from '../../../lib/prisma'
-import { isAuthenticated } from '../../../server/services/auth/isAuthenticated'
+import { isAuthenticated } from '../../../server/next/auth/isAuthenticated'
 import { authOptions } from '../auth/[...nextauth]'
 import { ErrorMessage } from 'shared-utils'
 

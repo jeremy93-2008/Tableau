@@ -1,13 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { Authenticate } from '../../../server/next/auth/Authenticate'
 import prisma from '../../../lib/prisma'
 import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { z } from 'zod'
-import { Authenticate } from '../../../server/next/auth/Authenticate'
 
 type ISchemaParams = z.infer<typeof schema>
 
 const schema = z.object({
-    id: z.string().cuid(),
+    email: z.string().email(),
 })
 
 export default async function handler(
@@ -18,11 +18,13 @@ export default async function handler(
         await Authenticate.Get<typeof schema, ISchemaParams>(req, res, schema)
     )
         .success(async (params) => {
-            const { id } = params
+            const { email } = params
 
-            const result = await prisma.task.findFirst({
+            const result = await prisma.notification.findMany({
                 where: {
-                    id,
+                    Users: {
+                        some: { email },
+                    },
                 },
             })
 

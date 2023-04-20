@@ -11,6 +11,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Notification {
+  id        String   @id @default(cuid())
+  type      String
+  message   String
+  createdAt DateTime @default(now())
+  Users     User[]
+  isRead    Boolean  @default(false)
+  isNew     Boolean  @default(true)
+}
+
 model Checklist {
   id               String         @id @default(cuid())
   name             String
@@ -129,6 +139,7 @@ model User {
   Board             Board[]
   BoardUserSharing  BoardUserSharing[]
   isDarkMode        Boolean            @default(false)
+  Notifications     Notification[]
 }
 
 model VerificationToken {

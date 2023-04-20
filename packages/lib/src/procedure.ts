@@ -62,6 +62,7 @@ export function Procedure<TParams>(options: { req: NextApiRequest }) {
             try {
                 return await onSuccess(params!)
             } catch (err) {
+                console.log('Hay un error en el success de Procedure')
                 return new Promise((resolve, reject) =>
                     reject({
                         inputError,

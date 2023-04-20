@@ -3,8 +3,8 @@ import { getServerSession } from 'next-auth/next'
 import prisma from '../../../lib/prisma'
 import { authOptions } from '../auth/[...nextauth]'
 import { z } from 'zod'
-import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
-import { Authenticate } from '../../../server/api/Authenticate'
+import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
+import { Authenticate } from '../../../server/next/auth/Authenticate'
 
 type ISchemaParams = z.infer<typeof schema>
 

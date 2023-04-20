@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, IconButton, Text, Tooltip } from '@chakra-ui/react'
-import { Finder, Icon } from 'shared-components'
+import { Finder, Icon, Notification } from 'shared-components'
 import { Profile } from 'shared-components'
 import { BiMenu } from 'react-icons/bi'
 import { useCallback } from 'react'
@@ -54,7 +54,10 @@ export function Header() {
                 </Text>
             </Heading>
             <Finder />
-            <Profile />
+            <Flex gap={6} alignItems="center">
+                <Profile />
+                <Notification />
+            </Flex>
         </Flex>
     )
 }

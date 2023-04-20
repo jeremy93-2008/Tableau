@@ -1,15 +1,17 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../../lib/prisma'
-import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { z } from 'zod'
-import { getTaskPermission } from 'shared-libs'
-import { getBoardIdFromTaskId } from '../../../server/prisma/getBoardIdFromTaskId'
 import { Authenticate } from '../../../server/next/auth/Authenticate'
+import prisma from '../../../lib/prisma'
+import { getTaskPermission } from 'shared-libs'
+import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 
 type ISchemaParams = z.infer<typeof schema>
 
 const schema = z.object({
+    boardId: z.string().cuid(),
     id: z.string().cuid(),
+    isRead: z.boolean().nullable(),
+    isNew: z.boolean().nullable(),
 })
 
 export default async function handler(
@@ -22,15 +24,22 @@ export default async function handler(
             res,
             schema,
             {
-                boardId: await getBoardIdFromTaskId(req.body.id),
+                boardId: req.body.boardId,
                 roleFn: getTaskPermission,
-                action: 'delete',
+                action: 'edit',
             }
         )
     )
         .success(async (params) => {
-            const { id } = params
-            const result = await prisma.task.delete({ where: { id } })
+            const { id, isNew, isRead } = params
+
+            const result = await prisma.notification.update({
+                where: { id },
+                data: {
+                    isRead: isRead ?? undefined,
+                    isNew: isNew ?? undefined,
+                },
+            })
 
             res.json(result)
         })

@@ -3,12 +3,12 @@ import AWS from 'aws-sdk'
 import prisma from '../../../lib/prisma'
 import { authOptions } from '../auth/[...nextauth]'
 import { addShareablePermissionCb } from 'shared-libs'
-import { onCallExceptions } from '../../../server/services/exceptions/onCallExceptions'
+import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { z } from 'zod'
-import { Authenticate } from '../../../server/api/Authenticate'
+import { Authenticate } from '../../../server/next/auth/Authenticate'
 import { Board } from '.prisma/client'
-import { isAuthenticated } from '../../../server/services/auth/isAuthenticated'
 import { Session } from 'next-auth'
+import { addNotification } from '../../../server/prisma/notification/add'
 
 type ISchemaParams = z.infer<typeof schema>
 
@@ -62,6 +62,12 @@ export default async function handler(
                     canEditContent,
                 },
             })
+
+            await addNotification(
+                'info',
+                'You have been invited to collaborate on a board',
+                [email]
+            )
 
             res.json({
                 data: result,

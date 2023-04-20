@@ -1,6 +1,6 @@
 import { NextApiResponse } from 'next'
-import { IErrorPromiseReject } from 'shared-libs/src/procedure'
-import { getErrorObject } from './getErrorObject'
+import { IErrorPromiseReject } from 'shared-libs'
+import { getErrorObject } from '../../utils/getErrorObject'
 
 export function onCallExceptions(
     res: NextApiResponse,
