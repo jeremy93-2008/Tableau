@@ -44,17 +44,6 @@ export function NotificationItem(props: INotificationItemProps) {
         }
     )
 
-    const onNotificationClick = useCallback(() => {
-        if (!notification.isRead)
-            mutateAsync({
-                boardId: selectedBoard?.id || '',
-                id: notification.id,
-                isRead: true,
-            }).then(() => {
-                refetchBoard.fetch()
-            })
-    }, [mutateAsync, notification, refetchBoard, selectedBoard])
-
     return (
         <Alert
             position="relative"
@@ -62,23 +51,32 @@ export function NotificationItem(props: INotificationItemProps) {
                 notification.type as 'error' | 'info' | 'warning' | 'success'
             }
             key={notification.id}
-            pl={6}
+            pl={4}
             borderRadius={5}
             cursor={notification.isRead ? 'default' : 'pointer'}
             sx={{
-                '&:hover .box': {
+                '&:hover .alert-container .box': {
                     transition: 'width 0.2s',
-                    width: 3,
+                    width: notification.isRead ? '0' : '8px',
+                },
+                '&:hover .alert-container': {
+                    transition: 'opacity 0.2s',
+                    opacity: '1',
                 },
             }}
         >
-            <Flex width="100%" justifyContent="space-between">
+            <Flex
+                className="alert-container"
+                width="100%"
+                justifyContent="space-between"
+                opacity={notification.isRead ? '0.7' : '1'}
+            >
                 <Flex
                     className="box"
                     position="absolute"
                     top={0}
                     left={0}
-                    width={2}
+                    width={notification.isRead ? '0' : '5px'}
                     height={'100%'}
                     backgroundColor={'var(--alert-fg)'}
                 />

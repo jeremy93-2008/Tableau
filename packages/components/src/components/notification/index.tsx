@@ -1,3 +1,4 @@
+import { ChangeEvent, useCallback, useState } from 'react'
 import { BsBellFill, BsCheck2All } from 'react-icons/bs'
 import {
     Avatar,
@@ -16,10 +17,25 @@ import {
     Select,
 } from '@chakra-ui/react'
 import { NotificationList } from './notificationList'
+import { Notification as INotification } from '@prisma/client'
 
 export function Notification() {
+    const [filterBy, setFilterBy] = useState<'all' | 'unread'>('unread')
+
+    const filterByFn = useCallback(
+        (notification: INotification) => {
+            if (filterBy === 'all') return true
+            return !notification.isRead
+        },
+        [filterBy]
+    )
+
+    const onFilterChange = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
+        setFilterBy(e.target.value as 'all' | 'unread')
+    }, [])
+
     return (
-        <Popover>
+        <Popover isLazy>
             <Flex>
                 <Tooltip label="Notifications">
                     <Box>
@@ -59,9 +75,17 @@ export function Notification() {
                             <Text pr={3} fontWeight="medium">
                                 Notifications
                             </Text>
-                            <Select border={0} px={0}>
-                                <option value="all">All</option>
-                                <option selected value="unread">
+                            <Select onChange={onFilterChange} border={0} px={0}>
+                                <option
+                                    selected={filterBy === 'all'}
+                                    value="all"
+                                >
+                                    All
+                                </option>
+                                <option
+                                    selected={filterBy === 'unread'}
+                                    value="unread"
+                                >
                                     Unread
                                 </option>
                             </Select>
@@ -78,7 +102,7 @@ export function Notification() {
                 </PopoverHeader>
                 <PopoverArrow />
                 <PopoverBody>
-                    <NotificationList />
+                    <NotificationList filterByFn={filterByFn} />
                 </PopoverBody>
             </PopoverContent>
         </Popover>

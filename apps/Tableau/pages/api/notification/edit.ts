@@ -9,7 +9,11 @@ type ISchemaParams = z.infer<typeof schema>
 
 const schema = z.object({
     boardId: z.string().cuid(),
-    id: z.string().cuid(),
+    notifications: z.array(
+        z.object({
+            id: z.string().cuid(),
+        })
+    ),
     isRead: z.boolean().nullable(),
     isNew: z.boolean().nullable(),
 })
@@ -31,10 +35,12 @@ export default async function handler(
         )
     )
         .success(async (params) => {
-            const { id, isNew, isRead } = params
+            const { notifications, isRead, isNew } = params
 
-            const result = await prisma.notification.update({
-                where: { id },
+            const result = await prisma.notification.updateMany({
+                where: {
+                    id: { in: notifications.map((n) => n.id) },
+                },
                 data: {
                     isRead: isRead ?? undefined,
                     isNew: isNew ?? undefined,
