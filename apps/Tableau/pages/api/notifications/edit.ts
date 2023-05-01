@@ -2,13 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
 import { Authenticate } from '../../../server/next/auth/Authenticate'
 import prisma from '../../../lib/prisma'
-import { getTaskPermission } from 'shared-libs'
 import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 
 type ISchemaParams = z.infer<typeof schema>
 
 const schema = z.object({
-    boardId: z.string().cuid(),
     notifications: z.array(
         z.object({
             id: z.string().cuid(),
@@ -23,16 +21,7 @@ export default async function handler(
     res: NextApiResponse
 ) {
     await (
-        await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
-            req,
-            res,
-            schema,
-            {
-                boardId: req.body.boardId,
-                roleFn: getTaskPermission,
-                action: 'edit',
-            }
-        )
+        await Authenticate.Post<typeof schema, ISchemaParams>(req, res, schema)
     )
         .success(async (params) => {
             const { notifications, isRead, isNew } = params

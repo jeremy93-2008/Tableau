@@ -1,17 +1,12 @@
-import { useEffect } from 'react'
-import axios from 'axios'
-import { useAtom } from 'jotai'
+import { useEffect, useMemo } from 'react'
 import { BsBellSlashFill } from 'react-icons/bs'
 import { Flex } from '@chakra-ui/react'
-import { useSession } from 'next-auth/react'
 import { Notification } from '@prisma/client'
-import { BoardAtom } from 'shared-atoms'
-import { useTableauMutation, useTableauQuery } from 'shared-hooks'
 import { NotificationItem } from './notificationItem'
 import { Icon } from '@chakra-ui/icons'
+import { useNotificationQuery } from './hooks/useNotificationQuery'
 
-type INotificationEdit = {
-    boardId: string
+export type INotificationEdit = {
     notifications: INotificationEditValues[]
     isRead?: boolean
     isNew?: boolean
@@ -22,57 +17,29 @@ type INotificationEditValues = {
 }
 
 interface INotificationListProps {
+    filterBy: 'all' | 'unread'
     filterByFn: (item: Notification) => boolean
+    onHasUnreadNotificationChange: (hasUnreadNotification: boolean) => void
 }
 
 export function NotificationList(props: INotificationListProps) {
-    const { filterByFn } = props
-    const [selectedBoard] = useAtom(BoardAtom)
-    const { data: session } = useSession()
-    const { data, refetch } = useTableauQuery<Notification[]>(
-        ['api/notification/list', { email: session?.user?.email }],
-        { enabled: !!session?.user?.email, noLoading: true }
-    )
+    const { filterBy, filterByFn, onHasUnreadNotificationChange } = props
 
-    const { mutateAsync } = useTableauMutation(() => {
-        const value: INotificationEdit = {
-            boardId: selectedBoard?.id || '',
-            notifications:
-                data?.map((item) => ({
-                    id: item.id,
-                })) || [],
-            isRead: true,
-            isNew: false,
-        }
-        return axios.post(`api/notification/edit`, value, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        })
-    })
+    const { notificationList } = useNotificationQuery({ filterByFn })
 
     useEffect(() => {
-        const clearTimeoutId = window.setTimeout(async () => {
-            if (data && data.every((item) => item.isRead)) return
-            await mutateAsync(null)
-            await refetch()
-        }, 2000)
-
-        return () => {
-            clearTimeout(clearTimeoutId)
-        }
-    }, [data, mutateAsync, refetch])
-
-    const notificationFiltered = data?.filter(filterByFn)
+        if (notificationList && notificationList.every((item) => item.isRead))
+            return onHasUnreadNotificationChange(false)
+        onHasUnreadNotificationChange(true)
+    }, [notificationList, onHasUnreadNotificationChange])
 
     return (
         <Flex flexDirection="column" gap={2}>
-            {notificationFiltered &&
-                notificationFiltered.map((item) => (
+            {notificationList &&
+                notificationList.map((item) => (
                     <NotificationItem key={item.id} notification={item} />
                 ))}
-            {notificationFiltered && notificationFiltered.length === 0 && (
+            {notificationList && notificationList.length === 0 && (
                 <Flex px={6} py={8} flexDirection="column" alignItems="center">
                     <Icon as={BsBellSlashFill} mb={2} fontSize="3xl" />
                     <Flex
@@ -81,7 +48,9 @@ export function NotificationList(props: INotificationListProps) {
                         justifyContent="center"
                         textAlign="center"
                     >
-                        Everything is up to date. You have no new notifications.
+                        {filterBy === 'unread' &&
+                            'Everything is up to date. You have no new notifications.'}
+                        {filterBy === 'all' && 'You have no notifications.'}
                     </Flex>
                 </Flex>
             )}

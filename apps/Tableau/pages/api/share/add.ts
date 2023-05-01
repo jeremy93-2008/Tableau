@@ -9,6 +9,7 @@ import { Authenticate } from '../../../server/next/auth/Authenticate'
 import { Board } from '.prisma/client'
 import { Session } from 'next-auth'
 import { addNotification } from '../../../server/prisma/notification/add'
+import { isAuthenticated } from '../../../server/next/auth/isAuthenticated'
 
 type ISchemaParams = z.infer<typeof schema>
 
@@ -41,6 +42,9 @@ export default async function handler(
     )
         .success(async (params) => {
             const { boardId, email, canEditSchema, canEditContent } = params
+
+            const session = await isAuthenticated({ req, res, authOptions })
+
             const isUserAlreadyHasAccount = await prisma.user.findFirst({
                 where: { email },
             })
@@ -63,9 +67,16 @@ export default async function handler(
                 },
             })
 
+            const board = await prisma.board.findFirst({
+                where: { id: boardId },
+            })
+
             await addNotification(
                 'info',
-                'You have been invited to collaborate on a board',
+                'You have been invited to collaborate on a board (' +
+                    board?.name +
+                    ') by ' +
+                    (session as Session).user.name,
                 [email]
             )
 

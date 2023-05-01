@@ -1,5 +1,5 @@
 import { ChangeEvent, useCallback, useState } from 'react'
-import { BsBellFill, BsCheck2All } from 'react-icons/bs'
+import { BsBellFill, BsCheck2All, BsTrashFill } from 'react-icons/bs'
 import {
     Avatar,
     Box,
@@ -15,12 +15,22 @@ import {
     Tooltip,
     Button,
     Select,
+    useToast,
 } from '@chakra-ui/react'
 import { NotificationList } from './notificationList'
 import { Notification as INotification } from '@prisma/client'
+import { useNotificationQuery } from './hooks/useNotificationQuery'
+import { useSession } from 'next-auth/react'
+import { useThemeMode } from 'shared-hooks'
+import { useNotificationToast } from './hooks/useNotificationToast'
 
 export function Notification() {
+    const { data: session, status } = useSession()
+
+    const { bg, text } = useThemeMode()
+
     const [filterBy, setFilterBy] = useState<'all' | 'unread'>('unread')
+    const [hasUnreadNotification, setHasUnreadNotification] = useState(true)
 
     const filterByFn = useCallback(
         (notification: INotification) => {
@@ -34,8 +44,20 @@ export function Notification() {
         setFilterBy(e.target.value as 'all' | 'unread')
     }, [])
 
+    const onHasUnreadNotificationChange = useCallback(
+        (newHasUnreadNotification: boolean) => {
+            if (newHasUnreadNotification === hasUnreadNotification) return
+            setHasUnreadNotification(newHasUnreadNotification)
+        },
+        [hasUnreadNotification]
+    )
+
+    useNotificationToast()
+    const { markAsRead, deleteNotification, refetchNotification } =
+        useNotificationQuery({})
+
     return (
-        <Popover isLazy>
+        <Popover>
             <Flex>
                 <Tooltip label="Notifications">
                     <Box>
@@ -43,7 +65,8 @@ export function Notification() {
                             <IconButton
                                 colorScheme="teal"
                                 variant="ghost"
-                                aria-label={'Notifications'}
+                                aria-label="Notifications"
+                                isDisabled={status !== 'authenticated'}
                                 icon={
                                     <Flex position="relative">
                                         <Avatar
@@ -52,15 +75,17 @@ export function Notification() {
                                             color="teal.200"
                                             as={BsBellFill}
                                         />
-                                        <Flex
-                                            position="absolute"
-                                            top={-1}
-                                            right={-1}
-                                            bg="red.500"
-                                            height={3}
-                                            width={3}
-                                            borderRadius="50%"
-                                        />
+                                        {hasUnreadNotification && (
+                                            <Flex
+                                                position="absolute"
+                                                top={-1}
+                                                right={-1}
+                                                bg="red.500"
+                                                height={3}
+                                                width={3}
+                                                borderRadius="50%"
+                                            />
+                                        )}
                                     </Flex>
                                 }
                             />
@@ -68,41 +93,68 @@ export function Notification() {
                     </Box>
                 </Tooltip>
             </Flex>
-            <PopoverContent width={'450px'}>
+            <PopoverContent width={'450px'} bg={bg.modal} color={text.primary}>
                 <PopoverHeader py={3} px={6}>
                     <Flex alignItems="center" justifyContent="space-between">
                         <Flex alignItems="center">
                             <Text pr={3} fontWeight="medium">
                                 Notifications
                             </Text>
-                            <Select onChange={onFilterChange} border={0} px={0}>
-                                <option
-                                    selected={filterBy === 'all'}
-                                    value="all"
-                                >
-                                    All
-                                </option>
-                                <option
-                                    selected={filterBy === 'unread'}
-                                    value="unread"
-                                >
-                                    Unread
-                                </option>
+                            <Select
+                                onChange={onFilterChange}
+                                defaultValue={filterBy}
+                                border={0}
+                                px={0}
+                            >
+                                <option value="all">All</option>
+                                <option value="unread">Unread</option>
                             </Select>
                         </Flex>
-                        <Button
-                            leftIcon={<BsCheck2All />}
-                            size="sm"
-                            colorScheme="teal"
-                            variant="ghost"
-                        >
-                            Mark all as read
-                        </Button>
+                        {filterBy === 'unread' && (
+                            <Button
+                                onClick={() => {
+                                    markAsRead('allUnread').then(() => {
+                                        refetchNotification().then()
+                                    })
+                                }}
+                                leftIcon={<BsCheck2All />}
+                                size="sm"
+                                colorScheme="teal"
+                                variant="ghost"
+                            >
+                                Mark all as read
+                            </Button>
+                        )}
+                        {filterBy === 'all' && (
+                            <Button
+                                onClick={() => {
+                                    deleteNotification(['all']).then(() => {
+                                        refetchNotification().then()
+                                    })
+                                }}
+                                leftIcon={<BsTrashFill />}
+                                size="sm"
+                                colorScheme="red"
+                                variant="ghost"
+                            >
+                                Delete all
+                            </Button>
+                        )}
                     </Flex>
                 </PopoverHeader>
                 <PopoverArrow />
-                <PopoverBody>
-                    <NotificationList filterByFn={filterByFn} />
+                <PopoverBody
+                    minHeight="160px"
+                    maxHeight="280px"
+                    overflowY="auto"
+                >
+                    <NotificationList
+                        filterBy={filterBy}
+                        filterByFn={filterByFn}
+                        onHasUnreadNotificationChange={
+                            onHasUnreadNotificationChange
+                        }
+                    />
                 </PopoverBody>
             </PopoverContent>
         </Popover>
