@@ -15,7 +15,6 @@ import {
     Tooltip,
     Button,
     Select,
-    useToast,
 } from '@chakra-ui/react'
 import { NotificationList } from './notificationList'
 import { Notification as INotification } from '@prisma/client'
