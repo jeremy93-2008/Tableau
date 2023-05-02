@@ -11,13 +11,6 @@ import {
 } from '@chakra-ui/react'
 import { useNotificationQuery } from './hooks/useNotificationQuery'
 
-export type INotificationEditValues = {
-    id: string
-    boardId: string
-    isRead?: boolean
-    isNew?: boolean
-}
-
 interface INotificationItemProps {
     notification: Notification
 }
