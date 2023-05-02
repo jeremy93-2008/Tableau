@@ -1,9 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getSession } from 'next-auth/react'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
 import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { Authenticate } from '../../../server/next/auth/Authenticate'
+import { isAuthenticated } from '../../../server/next/auth/isAuthenticated'
+import { authOptions } from '../auth/[...nextauth]'
+import { Session } from 'next-auth'
 
 type ISchemaParams = z.infer<typeof schema>
 
@@ -22,7 +24,13 @@ export default async function handler(
     )
         .success(async (params) => {
             const { name, description, backgroundUrl } = params
-            const session = await getSession({ req })
+
+            const session = (await isAuthenticated({
+                req,
+                res,
+                authOptions,
+            })) as Session
+
             const email = session?.user?.email ?? ''
 
             const userEntry = await prisma.user.findFirst({
