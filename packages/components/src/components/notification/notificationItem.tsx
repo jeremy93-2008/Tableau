@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { Notification } from '@prisma/client'
 import {
     Alert,
