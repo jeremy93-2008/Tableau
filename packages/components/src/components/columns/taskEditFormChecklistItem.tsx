@@ -89,8 +89,9 @@ export function TaskEditFormChecklistItem(
     }, [checklist, mutateEditAsync, refetchBoard, selectedBoard, session])
 
     const onSubmitEdit = useCallback(
-        (value: string) => {
+        (values: string[]) => {
             if (!selectedBoard || !session?.user.email) return
+            const [value] = values
             mutateEditAsync({
                 id: checklist.id,
                 boardId: selectedBoard.id,
@@ -179,10 +180,10 @@ export function TaskEditFormChecklistItem(
                 isOpen={isOpen}
                 onClose={onClose}
                 title={'Add a Checklist Item'}
-                description={'Name'}
+                description={['Name']}
                 onSubmit={onSubmitEdit}
-                defaultValue={checklist.name}
-                validationValueSchema={z.string().min(3)}
+                defaultValue={[checklist.name]}
+                validationValueSchema={[z.string().min(3)]}
             />
             <DeleteModal
                 title="Delete Chwcklist Item"
