@@ -3,7 +3,6 @@ import React, {
     Ref,
     useCallback,
     useEffect,
-    useMemo,
     useState,
 } from 'react'
 import { AlertDialog } from '@chakra-ui/modal'
@@ -14,105 +13,71 @@ import {
     AlertDialogHeader,
     AlertDialogOverlay,
     Button,
-    Flex,
+    useToast,
     Text,
 } from '@chakra-ui/react'
 import { FocusableElement } from '@chakra-ui/utils'
 import { TextInput } from '../../textInput'
 import { z, ZodSchema } from 'zod'
-import { SafeParseError } from 'zod/lib/types'
 
 interface ITaskEditFormModalInputProps {
     title: string
-    description: string | string[]
+    description: string
     isOpen: boolean
     onClose: () => void
-    onSubmit: (value: string[]) => void
-    defaultValue?: string | string[]
-    validationValueSchema?: Array<ZodSchema<any>>
+    onSubmit: (value: string) => void
+    defaultValue?: string
+    validationValueSchema?: ZodSchema<any>
 }
 
 export function InputModal(props: ITaskEditFormModalInputProps) {
     const {
         title,
-        description: rawDescription,
+        description,
         isOpen,
         onClose,
         onSubmit,
-        defaultValue: rawDefaultValue,
+        defaultValue,
         validationValueSchema,
     } = props
-
-    const description = Array.isArray(rawDescription)
-        ? rawDescription
-        : [rawDescription]
-
-    const defaultValue = useMemo(
-        () =>
-            Array.isArray(rawDefaultValue)
-                ? rawDefaultValue
-                : [rawDefaultValue || ''],
-        [rawDefaultValue]
-    )
-
     const inputRef = React.useRef<FocusableElement | null>(null)
 
-    const [value, setValue] = useState(defaultValue ?? [])
+    const [value, setValue] = useState(defaultValue ?? '')
 
-    const [hasErrors, setHasError] = useState<boolean[]>([])
-    const [errorMessages, setErrorMessages] = useState<string[]>([])
+    const [hasError, setHasError] = useState(false)
+    const [errorMessages, setErrorMessages] = useState<string>('')
+    const toast = useToast()
 
     const handleChange = useCallback(
-        (evt: ChangeEvent<HTMLElement>, idx: number) => {
-            setValue((prevState) => {
-                const newState = [...prevState]
-                newState[idx] = (evt.target as HTMLInputElement).value
-
-                const success = validationValueSchema?.every(
-                    (zodSchema) => zodSchema.safeParse(value[idx]).success
-                )
-
-                if (success) {
-                    setHasError([])
-                    setErrorMessages([])
-                }
-
-                return structuredClone(newState)
-            })
+        (evt: ChangeEvent<HTMLElement>) => {
+            if (
+                validationValueSchema?.safeParse(
+                    (evt.target as HTMLInputElement).value
+                ).success
+            ) {
+                setHasError(false)
+                setErrorMessages('')
+            }
+            setValue((evt.target as HTMLInputElement).value)
         },
-        [validationValueSchema, value]
+        [validationValueSchema]
     )
 
     useEffect(() => {
-        if (isOpen) return
         setValue(defaultValue ?? '')
-        setHasError([])
-        setErrorMessages([])
     }, [defaultValue, isOpen])
 
     const handleOnSubmit = useCallback(() => {
-        const parseSchema = validationValueSchema?.map((zodSchema, idx) =>
-            zodSchema.safeParse(value[idx])
-        )
-        const success = parseSchema?.every((parse) => parse?.success)
-
-        if (parseSchema && !success) {
-            const messages: string[] = parseSchema.map(
-                (parse) =>
-                    (parse as SafeParseError<any>)?.error?.errors
-                        .map((err) => err.message)
-                        .join('\n') ?? ''
-            )
-            setHasError(messages.map((message) => !!message))
-            setErrorMessages(messages)
-            return
-        } else {
-            setHasError([])
-            setErrorMessages([])
+        const parse = validationValueSchema?.safeParse(value)
+        if (parse && !parse.success) {
+            const message = parse.error.issues
+                .map((issue) => issue.message)
+                .join('\\n')
+            setHasError(true)
+            setErrorMessages(message)
         }
-
         onSubmit(value)
-    }, [onSubmit, validationValueSchema, value])
+    }, [onSubmit, toast, validationValueSchema, value])
 
     return (
         <AlertDialog
@@ -127,54 +92,30 @@ export function InputModal(props: ITaskEditFormModalInputProps) {
                     </AlertDialogHeader>
 
                     <AlertDialogBody>
-                        {value.map((val, idx) => (
-                            <Flex
-                                key={idx}
-                                flexDirection="column"
-                                mt={idx > 0 ? 4 : 0}
-                            >
-                                <TextInput
-                                    ref={
-                                        idx === 0
-                                            ? (inputRef as
-                                                  | Ref<HTMLInputElement>
-                                                  | undefined)
-                                            : undefined
-                                    }
-                                    name={'inputValue-' + idx}
-                                    label={description[idx]}
-                                    value={val}
-                                    onEnter={() => {
-                                        if (value.length === idx + 1)
-                                            handleOnSubmit()
-                                    }}
-                                    onChange={(evt) => handleChange(evt, idx)}
-                                    onBlur={(evt) => handleChange(evt, idx)}
-                                    style={
-                                        hasErrors[idx]
-                                            ? { border: 'solid 1px #F56565' }
-                                            : {}
-                                    }
-                                />
-                                {hasErrors && errorMessages && (
-                                    <Text
-                                        mt={2}
-                                        ml={2}
-                                        whiteSpace="pre"
-                                        color="#F56565"
-                                    >
-                                        {errorMessages[idx] ?? ''}
-                                    </Text>
-                                )}
-                            </Flex>
-                        ))}
+                        <TextInput
+                            ref={inputRef as Ref<HTMLInputElement> | undefined}
+                            name="inputValue"
+                            label={description}
+                            value={value}
+                            onEnter={() => onSubmit(value)}
+                            onChange={handleChange}
+                            onBlur={handleChange}
+                            style={
+                                hasError ? { border: 'solid 1px #F56565' } : {}
+                            }
+                        />
+                        {hasError && errorMessages && (
+                            <Text mt={2} ml={2} color="#F56565">
+                                {errorMessages}
+                            </Text>
+                        )}
                     </AlertDialogBody>
 
                     <AlertDialogFooter>
                         <Button onClick={onClose}>Cancel</Button>
                         <Button
                             data-cy="modalInputButton"
-                            colorScheme={hasErrors.length > 0 ? 'red' : 'teal'}
+                            colorScheme={hasError ? 'red' : 'teal'}
                             onClick={handleOnSubmit}
                             ml={3}
                         >

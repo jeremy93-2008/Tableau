@@ -121,9 +121,8 @@ export function TaskEditFormChecklistGroup(
     }, [onOpen])
 
     const onSubmitAdd = useCallback(
-        (values: string[]) => {
+        (value: string) => {
             if (!selectedBoard || !session?.user.email) return
-            const [value] = values
             mutateAsync({
                 boardId: selectedBoard.id,
                 checklistGroupId: checklistGroup.id,
@@ -145,9 +144,8 @@ export function TaskEditFormChecklistGroup(
     )
 
     const onSubmitEdit = useCallback(
-        (values: string[]) => {
+        (value: string) => {
             if (!selectedBoard || !session?.user.email) return
-            const [value] = values
             mutateEditAsync({
                 boardId: selectedBoard.id,
                 id: checklistGroup.id,
@@ -244,18 +242,18 @@ export function TaskEditFormChecklistGroup(
                 isOpen={isOpen}
                 onClose={onClose}
                 title={'Add a Checklist Item'}
-                description={['Name']}
+                description={'Name'}
                 onSubmit={onSubmitAdd}
-                validationValueSchema={[z.string().min(3)]}
+                validationValueSchema={z.string().min(3)}
             />
             <InputModal
                 isOpen={isEditModalOpen}
                 onClose={onEditModalClose}
                 title={'Edit a Checklist Group'}
-                description={['Name']}
+                description={'Name'}
                 defaultValue={checklistGroup.name}
                 onSubmit={onSubmitEdit}
-                validationValueSchema={[z.string().min(3)]}
+                validationValueSchema={z.string().min(3)}
             />
             <DeleteModal
                 title="Delete Checklist Group"

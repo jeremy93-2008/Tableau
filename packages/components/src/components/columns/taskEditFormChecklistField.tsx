@@ -63,9 +63,8 @@ export function TaskEditFormChecklistField(
     }, [onOpen])
 
     const onSubmitAddGroup = useCallback(
-        (values: string[]) => {
+        (value: string) => {
             if (!selectedBoard) return
-            const [value] = values
             mutateAsync({
                 boardId: selectedBoard?.id,
                 name: value,
@@ -96,9 +95,9 @@ export function TaskEditFormChecklistField(
                     isOpen={isOpen}
                     onClose={onClose}
                     title={'Add a Checklist Group'}
-                    description={['Name']}
+                    description={'Name'}
                     onSubmit={onSubmitAddGroup}
-                    validationValueSchema={[z.string().min(3)]}
+                    validationValueSchema={z.string().min(3)}
                 />
             </Flex>
             <Flex flexDirection="column" mt={2} ml={3}>
