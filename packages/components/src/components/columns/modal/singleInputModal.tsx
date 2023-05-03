@@ -13,7 +13,6 @@ import {
     AlertDialogHeader,
     AlertDialogOverlay,
     Button,
-    useToast,
     Text,
 } from '@chakra-ui/react'
 import { FocusableElement } from '@chakra-ui/utils'
@@ -30,7 +29,7 @@ interface ITaskEditFormModalInputProps {
     validationValueSchema?: ZodSchema<any>
 }
 
-export function InputModal(props: ITaskEditFormModalInputProps) {
+export function SingleInputModal(props: ITaskEditFormModalInputProps) {
     const {
         title,
         description,
@@ -46,7 +45,6 @@ export function InputModal(props: ITaskEditFormModalInputProps) {
 
     const [hasError, setHasError] = useState(false)
     const [errorMessages, setErrorMessages] = useState<string>('')
-    const toast = useToast()
 
     const handleChange = useCallback(
         (evt: ChangeEvent<HTMLElement>) => {
@@ -75,9 +73,10 @@ export function InputModal(props: ITaskEditFormModalInputProps) {
                 .join('\\n')
             setHasError(true)
             setErrorMessages(message)
+            return
         }
         onSubmit(value)
-    }, [onSubmit, toast, validationValueSchema, value])
+    }, [onSubmit, validationValueSchema, value])
 
     return (
         <AlertDialog

@@ -18,6 +18,7 @@ import { BsTrashFill } from 'react-icons/bs'
 import { DeleteModal } from './modal/deleteModal'
 import { TaskEditFormAssignedUser } from './taskEditFormAssignedUser'
 import { TaskEditFormChecklistField } from './taskEditFormChecklistField'
+import { TaskEditFormLinkField } from './taskEditForrmLinkField'
 
 interface ITaskEditForm {
     task: IFullTask
@@ -152,6 +153,9 @@ export function TaskEditForm(props: ITaskEditForm) {
                                 />
                                 <Flex mt={4}>
                                     <TaskEditFormChecklistField task={task} />
+                                </Flex>
+                                <Flex mt={2}>
+                                    <TaskEditFormLinkField task={task} />
                                 </Flex>
                                 <Flex mt={4} gap={2}>
                                     <TextInput

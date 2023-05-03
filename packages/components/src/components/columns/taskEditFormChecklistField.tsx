@@ -11,7 +11,7 @@ import { AddIcon } from '@chakra-ui/icons'
 import { TaskEditFormChecklistGroup } from './taskEditFormChecklistGroup'
 import React, { useCallback } from 'react'
 import { IFullTask } from 'shared-types'
-import { InputModal } from './modal/inputModal'
+import { SingleInputModal } from './modal/singleInputModal'
 import { useAtom } from 'jotai'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 import { z } from 'zod'
@@ -91,7 +91,7 @@ export function TaskEditFormChecklistField(
                         size="xs"
                     />
                 </Tooltip>
-                <InputModal
+                <SingleInputModal
                     isOpen={isOpen}
                     onClose={onClose}
                     title={'Add a Checklist Group'}

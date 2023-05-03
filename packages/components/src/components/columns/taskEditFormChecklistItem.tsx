@@ -17,7 +17,7 @@ import {
     ICheckListEditFormikValues,
 } from './taskEditFormChecklistGroup'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
-import { InputModal } from './modal/inputModal'
+import { SingleInputModal } from './modal/singleInputModal'
 
 import { BsFillPencilFill, BsTrashFill } from 'react-icons/bs'
 import { DeleteModal } from './modal/deleteModal'
@@ -175,7 +175,7 @@ export function TaskEditFormChecklistItem(
                 />
             </Tooltip>
 
-            <InputModal
+            <SingleInputModal
                 isOpen={isOpen}
                 onClose={onClose}
                 title={'Add a Checklist Item'}

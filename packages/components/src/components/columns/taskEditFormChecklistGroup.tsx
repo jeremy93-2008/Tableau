@@ -15,7 +15,7 @@ import { useTableauMutation } from 'shared-hooks'
 import { useSession } from 'next-auth/react'
 import { useAtom } from 'jotai'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
-import { InputModal } from './modal/inputModal'
+import { SingleInputModal } from './modal/singleInputModal'
 import { TaskEditFormChecklistItem } from './taskEditFormChecklistItem'
 import { z } from 'zod'
 import { BsFillPencilFill, BsTrashFill } from 'react-icons/bs'
@@ -238,7 +238,7 @@ export function TaskEditFormChecklistGroup(
                 </Button>
             </Flex>
 
-            <InputModal
+            <SingleInputModal
                 isOpen={isOpen}
                 onClose={onClose}
                 title={'Add a Checklist Item'}
@@ -246,7 +246,7 @@ export function TaskEditFormChecklistGroup(
                 onSubmit={onSubmitAdd}
                 validationValueSchema={z.string().min(3)}
             />
-            <InputModal
+            <SingleInputModal
                 isOpen={isEditModalOpen}
                 onClose={onEditModalClose}
                 title={'Edit a Checklist Group'}
