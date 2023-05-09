@@ -9,9 +9,9 @@ import {
 import React, { Ref, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertDialog } from '@chakra-ui/modal'
 import { FocusableElement } from '@chakra-ui/utils'
-import { ZodSchema } from 'zod'
+import { ZodError, ZodIssue, ZodSchema } from 'zod'
 import { SafeParseError } from 'zod/lib/types'
-import { ZodError } from 'zod/lib/ZodError'
+import { getZodIssuesByPath } from 'shared-utils'
 
 interface IFormModalProps<TValues extends Object> {
     title: string
@@ -26,7 +26,7 @@ interface IFormModalProps<TValues extends Object> {
     }: {
         values: TValues
         onFieldChange: (field: keyof TValues, value: string) => void
-        error: ZodError<TValues>
+        error: Record<string, ZodIssue[]>
     }) => React.ReactNode
 }
 export function FormModal<TValues extends Object>(
@@ -39,10 +39,11 @@ export function FormModal<TValues extends Object>(
         isOpen,
         onSubmit,
         onClose,
-        children,
+        children: fnGetChildren,
     } = props
     const inputRef = React.useRef<FocusableElement | null>(null)
 
+    const [isSubmitted, setIsSubmitted] = useState(false)
     const [values, setValues] = useState(defaultValues ?? '')
 
     const validate = useMemo(() => {
@@ -51,16 +52,24 @@ export function FormModal<TValues extends Object>(
 
     const error = useMemo(() => {
         return (validate as SafeParseError<TValues>).error
-    }, [validate])
+    }, [validate]) as ZodError<TValues> | undefined
 
     const onFieldChange = useCallback((field: keyof TValues, value: any) => {
         setValues((prev) => ({ ...prev, [field]: value }))
     }, [])
 
-    const handleOnSubmit = () => {}
+    const handleOnSubmit = () => {
+        if (validate?.success) {
+            onSubmit(values)
+            onClose()
+            return
+        }
+        setIsSubmitted(true)
+    }
 
     useEffect(() => {
         if (isOpen) return
+        setIsSubmitted(false)
         setValues(defaultValues)
     }, [defaultValues, isOpen])
 
@@ -77,10 +86,13 @@ export function FormModal<TValues extends Object>(
                     </AlertDialogHeader>
 
                     <AlertDialogBody>
-                        {children({
+                        {fnGetChildren({
                             values,
                             onFieldChange,
-                            error,
+                            error:
+                                isSubmitted && error?.issues
+                                    ? getZodIssuesByPath(error.issues)
+                                    : {},
                         })}
                     </AlertDialogBody>
 
@@ -93,7 +105,11 @@ export function FormModal<TValues extends Object>(
                         </Button>
                         <Button
                             data-cy="modalFormButton"
-                            colorScheme="teal"
+                            colorScheme={
+                                isSubmitted && error && error?.issues.length > 0
+                                    ? 'red'
+                                    : 'teal'
+                            }
                             onClick={handleOnSubmit}
                             ml={3}
                         >

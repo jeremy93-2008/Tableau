@@ -18,7 +18,10 @@ interface ITaskEditFormLinkField {
 export function TaskEditFormLinkField(props: ITaskEditFormLinkField) {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const onSubmitLink = useCallback(() => {}, [])
+    const onSubmitLink = useCallback(
+        (values: { name: string; url: string }) => {},
+        []
+    )
 
     return (
         <Flex>
@@ -46,7 +49,6 @@ export function TaskEditFormLinkField(props: ITaskEditFormLinkField) {
             >
                 {({ values, onFieldChange, error }) => (
                     <Flex flexDirection="column" gap={3}>
-                        <Text color="red">{JSON.stringify(error)}</Text>
                         <TextInput
                             name="nameInput"
                             label="Name"
@@ -58,7 +60,17 @@ export function TaskEditFormLinkField(props: ITaskEditFormLinkField) {
                                 )
                             }
                             onBlur={() => {}}
+                            style={
+                                error?.name?.length > 0
+                                    ? { border: 'solid 1px #F56565' }
+                                    : {}
+                            }
                         />
+                        {error?.name?.map((err) => (
+                            <Text key={err.path.join('.')} color="red.500">
+                                {err.message}
+                            </Text>
+                        ))}
                         <TextInput
                             name="urlInput"
                             label="URL"
@@ -70,7 +82,17 @@ export function TaskEditFormLinkField(props: ITaskEditFormLinkField) {
                                 )
                             }
                             onBlur={() => {}}
+                            style={
+                                error?.url?.length > 0
+                                    ? { border: 'solid 1px #F56565' }
+                                    : {}
+                            }
                         />
+                        {error?.url?.map((err) => (
+                            <Text key={err.path.join('.')} color="red.500">
+                                {err.message}
+                            </Text>
+                        ))}
                     </Flex>
                 )}
             </FormModal>
