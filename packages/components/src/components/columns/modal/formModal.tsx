@@ -68,7 +68,6 @@ export function FormModal<TValues extends Object>(
     }
 
     useEffect(() => {
-        if (isOpen) return
         setIsSubmitted(false)
         setValues(defaultValues)
     }, [defaultValues, isOpen])

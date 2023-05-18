@@ -11,6 +11,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Link {
+  id     String @id @default(cuid())
+  name   String
+  url    String
+  image  String
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
 model Notification {
   id        String   @id @default(cuid())
   type      String
@@ -55,6 +64,7 @@ model Task {
   assignedUserId  String?
   assignedUser    User?            @relation("AssignedUser", fields: [assignedUserId], references: [id], onDelete: Cascade)
   checklistsGroup ChecklistGroup[]
+  link            Link[]
 }
 
 model Board {
