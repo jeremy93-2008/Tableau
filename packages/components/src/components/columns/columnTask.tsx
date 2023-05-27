@@ -81,9 +81,10 @@ export function ColumnTask(props: IColumnTaskProps) {
                 elapsedTime: task.elapsedTime || 0,
                 statusId: statusBoard.id,
                 order: (taskLength ?? 998) + 1,
-                assignedUserId: (task.assignedUserId ?? null) as
-                    | string
-                    | undefined,
+                assignedUsers:
+                    task.assignedUsers.map(
+                        (assignedUser) => assignedUser.User.id
+                    ) ?? null,
             }).then(() => {
                 setDropColumnAllowed(false)
                 refetchBoards.fetch()

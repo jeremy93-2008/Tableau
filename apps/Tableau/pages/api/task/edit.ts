@@ -15,7 +15,7 @@ const schema = z.object({
     statusId: z.string().cuid(),
     elapsedTime: z.number(),
     estimatedTime: z.number(),
-    assignedUserId: z.string().nullable(),
+    assignedUsers: z.array(z.string()).nullable(),
 })
 
 export default async function handler(
@@ -42,14 +42,23 @@ export default async function handler(
                 elapsedTime,
                 estimatedTime,
                 statusId,
-                assignedUserId,
+                assignedUsers,
             } = params
 
-            const assignedUserConnect = assignedUserId
+            const assignedUsersValues = assignedUsers
                 ? {
-                      connect: {
-                          id: assignedUserId,
-                      },
+                      connectOrCreate: assignedUsers.map((userId) => {
+                          return {
+                              where: {
+                                  taskId_userId: { userId, taskId: id },
+                              },
+                              create: {
+                                  userId,
+                                  taskId: id,
+                                  isHolder: false,
+                              },
+                          }
+                      }),
                   }
                 : undefined
 
@@ -67,7 +76,7 @@ export default async function handler(
                             id: statusId,
                         },
                     },
-                    assignedUser: assignedUserConnect,
+                    assignedUsers: assignedUsersValues,
                 },
             })
 

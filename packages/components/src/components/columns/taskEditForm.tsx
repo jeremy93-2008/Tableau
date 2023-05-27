@@ -49,7 +49,10 @@ export function TaskEditForm(props: ITaskEditForm) {
             elapsedTime: task.elapsedTime || 0,
             estimatedTime: task.estimatedTime || 0,
             order: task.order || 999,
-            assignedUserId: task.assignedUserId ?? undefined,
+            assignedUsers:
+                task.assignedUsers.map(
+                    (assignedUser) => assignedUser.User.id
+                ) ?? undefined,
         }),
         [task, status]
     )
@@ -91,18 +94,16 @@ export function TaskEditForm(props: ITaskEditForm) {
                         <Flex
                             position="absolute"
                             top={4}
-                            right="85px"
+                            left="160px"
                             flexDirection="column"
                         >
                             <TaskEditFormAssignedUser
-                                assignedUserId={props.values.assignedUserId}
+                                assignedUsers={task.assignedUsers}
                                 setAssignedUser={(
                                     assignedUserId: string | null
                                 ) => {
                                     props.setValues({
                                         ...props.values,
-                                        assignedUserId:
-                                            assignedUserId ?? undefined,
                                     })
                                 }}
                             />

@@ -49,22 +49,21 @@ model ChecklistGroup {
 }
 
 model Task {
-  id              String           @id @default(cuid())
+  id              String             @id @default(cuid())
   name            String
   description     String?
-  status          StatusBoard      @relation(fields: [statusId], references: [id])
+  status          StatusBoard        @relation(fields: [statusId], references: [id])
   statusId        String
-  board           Board            @relation(fields: [boardId], references: [id])
+  board           Board              @relation(fields: [boardId], references: [id])
   boardId         String
-  user            User             @relation("User", fields: [userId], references: [id], onDelete: Cascade)
+  user            User               @relation("User", fields: [userId], references: [id], onDelete: Cascade)
   userId          String
-  order           Int              @default(1)
+  order           Int                @default(1)
   estimatedTime   Int?
   elapsedTime     Int?
-  assignedUserId  String?
-  assignedUser    User?            @relation("AssignedUser", fields: [assignedUserId], references: [id], onDelete: Cascade)
   checklistsGroup ChecklistGroup[]
   link            Link[]
+  assignedUsers   TaskAssignedUser[]
 }
 
 model Board {
@@ -135,6 +134,17 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model TaskAssignedUser {
+  id       String  @id @default(cuid())
+  taskId   String
+  userId   String
+  Task     Task    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  User     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isHolder Boolean @default(false)
+
+  @@unique([taskId, userId])
+}
+
 model User {
   id                String             @id @default(cuid())
   name              String?
@@ -144,12 +154,12 @@ model User {
   accounts          Account[]
   sessions          Session[]
   Task              Task[]             @relation("User")
-  TaskAssigned      Task[]             @relation("AssignedUser")
   ChecklistAssigned Checklist[]
   Board             Board[]
   BoardUserSharing  BoardUserSharing[]
   isDarkMode        Boolean            @default(false)
   Notifications     Notification[]
+  AssignedTasks     TaskAssignedUser[]
 }
 
 model VerificationToken {

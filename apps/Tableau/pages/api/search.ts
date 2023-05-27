@@ -72,7 +72,10 @@ export default async function handler(
                                 },
                             },
                         },
-                        include: { user: true, assignedUser: true },
+                        include: {
+                            user: true,
+                            assignedUsers: { include: { User: true } },
+                        },
                     })
                 )
             )

@@ -10,7 +10,6 @@ import {
     useDisclosure,
 } from '@chakra-ui/react'
 import { BsClock, BsClockHistory, BsFillPencilFill } from 'react-icons/bs'
-import { Task } from '.prisma/client'
 import { TaskEdit } from './taskEdit'
 import { TaskItemType } from 'shared-utils'
 import { IFullStatus } from 'shared-types'
@@ -187,19 +186,13 @@ export function TaskItem(props: ITaskItemProps) {
                 bottom={-2}
                 className="board-item-actions"
             >
-                <Tooltip
-                    label={
-                        task.assignedUser
-                            ? `Assigned to ${task.assignedUser?.name}`
-                            : 'Not assigned'
-                    }
-                >
+                <Tooltip label={'' ? `Assigned to` : 'Not assigned'}>
                     <Avatar
                         width={readonly ? 8 : 10}
                         height={readonly ? 8 : 10}
                         border={`solid 3px ${border.teal}`}
-                        src={task.assignedUser?.image ?? ''}
-                        name={task.assignedUser?.name ?? ''}
+                        src={''}
+                        name={''}
                     />
                 </Tooltip>
             </Flex>

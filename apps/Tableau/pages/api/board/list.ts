@@ -39,7 +39,11 @@ export default async function handler(
                             Task: {
                                 include: {
                                     user: true,
-                                    assignedUser: true,
+                                    assignedUsers: {
+                                        include: {
+                                            User: true,
+                                        },
+                                    },
                                     checklistsGroup: {
                                         include: {
                                             checklists: {

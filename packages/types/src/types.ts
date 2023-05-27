@@ -4,6 +4,7 @@ import {
     Checklist,
     ChecklistGroup,
     Link,
+    TaskAssignedUser,
 } from '@prisma/client'
 
 export type IBoardWithAllRelation = Board & {
@@ -23,9 +24,13 @@ export type IFullBoardSharing = BoardUserSharing & {
 
 export type IFullTask = Task & {
     user: User
-    assignedUser: User
+    assignedUsers: IFullTaskAssignedUser[]
     checklistsGroup: IFullCheckListGroup[]
     link: Link[]
+}
+
+export type IFullTaskAssignedUser = TaskAssignedUser & {
+    User: User
 }
 
 export type IFullCheckListGroup = ChecklistGroup & { checklists: Checklist[] }
