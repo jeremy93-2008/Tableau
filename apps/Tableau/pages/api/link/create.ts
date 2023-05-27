@@ -35,7 +35,7 @@ export default async function handler(
 
             const url =
                 rawUrl.trim()[rawUrl.length - 1] === '/'
-                    ? rawUrl.slice(0, rawUrl.length - 2)
+                    ? rawUrl.slice(0, rawUrl.length - 1)
                     : rawUrl
 
             const result = await prisma.link.create({

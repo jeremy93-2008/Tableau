@@ -16,7 +16,7 @@ const schema = z.object({
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse
+    res: NextApiResponse,
 ) {
     await (
         await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
@@ -27,17 +27,23 @@ export default async function handler(
                 boardId: req.body.boardId,
                 roleFn: getTaskPermission,
                 action: 'edit',
-            }
+            },
         )
     )
         .success(async (params) => {
-            const { id, name, url } = params
+            const { id, name, url: rawUrl } = params
+
+            const url =
+                rawUrl.trim()[rawUrl.length - 1] === '/'
+                    ? rawUrl.slice(0, rawUrl.length - 1)
+                    : rawUrl
 
             const result = await prisma.link.update({
                 where: { id },
                 data: {
                     name,
                     url,
+                    image: url + '/favicon.ico',
                 },
             })
 
