@@ -91,12 +91,7 @@ export function TaskEditForm(props: ITaskEditForm) {
             >
                 {(props) => (
                     <form onSubmit={props.handleSubmit}>
-                        <Flex
-                            position="absolute"
-                            top={4}
-                            left="160px"
-                            flexDirection="column"
-                        >
+                        <Flex mb={2} flexDirection="column">
                             <TaskEditFormAssignedUser
                                 assignedUsers={task.assignedUsers}
                                 setAssignedUser={(
