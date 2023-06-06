@@ -6,7 +6,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react'
 import {
     IOptionsMenuItem,
     useShareRolesOptions,
-} from './hooks/useShareRolesOptions'
+} from '../../hooks/useShareRolesOptions'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
 import { FaUserPlus } from 'react-icons/fa'

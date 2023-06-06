@@ -25,7 +25,7 @@ export type ITaskEditFormikValues = {
     elapsedTime: number
     estimatedTime: number
     order: number
-    assignedUsers?: string[]
+    assignedUserIds?: string[]
 }
 
 interface ITaskEditProps {
@@ -95,7 +95,7 @@ export function TaskEdit(props: ITaskEditProps) {
             <ModalContent>
                 <ModalHeader>Edit your task</ModalHeader>
                 <ModalCloseButton />
-                <ModalBody data-cy="taskEditForm" pb={6}>
+                <ModalBody data-cy="taskEditForm">
                     <TaskEditForm
                         task={task}
                         status={status}

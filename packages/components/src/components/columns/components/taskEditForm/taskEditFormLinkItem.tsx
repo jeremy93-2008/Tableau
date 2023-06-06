@@ -13,7 +13,7 @@ import {
 import React, { useCallback, useState, useEffect } from 'react'
 import { RiErrorWarningFill } from 'react-icons/ri'
 import { BsFillPencilFill, BsTrashFill } from 'react-icons/bs'
-import { DeleteModal } from './modal/deleteModal'
+import { DeleteModal } from '../../modal/deleteModal'
 import { useTableauMutation } from 'shared-hooks'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 import { useSession } from 'next-auth/react'
@@ -74,7 +74,7 @@ export function TaskEditFormLinkItem(props: ITaskEditFormLinkItemProps) {
                     Accept: 'application/json',
                 },
             })
-        },
+        }
     )
 
     const onSubmitDelete = useCallback(() => {
@@ -101,63 +101,63 @@ export function TaskEditFormLinkItem(props: ITaskEditFormLinkItemProps) {
 
     return (
         <Flex
-            display='flex'
+            display="flex"
             flex={1}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
         >
-            <Flex flex={1} alignItems='center'>
+            <Flex flex={1} alignItems="center">
                 <Link
                     href={link.url}
-                    rel='noreferrer'
-                    target='_blank'
-                    display='flex'
+                    rel="noreferrer"
+                    target="_blank"
+                    display="flex"
                     flex={1}
                 >
                     {isValidImage ? (
                         <Tooltip label={link.url}>
                             <Image
-                                width='24px'
-                                height='24px'
+                                width="24px"
+                                height="24px"
                                 alt={link.name}
                                 src={link.image}
                                 onError={onImageError}
-                                fontSize='8px'
+                                fontSize="8px"
                             />
                         </Tooltip>
                     ) : (
-                        <Tooltip label='Favicon image not found'>
+                        <Tooltip label="Favicon image not found">
                             <Flex>
                                 <RiErrorWarningFill
-                                    color='#FDB6A0'
-                                    size='24px'
+                                    color="#FDB6A0"
+                                    size="24px"
                                 />
                             </Flex>
                         </Tooltip>
                     )}
-                    <Text colorScheme='teal' ml={2}>
+                    <Text colorScheme="teal" ml={2}>
                         {link.name}
                     </Text>
                 </Link>
                 <Flex>
-                    <Tooltip label='Edit Link Item'>
+                    <Tooltip label="Edit Link Item">
                         <IconButton
                             visibility={isHover ? 'visible' : 'hidden'}
                             aria-label={'Edit Checklist Item'}
                             icon={<BsFillPencilFill />}
-                            size='xs'
+                            size="xs"
                             w={'22px'}
                             h={'22px'}
                             variant={'ghost'}
                             onClick={onEditModalOpen}
                         />
                     </Tooltip>
-                    <Tooltip label='Delete Link Item'>
+                    <Tooltip label="Delete Link Item">
                         <IconButton
                             visibility={isHover ? 'visible' : 'hidden'}
                             aria-label={'Delete Checklist Item'}
                             icon={<BsTrashFill />}
-                            size='xs'
+                            size="xs"
                             w={'22px'}
                             h={'22px'}
                             variant={'ghost'}
@@ -167,7 +167,7 @@ export function TaskEditFormLinkItem(props: ITaskEditFormLinkItemProps) {
                     </Tooltip>
                 </Flex>
                 <DeleteModal
-                    title='Delete Link Item'
+                    title="Delete Link Item"
                     isOpen={isDeleteModalOpen}
                     onClose={onDeleteModalClose}
                     onSubmit={onSubmitDelete}

@@ -14,12 +14,12 @@ import { ActionMeta, Select, SingleValue } from 'chakra-react-select'
 import {
     IOptionsMenuItem,
     useShareRolesOptions,
-} from './hooks/useShareRolesOptions'
+} from '../../hooks/useShareRolesOptions'
 import { useTableauMutation, useTableauRoute, useThemeMode } from 'shared-hooks'
 import { ColumnShareFormNew } from './columnShareFormNew'
 import { useSession } from 'next-auth/react'
-import { DeleteModal } from './modal/deleteModal'
-import { useShareRolesPermission } from './hooks/useShareRolesPermission'
+import { DeleteModal } from '../../modal/deleteModal'
+import { useShareRolesPermission } from '../../hooks/useShareRolesPermission'
 import { useAtom } from 'jotai'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 

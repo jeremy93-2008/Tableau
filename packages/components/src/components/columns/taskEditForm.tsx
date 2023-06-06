@@ -4,6 +4,11 @@ import {
     Button,
     ButtonGroup,
     Flex,
+    Tab,
+    TabList,
+    TabPanel,
+    TabPanels,
+    Tabs,
     Text,
     useDisclosure,
     VStack,
@@ -16,9 +21,11 @@ import { Task } from '.prisma/client'
 import { IFullStatus, IFullTask } from 'shared-types'
 import { BsTrashFill } from 'react-icons/bs'
 import { DeleteModal } from './modal/deleteModal'
-import { TaskEditFormAssignedUser } from './taskEditFormAssignedUser'
-import { TaskEditFormChecklistField } from './taskEditFormChecklistField'
-import { TaskEditFormLinkField } from './taskEditForrmLinkField'
+import { TaskEditFormAssignedUser } from './components/taskEditForm/taskEditFormAssignedUser'
+import { TaskEditFormChecklistField } from './components/taskEditForm/taskEditFormChecklistField'
+import { TaskEditFormLinkField } from './components/taskEditForm/taskEditForrmLinkField'
+import { TaskEditFormStartDueDate } from './components/taskEditForm/taskEditFormStartDueDate'
+import { TaskEditFormNotification } from './components/taskEditForm/taskEditFormNotification'
 
 interface ITaskEditForm {
     task: IFullTask
@@ -49,7 +56,7 @@ export function TaskEditForm(props: ITaskEditForm) {
             elapsedTime: task.elapsedTime || 0,
             estimatedTime: task.estimatedTime || 0,
             order: task.order || 999,
-            assignedUsers:
+            assignedUserIds:
                 task.assignedUsers.map(
                     (assignedUser) => assignedUser.User.id
                 ) ?? undefined,
@@ -67,7 +74,7 @@ export function TaskEditForm(props: ITaskEditForm) {
                 statusId: Yup.string().required('Status Id is required'),
                 elapsedTime: Yup.number(),
                 estimatedTime: Yup.number(),
-                assignedUserId: Yup.string().nullable(),
+                assignedUserIds: Yup.array(Yup.string()).nullable(),
             }),
         []
     )
@@ -91,124 +98,213 @@ export function TaskEditForm(props: ITaskEditForm) {
             >
                 {(props) => (
                     <form onSubmit={props.handleSubmit}>
-                        <Flex mb={2} flexDirection="column">
+                        <Flex
+                            mb={2}
+                            flexDirection="row"
+                            justifyContent="space-between"
+                        >
                             <TaskEditFormAssignedUser
                                 assignedUsers={task.assignedUsers}
                                 setAssignedUser={(
-                                    assignedUserId: string | null
+                                    assignedUserIds: string[] | null
                                 ) => {
                                     props.setValues({
                                         ...props.values,
+                                        assignedUserIds:
+                                            assignedUserIds ?? undefined,
                                     })
                                 }}
                             />
+                            <TaskEditFormStartDueDate />
+                            <TaskEditFormNotification />
                         </Flex>
-                        <Flex maxH="65vh" flexDirection="column">
-                            <Flex
-                                minH={0}
-                                flex={1}
-                                onWheel={(evt) => evt.stopPropagation()}
-                                overflowY="auto"
-                                flexDirection="column"
+                        <Flex width="100%" mb={4} flexDirection="row">
+                            <Tabs
+                                width="100%"
+                                colorScheme="teal"
+                                variant="soft-rounded"
                             >
-                                <TextInput
-                                    label="Name"
-                                    name="name"
-                                    value={props.values.name}
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                    style={
-                                        props.errors.name
-                                            ? {
-                                                  backgroundColor:
-                                                      'var(--chakra-colors-red-200)',
-                                              }
-                                            : {}
-                                    }
-                                />
-                                {props.errors.name ? (
-                                    <Flex
-                                        alignItems="center"
-                                        color="red.500"
-                                        ml="2"
-                                    >
-                                        <WarningIcon />
-                                        <Text fontSize="13px" m="1">
-                                            Task Name is required
-                                        </Text>
-                                    </Flex>
-                                ) : null}
-                                <VStack mb={4} />
-                                <TextInput
-                                    type="textarea"
-                                    label="Description"
-                                    name="description"
-                                    value={props.values.description}
-                                    onChange={props.handleChange}
-                                    onBlur={props.handleBlur}
-                                />
-                                <Flex mt={4}>
-                                    <TaskEditFormChecklistField task={task} />
-                                </Flex>
-                                <Flex mt={2}>
-                                    <TaskEditFormLinkField task={task} />
-                                </Flex>
-                                <Flex mt={4} gap={2}>
-                                    <TextInput
-                                        type="number"
-                                        min={0}
-                                        label="Elapsed Time"
-                                        name="elapsedTime"
-                                        value={props.values.elapsedTime.toString()}
-                                        onChange={props.handleChange}
-                                        onBlur={props.handleBlur}
-                                    />
-                                    <TextInput
-                                        type="number"
-                                        min={0}
-                                        label="Estimated Time"
-                                        name="estimatedTime"
-                                        value={props.values.estimatedTime.toString()}
-                                        onChange={props.handleChange}
-                                        onBlur={props.handleBlur}
-                                    />
-                                </Flex>
-                            </Flex>
-                            <ButtonGroup
-                                display="flex"
-                                flex="0"
-                                justifyContent="space-between"
-                                mt="6"
-                            >
-                                <ButtonGroup
-                                    display="flex"
-                                    justifyContent="flex-start"
+                                <TabList
+                                    width="100%"
+                                    justifyContent="center"
+                                    pb={2}
                                 >
-                                    <Button
-                                        data-cy="buttonEditDelete"
-                                        onClick={() => onOpenModal()}
-                                        leftIcon={<BsTrashFill />}
-                                        colorScheme="red"
-                                        mr={1}
+                                    <Tab
+                                        color="white"
+                                        height="30px"
+                                        _selected={{
+                                            color: 'teal.700',
+                                            backgroundColor: 'teal.200',
+                                        }}
                                     >
-                                        Delete
-                                    </Button>
-                                </ButtonGroup>
-                                <ButtonGroup
-                                    display="flex"
-                                    justifyContent="flex-end"
-                                >
-                                    <Button onClick={onClose}>Cancel</Button>
-                                    <Button
-                                        data-cy="buttonEditSave"
-                                        type="submit"
-                                        colorScheme="teal"
-                                        mr={1}
+                                        Description
+                                    </Tab>
+                                    <Tab
+                                        color="white"
+                                        height="30px"
+                                        _selected={{
+                                            color: 'teal.700',
+                                            backgroundColor: 'teal.200',
+                                        }}
                                     >
-                                        Save
-                                    </Button>
-                                </ButtonGroup>
-                            </ButtonGroup>
+                                        Comments
+                                    </Tab>
+                                    <Tab
+                                        color="white"
+                                        height="30px"
+                                        _selected={{
+                                            color: 'teal.700',
+                                            backgroundColor: 'teal.200',
+                                        }}
+                                    >
+                                        History
+                                    </Tab>
+                                </TabList>
+                                <TabPanels>
+                                    <TabPanel p={0}>
+                                        <Flex
+                                            maxH="65vh"
+                                            flexDirection="column"
+                                        >
+                                            <Flex
+                                                minH={0}
+                                                flex={1}
+                                                onWheel={(evt) =>
+                                                    evt.stopPropagation()
+                                                }
+                                                overflowY="auto"
+                                                flexDirection="column"
+                                            >
+                                                <TextInput
+                                                    label="Name"
+                                                    name="name"
+                                                    value={props.values.name}
+                                                    onChange={
+                                                        props.handleChange
+                                                    }
+                                                    onBlur={props.handleBlur}
+                                                    style={
+                                                        props.errors.name
+                                                            ? {
+                                                                  backgroundColor:
+                                                                      'var(--chakra-colors-red-200)',
+                                                              }
+                                                            : {}
+                                                    }
+                                                />
+                                                {props.errors.name ? (
+                                                    <Flex
+                                                        alignItems="center"
+                                                        color="red.500"
+                                                        ml="2"
+                                                    >
+                                                        <WarningIcon />
+                                                        <Text
+                                                            fontSize="13px"
+                                                            m="1"
+                                                        >
+                                                            Task Name is
+                                                            required
+                                                        </Text>
+                                                    </Flex>
+                                                ) : null}
+                                                <VStack mb={4} />
+                                                <TextInput
+                                                    type="textarea"
+                                                    label="Description"
+                                                    name="description"
+                                                    value={
+                                                        props.values.description
+                                                    }
+                                                    onChange={
+                                                        props.handleChange
+                                                    }
+                                                    onBlur={props.handleBlur}
+                                                />
+                                                <Flex mt={4}>
+                                                    <TaskEditFormChecklistField
+                                                        task={task}
+                                                    />
+                                                </Flex>
+                                                <Flex mt={2}>
+                                                    <TaskEditFormLinkField
+                                                        task={task}
+                                                    />
+                                                </Flex>
+                                                <Flex mt={4} gap={2}>
+                                                    <TextInput
+                                                        type="number"
+                                                        min={0}
+                                                        label="Elapsed Time"
+                                                        name="elapsedTime"
+                                                        value={props.values.elapsedTime.toString()}
+                                                        onChange={
+                                                            props.handleChange
+                                                        }
+                                                        onBlur={
+                                                            props.handleBlur
+                                                        }
+                                                    />
+                                                    <TextInput
+                                                        type="number"
+                                                        min={0}
+                                                        label="Estimated Time"
+                                                        name="estimatedTime"
+                                                        value={props.values.estimatedTime.toString()}
+                                                        onChange={
+                                                            props.handleChange
+                                                        }
+                                                        onBlur={
+                                                            props.handleBlur
+                                                        }
+                                                    />
+                                                </Flex>
+                                            </Flex>
+                                            <ButtonGroup
+                                                display="flex"
+                                                flex="0"
+                                                justifyContent="space-between"
+                                                mt="6"
+                                            >
+                                                <ButtonGroup
+                                                    display="flex"
+                                                    justifyContent="flex-start"
+                                                >
+                                                    <Button
+                                                        data-cy="buttonEditDelete"
+                                                        onClick={() =>
+                                                            onOpenModal()
+                                                        }
+                                                        leftIcon={
+                                                            <BsTrashFill />
+                                                        }
+                                                        colorScheme="red"
+                                                        mr={1}
+                                                    >
+                                                        Delete
+                                                    </Button>
+                                                </ButtonGroup>
+                                                <ButtonGroup
+                                                    display="flex"
+                                                    justifyContent="flex-end"
+                                                >
+                                                    <Button onClick={onClose}>
+                                                        Cancel
+                                                    </Button>
+                                                    <Button
+                                                        data-cy="buttonEditSave"
+                                                        type="submit"
+                                                        colorScheme="teal"
+                                                        mr={1}
+                                                    >
+                                                        Save
+                                                    </Button>
+                                                </ButtonGroup>
+                                            </ButtonGroup>
+                                        </Flex>
+                                    </TabPanel>
+                                </TabPanels>
+                            </Tabs>
                         </Flex>
                     </form>
                 )}

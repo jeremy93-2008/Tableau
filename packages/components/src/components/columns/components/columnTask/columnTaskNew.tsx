@@ -21,7 +21,7 @@ import { FormikHelpers } from 'formik'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 import { IFullStatus } from 'shared-types'
 import { useTableauMutation, useThemeMode } from 'shared-hooks'
-import { useTaskPermission } from './hooks/useTaskPermission'
+import { useTaskPermission } from '../../hooks/useTaskPermission'
 
 interface IColumnTaskNewProps {
     isVisible: boolean
