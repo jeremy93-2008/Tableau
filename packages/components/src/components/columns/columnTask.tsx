@@ -81,7 +81,7 @@ export function ColumnTask(props: IColumnTaskProps) {
                 elapsedTime: task.elapsedTime || 0,
                 statusId: statusBoard.id,
                 order: (taskLength ?? 998) + 1,
-                assignedUsers:
+                assignedUserIds:
                     task.assignedUsers.map(
                         (assignedUser) => assignedUser.User.id
                     ) ?? null,
