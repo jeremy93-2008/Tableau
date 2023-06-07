@@ -6,7 +6,7 @@ import { IFullTaskAssignedUser } from 'shared-types/src/types'
 import { useTableauQuery } from 'shared-hooks'
 import { IFullBoardSharing } from '../../columnShare'
 import { AiOutlineEllipsis } from 'react-icons/ai'
-
+import { FaUserSlash } from 'react-icons/fa'
 interface ITaskEditFormAssignedUserProps {
     assignedUsers?: IFullTaskAssignedUser[]
     setAssignedUser: (assignedUserIds: string[] | null) => void
@@ -82,6 +82,20 @@ export function TaskEditFormAssignedUser(
                         </Tooltip>
                     )
                 })}
+                {assignedUsers?.length === 0 && (
+                    <Tooltip label="No user assigned">
+                        <Flex
+                            justifyContent="center"
+                            alignItems="center"
+                            bgColor="gray.600"
+                            borderRadius="50%"
+                            width="32px"
+                            height="32px"
+                        >
+                            <FaUserSlash />
+                        </Flex>
+                    </Tooltip>
+                )}
                 <Tooltip label="Click to see more information">
                     <Flex
                         justifyContent="center"
