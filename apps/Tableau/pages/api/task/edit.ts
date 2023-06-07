@@ -15,7 +15,7 @@ const schema = z.object({
     statusId: z.string().cuid(),
     elapsedTime: z.number(),
     estimatedTime: z.number(),
-    assignedUsers: z.array(z.string()).nullable(),
+    assignedUserIds: z.array(z.string()).nullable(),
 })
 
 export default async function handler(
@@ -33,54 +33,54 @@ export default async function handler(
                 action: 'edit',
             }
         )
-    )
-        .success(async (params) => {
-            const {
+    ).success(async (params) => {
+        const {
+            id,
+            name,
+            description,
+            elapsedTime,
+            estimatedTime,
+            statusId,
+            assignedUserIds,
+        } = params
+
+        const assignedUsersValues = assignedUserIds
+            ? {
+                  connectOrCreate: assignedUserIds.map((userId) => {
+                      return {
+                          where: {
+                              taskId_userId: { userId, taskId: id },
+                          },
+                          create: {
+                              userId,
+                              taskId: id,
+                              isHolder: false,
+                          },
+                      }
+                  }),
+              }
+            : undefined
+
+        console.log(assignedUserIds)
+
+        const result = await prisma.task.update({
+            where: {
                 id,
+            },
+            data: {
                 name,
                 description,
-                elapsedTime,
-                estimatedTime,
-                statusId,
-                assignedUsers,
-            } = params
-
-            const assignedUsersValues = assignedUsers
-                ? {
-                      connectOrCreate: assignedUsers.map((userId) => {
-                          return {
-                              where: {
-                                  taskId_userId: { userId, taskId: id },
-                              },
-                              create: {
-                                  userId,
-                                  taskId: id,
-                                  isHolder: false,
-                              },
-                          }
-                      }),
-                  }
-                : undefined
-
-            const result = await prisma.task.update({
-                where: {
-                    id,
-                },
-                data: {
-                    name,
-                    description,
-                    elapsedTime: elapsedTime,
-                    estimatedTime: estimatedTime,
-                    status: {
-                        connect: {
-                            id: statusId,
-                        },
+                elapsedTime: elapsedTime,
+                estimatedTime: estimatedTime,
+                status: {
+                    connect: {
+                        id: statusId,
                     },
-                    assignedUsers: assignedUsersValues,
                 },
-            })
-
-            res.json(result)
+                assignedUsers: assignedUsersValues,
+            },
         })
-        .catch((errors) => onCallExceptions(res, errors))
+
+        res.json(result)
+    })
 }
