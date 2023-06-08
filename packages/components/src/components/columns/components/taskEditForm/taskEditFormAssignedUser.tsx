@@ -1,13 +1,25 @@
 import React from 'react'
-import { Avatar, Flex, Text, Tooltip, useDisclosure } from '@chakra-ui/react'
+import {
+    Button,
+    Flex,
+    Popover,
+    PopoverArrow,
+    PopoverBody,
+    PopoverContent,
+    PopoverHeader,
+    PopoverTrigger,
+    Text,
+    Tooltip,
+    useDisclosure,
+} from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
 import { IFullTaskAssignedUser } from 'shared-types/src/types'
 import { useTableauQuery } from 'shared-hooks'
 import { IFullBoardSharing } from '../../columnShare'
-import { AiOutlineEllipsis } from 'react-icons/ai'
-import { FaUserSlash } from 'react-icons/fa'
-interface ITaskEditFormAssignedUserProps {
+import { TaskEditFormAssignedUserInnerButton } from './taskEditFormAssignedUserInnerButton'
+import { TaskEditFormAssignedUserList } from './taskEditFormAssignedUserList'
+export interface ITaskEditFormAssignedUserProps {
     assignedUsers?: IFullTaskAssignedUser[]
     setAssignedUser: (assignedUserIds: string[] | null) => void
 }
@@ -18,98 +30,45 @@ export function TaskEditFormAssignedUser(
     const { assignedUsers, setAssignedUser } = props
     const [selectedBoard] = useAtom(BoardAtom)
 
-    const { data } = useTableauQuery<IFullBoardSharing[]>(
+    const { data, isLoading } = useTableauQuery<IFullBoardSharing[]>(
         ['api/share/list', { boardId: selectedBoard?.id }],
         {
             noLoading: true,
         }
     )
 
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen, onOpen, onClose, onToggle } = useDisclosure()
 
     return (
         <Flex alignItems="center" flexDirection="column">
             <Flex width="100%" flex={1} pl={2} mb={1}>
                 <Text size="sm">Assignees</Text>
             </Flex>
-            <Flex
-                onClick={() => {}}
-                cursor="pointer"
-                p={2}
-                borderRadius="5px"
-                _hover={{
-                    bgColor: 'blackAlpha.300',
-                }}
-                _active={{
-                    bgColor: 'blackAlpha.500',
-                }}
-            >
-                {assignedUsers?.map((assignedUser, idx, assignedUsersArray) => {
-                    if (idx === 3)
-                        return (
-                            <Tooltip
-                                key={assignedUser.id + idx}
-                                label="Click to see more information"
-                            >
-                                <Flex
-                                    justifyContent="center"
-                                    alignItems="center"
-                                    bgColor="gray.600"
-                                    borderRadius="50%"
-                                    width="32px"
-                                    height="32px"
-                                    ml={-3}
-                                >
-                                    <Text fontSize="xs">
-                                        +{assignedUsersArray?.length - 3}
-                                    </Text>
-                                </Flex>
-                            </Tooltip>
-                        )
-                    if (idx > 2) return
-                    return (
-                        <Tooltip
-                            key={assignedUser.id + idx}
-                            label={`${assignedUser.User.name} (${assignedUser.User.email})`}
-                        >
-                            <Avatar
-                                size="sm"
-                                name={assignedUser.User.name ?? ''}
-                                src={assignedUser.User.image ?? ''}
-                                ml={idx > 0 ? -3 : 0}
-                                zIndex={assignedUsersArray?.length - idx}
-                            />
-                        </Tooltip>
-                    )
-                })}
-                {assignedUsers?.length === 0 && (
-                    <Tooltip label="No user assigned">
-                        <Flex
-                            justifyContent="center"
-                            alignItems="center"
-                            bgColor="gray.600"
-                            borderRadius="50%"
-                            width="32px"
-                            height="32px"
-                        >
-                            <FaUserSlash />
-                        </Flex>
-                    </Tooltip>
-                )}
-                <Tooltip label="Click to see more information">
-                    <Flex
-                        justifyContent="center"
-                        alignItems="center"
-                        bgColor="gray.600"
-                        borderRadius="50%"
-                        width="32px"
-                        height="32px"
-                        ml={1}
+            <Popover isLazy isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
+                <PopoverTrigger>
+                    <Button
+                        colorScheme="blackAlpha"
+                        bgColor="transparent"
+                        color="white"
                     >
-                        <AiOutlineEllipsis />
-                    </Flex>
-                </Tooltip>
-            </Flex>
+                        <TaskEditFormAssignedUserInnerButton
+                            assignedUsers={assignedUsers}
+                        />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                    <PopoverArrow />
+                    <PopoverBody>
+                        {!isLoading && (
+                            <TaskEditFormAssignedUserList
+                                boardSharings={data!}
+                                assignedUsers={assignedUsers}
+                                setAssignedUser={setAssignedUser}
+                            />
+                        )}
+                    </PopoverBody>
+                </PopoverContent>
+            </Popover>
         </Flex>
     )
 }

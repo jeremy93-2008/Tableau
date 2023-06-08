@@ -24,7 +24,7 @@ export function ErrorDescription(props: IErrorProps) {
     const validationErrorObj = error.response!.data as {
         inputError: z.ZodError<any>
         checkError: { status: number; message: string }
-        stackTrace?: string
+        serverError?: string
     }
 
     return (
@@ -34,7 +34,12 @@ export function ErrorDescription(props: IErrorProps) {
                     <Tab>Pretty</Tab>
                     <Tab>Raw</Tab>
                 </TabList>
-                <TabPanels h={'200px'} overflowY={'auto'}>
+                <TabPanels
+                    height="200px"
+                    overflow="auto"
+                    onWheel={(evt) => evt.stopPropagation()}
+                    sx={{ width: '450px' }}
+                >
                     <TabPanel>
                         <JSONPrettier json={validationErrorObj} />
                     </TabPanel>

@@ -14,7 +14,7 @@ export function getErrorObject(errors: IErrorPromiseReject<any>) {
     const errorDevelopment = JSON.stringify(
         {
             inputZodError: errors.inputError,
-            stackTrace: errors.stackTrace,
+            serverError: errors.serverError,
             checkFnError: errors.checkError,
         },
         undefined,

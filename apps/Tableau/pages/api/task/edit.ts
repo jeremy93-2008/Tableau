@@ -33,54 +33,53 @@ export default async function handler(
                 action: 'edit',
             }
         )
-    ).success(async (params) => {
-        const {
-            id,
-            name,
-            description,
-            elapsedTime,
-            estimatedTime,
-            statusId,
-            assignedUserIds,
-        } = params
-
-        const assignedUsersValues = assignedUserIds
-            ? {
-                  connectOrCreate: assignedUserIds.map((userId) => {
-                      return {
-                          where: {
-                              taskId_userId: { userId, taskId: id },
-                          },
-                          create: {
-                              userId,
-                              taskId: id,
-                              isHolder: false,
-                          },
-                      }
-                  }),
-              }
-            : undefined
-
-        console.log(assignedUserIds)
-
-        const result = await prisma.task.update({
-            where: {
+    )
+        .success(async (params) => {
+            const {
                 id,
-            },
-            data: {
                 name,
                 description,
-                elapsedTime: elapsedTime,
-                estimatedTime: estimatedTime,
-                status: {
-                    connect: {
-                        id: statusId,
-                    },
-                },
-                assignedUsers: assignedUsersValues,
-            },
-        })
+                elapsedTime,
+                estimatedTime,
+                statusId,
+                assignedUserIds,
+            } = params
 
-        res.json(result)
-    })
+            const assignedUsersValues = assignedUserIds
+                ? {
+                      connectOrCreate: assignedUserIds.map((userId) => {
+                          return {
+                              where: {
+                                  taskId_userId: { userId, taskId: id },
+                              },
+                              create: {
+                                  userId,
+                                  isHolder: false,
+                              },
+                          }
+                      }),
+                  }
+                : undefined
+
+            const result = await prisma.task.update({
+                where: {
+                    id,
+                },
+                data: {
+                    name,
+                    description,
+                    elapsedTime: elapsedTime,
+                    estimatedTime: estimatedTime,
+                    status: {
+                        connect: {
+                            id: statusId,
+                        },
+                    },
+                    assignedUsers: assignedUsersValues,
+                },
+            })
+
+            res.json(result)
+        })
+        .catch((errors) => onCallExceptions(res, errors))
 }

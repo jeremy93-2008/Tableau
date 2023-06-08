@@ -4,4 +4,5 @@ export {
     type IFullBoardSharing,
     type IFullTask,
     type IFullCheckListGroup,
+    type IFullTaskAssignedUser,
 } from './types'

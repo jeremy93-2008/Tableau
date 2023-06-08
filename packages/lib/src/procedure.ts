@@ -1,10 +1,11 @@
 import { NextApiRequest } from 'next'
 import { z } from 'zod'
+import { Prisma } from '@prisma/client'
 
 export type IErrorPromiseReject<TParams> = {
     inputError: z.ZodError<TParams>
     checkError: { status: number; message: string }
-    stackTrace?: string
+    serverError?: Partial<Prisma.PrismaClientKnownRequestError>
 }
 
 export function Procedure<TParams>(options: { req: NextApiRequest }) {
@@ -61,13 +62,19 @@ export function Procedure<TParams>(options: { req: NextApiRequest }) {
         success: async (onSuccess: (params: TParams) => Promise<void>) => {
             try {
                 return await onSuccess(params!)
-            } catch (err) {
+            } catch (e) {
+                const err = e as Prisma.PrismaClientKnownRequestError
                 console.log('Hay un error en el success de Procedure')
                 return new Promise((resolve, reject) =>
                     reject({
                         inputError,
                         checkError,
-                        stackTrace: err,
+                        serverError: {
+                            stack: err.stack,
+                            message: err.message,
+                            code: err.code,
+                            cause: err.cause,
+                        },
                     } as IErrorPromiseReject<TParams>)
                 )
             }
