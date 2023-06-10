@@ -23,6 +23,22 @@ export function useThemeMode() {
 
     const borderTeal = useColorModeValue('#54d6d0', '#026060')
 
+    const taskEditTabText = useColorModeValue('teal.600', 'white')
+    const taskEditTabTextSelected = useColorModeValue('white', 'teal.700')
+
+    const taskEditTabBg = useColorModeValue('transparent', 'transparent')
+    const taskEditTabBgSelected = useColorModeValue('teal.500', 'teal.200')
+
+    const colorSchemeAssignedUser = useColorModeValue('gray', 'blackAlpha')
+    const bgAssignedUser = useColorModeValue('gray.100', 'gray.600')
+
+    const hoverAssignedUser = useColorModeValue('gray.100', 'blackAlpha.300')
+    const separatorAssignedUser = useColorModeValue(
+        'gray.200',
+        'blackAlpha.400'
+    )
+    const textAssignedUser = useColorModeValue('gray.600', 'gray.50')
+
     return {
         bg: {
             primary: bgPrimary,
@@ -47,6 +63,19 @@ export function useThemeMode() {
         },
         border: {
             teal: borderTeal,
+        },
+        taskEditTab: {
+            text: taskEditTabText,
+            textSelected: taskEditTabTextSelected,
+            bg: taskEditTabBg,
+            bgSelected: taskEditTabBgSelected,
+        },
+        assignedUser: {
+            colorScheme: colorSchemeAssignedUser,
+            bg: bgAssignedUser,
+            hover: hoverAssignedUser,
+            separator: separatorAssignedUser,
+            text: textAssignedUser,
         },
     }
 }

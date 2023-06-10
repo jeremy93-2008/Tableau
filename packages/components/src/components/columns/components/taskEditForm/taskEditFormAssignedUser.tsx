@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import {
     Button,
     Flex,
@@ -6,29 +6,30 @@ import {
     PopoverArrow,
     PopoverBody,
     PopoverContent,
-    PopoverHeader,
     PopoverTrigger,
     Text,
-    Tooltip,
     useDisclosure,
 } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
-import { IFullTaskAssignedUser } from 'shared-types/src/types'
-import { useTableauQuery } from 'shared-hooks'
+import { useTableauQuery, useThemeMode } from 'shared-hooks'
 import { IFullBoardSharing } from '../../columnShare'
 import { TaskEditFormAssignedUserInnerButton } from './taskEditFormAssignedUserInnerButton'
 import { TaskEditFormAssignedUserList } from './taskEditFormAssignedUserList'
+import { User } from '@prisma/client'
+
 export interface ITaskEditFormAssignedUserProps {
-    assignedUsers?: IFullTaskAssignedUser[]
+    assignedUsersIds?: string[]
     setAssignedUser: (assignedUserIds: string[] | null) => void
 }
 
 export function TaskEditFormAssignedUser(
     props: ITaskEditFormAssignedUserProps
 ) {
-    const { assignedUsers, setAssignedUser } = props
+    const { assignedUsersIds, setAssignedUser } = props
     const [selectedBoard] = useAtom(BoardAtom)
+
+    const { assignedUser: themeAssignedUser } = useThemeMode()
 
     const { data, isLoading } = useTableauQuery<IFullBoardSharing[]>(
         ['api/share/list', { boardId: selectedBoard?.id }],
@@ -36,6 +37,16 @@ export function TaskEditFormAssignedUser(
             noLoading: true,
         }
     )
+
+    const assignedUsers = useMemo(() => {
+        return assignedUsersIds
+            ?.map((assignedUserId) => {
+                return data?.find(
+                    (boardSharing) => boardSharing.userId === assignedUserId
+                )?.user
+            })
+            .filter((user) => user) as User[]
+    }, [assignedUsersIds, data])
 
     const { isOpen, onOpen, onClose, onToggle } = useDisclosure()
 
@@ -47,9 +58,9 @@ export function TaskEditFormAssignedUser(
             <Popover isLazy isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
                 <PopoverTrigger>
                     <Button
-                        colorScheme="blackAlpha"
+                        colorScheme={themeAssignedUser.colorScheme}
                         bgColor="transparent"
-                        color="white"
+                        color={themeAssignedUser.text}
                     >
                         <TaskEditFormAssignedUserInnerButton
                             assignedUsers={assignedUsers}

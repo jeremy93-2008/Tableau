@@ -45,21 +45,26 @@ export default async function handler(
                 assignedUserIds,
             } = params
 
-            const assignedUsersValues = assignedUserIds
-                ? {
-                      connectOrCreate: assignedUserIds.map((userId) => {
-                          return {
-                              where: {
-                                  taskId_userId: { userId, taskId: id },
-                              },
-                              create: {
-                                  userId,
-                                  isHolder: false,
-                              },
-                          }
-                      }),
-                  }
-                : undefined
+            const assignedUsersValues =
+                assignedUserIds && assignedUserIds.length > 0
+                    ? {
+                          connectOrCreate: assignedUserIds.map((userId) => {
+                              return {
+                                  where: {
+                                      taskId_userId: { userId, taskId: id },
+                                  },
+                                  create: {
+                                      userId,
+                                      isHolder: false,
+                                  },
+                              }
+                          }),
+                      }
+                    : {
+                          deleteMany: {
+                              taskId: id,
+                          },
+                      }
 
             const result = await prisma.task.update({
                 where: {

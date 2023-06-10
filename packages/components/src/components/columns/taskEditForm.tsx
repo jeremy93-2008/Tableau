@@ -26,6 +26,7 @@ import { TaskEditFormChecklistField } from './components/taskEditForm/taskEditFo
 import { TaskEditFormLinkField } from './components/taskEditForm/taskEditForrmLinkField'
 import { TaskEditFormStartDueDate } from './components/taskEditForm/taskEditFormStartDueDate'
 import { TaskEditFormNotification } from './components/taskEditForm/taskEditFormNotification'
+import { useThemeMode } from 'shared-hooks'
 
 interface ITaskEditForm {
     task: IFullTask
@@ -40,6 +41,9 @@ interface ITaskEditForm {
 
 export function TaskEditForm(props: ITaskEditForm) {
     const { task, status, onTaskEditSubmit, onTaskDelete, onClose } = props
+
+    const theme = useThemeMode()
+
     const {
         isOpen: isOpenModal,
         onClose: onCloseModal,
@@ -104,7 +108,7 @@ export function TaskEditForm(props: ITaskEditForm) {
                             justifyContent="space-between"
                         >
                             <TaskEditFormAssignedUser
-                                assignedUsers={task.assignedUsers}
+                                assignedUsersIds={props.values.assignedUserIds}
                                 setAssignedUser={(
                                     assignedUserIds: string[] | null
                                 ) => {
@@ -130,31 +134,40 @@ export function TaskEditForm(props: ITaskEditForm) {
                                     pb={2}
                                 >
                                     <Tab
-                                        color="white"
+                                        color={theme.taskEditTab.text}
+                                        backgroundColor={theme.taskEditTab.bg}
                                         height="30px"
                                         _selected={{
-                                            color: 'teal.700',
-                                            backgroundColor: 'teal.200',
+                                            color: theme.taskEditTab
+                                                .textSelected,
+                                            backgroundColor:
+                                                theme.taskEditTab.bgSelected,
                                         }}
                                     >
                                         Description
                                     </Tab>
                                     <Tab
-                                        color="white"
+                                        color={theme.taskEditTab.text}
+                                        backgroundColor={theme.taskEditTab.bg}
                                         height="30px"
                                         _selected={{
-                                            color: 'teal.700',
-                                            backgroundColor: 'teal.200',
+                                            color: theme.taskEditTab
+                                                .textSelected,
+                                            backgroundColor:
+                                                theme.taskEditTab.bgSelected,
                                         }}
                                     >
                                         Comments
                                     </Tab>
                                     <Tab
-                                        color="white"
+                                        color={theme.taskEditTab.text}
+                                        backgroundColor={theme.taskEditTab.bg}
                                         height="30px"
                                         _selected={{
-                                            color: 'teal.700',
-                                            backgroundColor: 'teal.200',
+                                            color: theme.taskEditTab
+                                                .textSelected,
+                                            backgroundColor:
+                                                theme.taskEditTab.bgSelected,
                                         }}
                                     >
                                         History

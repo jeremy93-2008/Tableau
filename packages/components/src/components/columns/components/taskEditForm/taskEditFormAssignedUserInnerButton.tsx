@@ -2,15 +2,20 @@ import React from 'react'
 import { Avatar, Button, Flex, Text, Tooltip } from '@chakra-ui/react'
 import { FaUserSlash } from 'react-icons/fa'
 import { AiOutlineEllipsis } from 'react-icons/ai'
-import { ITaskEditFormAssignedUserProps } from './taskEditFormAssignedUser'
+import { User } from '@prisma/client'
+import { useThemeMode } from 'shared-hooks'
 
-interface ITaskEditFormAssignedUserInnerButtonProps
-    extends Omit<ITaskEditFormAssignedUserProps, 'setAssignedUser'> {}
+interface ITaskEditFormAssignedUserInnerButtonProps {
+    assignedUsers: User[]
+}
 
 export function TaskEditFormAssignedUserInnerButton(
     props: ITaskEditFormAssignedUserInnerButtonProps
 ) {
     const { assignedUsers } = props
+
+    const { assignedUser: themeAssignedUser } = useThemeMode()
+
     return (
         <Flex>
             {assignedUsers?.map((assignedUser, idx, assignedUsersArray) => {
@@ -23,7 +28,7 @@ export function TaskEditFormAssignedUserInnerButton(
                             <Flex
                                 justifyContent="center"
                                 alignItems="center"
-                                bgColor="gray.600"
+                                bgColor={themeAssignedUser.bg}
                                 borderRadius="50%"
                                 width="32px"
                                 height="32px"
@@ -39,12 +44,12 @@ export function TaskEditFormAssignedUserInnerButton(
                 return (
                     <Tooltip
                         key={assignedUser.id + idx}
-                        label={`${assignedUser.User.name} (${assignedUser.User.email})`}
+                        label={`${assignedUser.name} (${assignedUser.email})`}
                     >
                         <Avatar
                             size="sm"
-                            name={assignedUser.User.name ?? ''}
-                            src={assignedUser.User.image ?? ''}
+                            name={assignedUser.name ?? ''}
+                            src={assignedUser.image ?? ''}
                             ml={idx > 0 ? -3 : 0}
                             zIndex={assignedUsersArray?.length - idx}
                         />
@@ -56,7 +61,7 @@ export function TaskEditFormAssignedUserInnerButton(
                     <Flex
                         justifyContent="center"
                         alignItems="center"
-                        bgColor="gray.600"
+                        bgColor={themeAssignedUser.bg}
                         borderRadius="50%"
                         width="32px"
                         height="32px"
@@ -69,7 +74,8 @@ export function TaskEditFormAssignedUserInnerButton(
                 <Flex
                     justifyContent="center"
                     alignItems="center"
-                    bgColor="gray.600"
+                    bgColor={themeAssignedUser.bg}
+                    color={themeAssignedUser.text}
                     borderRadius="50%"
                     width="32px"
                     height="32px"

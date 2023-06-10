@@ -1,5 +1,4 @@
 import React from 'react'
-import { Task } from '.prisma/client'
 import { IFullStatus, IFullTask } from 'shared-types'
 import { TaskItemOrder } from './taskItemOrder'
 import { useTaskPermission } from './hooks/useTaskPermission'
