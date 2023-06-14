@@ -194,6 +194,7 @@ export function TaskItem(props: ITaskItemProps) {
                                 <Tooltip
                                     key={assignedUser.id + idx}
                                     label={assignedUsersArray
+                                        .slice(2)
                                         .map((assigned) => assigned.User.name)
                                         .join(', ')}
                                 >
@@ -205,6 +206,9 @@ export function TaskItem(props: ITaskItemProps) {
                                         width="32px"
                                         height="32px"
                                         ml={-3}
+                                        _hover={{
+                                            ml: 0,
+                                        }}
                                     >
                                         <Text fontSize="xs">
                                             +{assignedUsersArray?.length - 2}
@@ -226,6 +230,9 @@ export function TaskItem(props: ITaskItemProps) {
                                     zIndex={assignedUsersArray?.length - idx}
                                     width="36px"
                                     height="36px"
+                                    _hover={{
+                                        ml: 0,
+                                    }}
                                 />
                             </Tooltip>
                         )
