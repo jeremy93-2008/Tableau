@@ -21,6 +21,7 @@ import { useTableauRoute, useThemeMode } from 'shared-hooks'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
 import { IFullTask } from 'shared-types'
+import { FaUserSlash } from 'react-icons/fa'
 
 interface ITaskItemProps {
     task: IFullTask
@@ -186,15 +187,65 @@ export function TaskItem(props: ITaskItemProps) {
                 bottom={-2}
                 className="board-item-actions"
             >
-                <Tooltip label={'' ? `Assigned to` : 'Not assigned'}>
-                    <Avatar
-                        width={readonly ? 8 : 10}
-                        height={readonly ? 8 : 10}
-                        border={`solid 3px ${border.teal}`}
-                        src={''}
-                        name={''}
-                    />
-                </Tooltip>
+                {task.assignedUsers?.map(
+                    (assignedUser, idx, assignedUsersArray) => {
+                        if (idx === 2)
+                            return (
+                                <Tooltip
+                                    key={assignedUser.id + idx}
+                                    label={assignedUsersArray
+                                        .map((assigned) => assigned.User.name)
+                                        .join(', ')}
+                                >
+                                    <Flex
+                                        justifyContent="center"
+                                        alignItems="center"
+                                        bgColor="gray.500"
+                                        borderRadius="50%"
+                                        width="32px"
+                                        height="32px"
+                                        ml={-3}
+                                    >
+                                        <Text fontSize="xs">
+                                            +{assignedUsersArray?.length - 2}
+                                        </Text>
+                                    </Flex>
+                                </Tooltip>
+                            )
+                        if (idx > 1) return <></>
+                        return (
+                            <Tooltip
+                                key={assignedUser.id + idx}
+                                label={`${assignedUser.User.name} (${assignedUser.User.email})`}
+                            >
+                                <Avatar
+                                    name={assignedUser.User.name ?? ''}
+                                    src={assignedUser.User.image ?? ''}
+                                    ml={idx > 0 ? -3 : 0}
+                                    border="2px teal solid"
+                                    zIndex={assignedUsersArray?.length - idx}
+                                    width="36px"
+                                    height="36px"
+                                />
+                            </Tooltip>
+                        )
+                    }
+                )}
+                {task.assignedUsers?.length === 0 && (
+                    <Tooltip label="No user assigned">
+                        <Flex
+                            justifyContent="center"
+                            alignItems="center"
+                            bgColor="gray.400"
+                            border="2px teal solid"
+                            borderRadius="50%"
+                            width="36px"
+                            height="36px"
+                        >
+                            <FaUserSlash />
+                        </Flex>
+                    </Tooltip>
+                )}
             </Flex>
         </Flex>
     )
