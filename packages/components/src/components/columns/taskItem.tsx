@@ -52,15 +52,18 @@ export function TaskItem(props: ITaskItemProps) {
         noHighlightIt
     )
 
-    const [{ isDragging }, drag] = useDrag(() => ({
-        type: TaskItemType,
-        item: { task },
-        canDrag: !readonly || !isDisabled,
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging(),
-            handlerId: monitor.getHandlerId(),
+    const [{ isDragging }, drag] = useDrag(
+        () => ({
+            type: TaskItemType,
+            item: { task },
+            canDrag: !readonly || !isDisabled,
+            collect: (monitor) => ({
+                isDragging: monitor.isDragging(),
+                handlerId: monitor.getHandlerId(),
+            }),
         }),
-    }))
+        [task, readonly, isDisabled]
+    )
 
     const onMouseEnterTask = useCallback(() => {
         if (isHoveringTask) return

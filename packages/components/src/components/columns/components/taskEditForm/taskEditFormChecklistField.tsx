@@ -94,7 +94,7 @@ export function TaskEditFormChecklistField(
                 <SingleInputModal
                     isOpen={isOpen}
                     onClose={onClose}
-                    title={'Add a Checklist Group'}
+                    title="Add a Checklist Group"
                     description={'Name'}
                     onSubmit={onSubmitAddGroup}
                     validationValueSchema={z.string().min(3)}

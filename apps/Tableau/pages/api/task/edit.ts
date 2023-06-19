@@ -14,6 +14,7 @@ const schema = z.object({
     description: z.string(),
     statusId: z.string().cuid(),
     elapsedTime: z.number(),
+    order: z.number(),
     estimatedTime: z.number(),
     assignedUserIds: z.array(z.string()).nullable(),
 })
@@ -42,46 +43,54 @@ export default async function handler(
                 elapsedTime,
                 estimatedTime,
                 statusId,
+                order,
                 assignedUserIds,
             } = params
 
-            const assignedUsersValues =
-                assignedUserIds && assignedUserIds.length > 0
-                    ? {
-                          connectOrCreate: assignedUserIds.map((userId) => {
-                              return {
-                                  where: {
-                                      taskId_userId: { userId, taskId: id },
-                                  },
-                                  create: {
-                                      userId,
-                                      isHolder: false,
-                                  },
-                              }
-                          }),
-                      }
-                    : {
-                          deleteMany: {
-                              taskId: id,
-                          },
-                      }
+            const result = await prisma.$transaction(async (tx) => {
+                await tx.task.update({
+                    where: { id },
+                    data: {
+                        assignedUsers: { deleteMany: { taskId: id } },
+                    },
+                })
 
-            const result = await prisma.task.update({
-                where: {
-                    id,
-                },
-                data: {
-                    name,
-                    description,
-                    elapsedTime: elapsedTime,
-                    estimatedTime: estimatedTime,
-                    status: {
-                        connect: {
-                            id: statusId,
+                if (
+                    !assignedUserIds ||
+                    (assignedUserIds && assignedUserIds.length === 0)
+                )
+                    return
+
+                return await tx.task.update({
+                    where: {
+                        id,
+                    },
+                    data: {
+                        name,
+                        description,
+                        elapsedTime: elapsedTime,
+                        estimatedTime: estimatedTime,
+                        status: {
+                            connect: {
+                                id: statusId,
+                            },
+                        },
+                        order,
+                        assignedUsers: {
+                            connectOrCreate: assignedUserIds.map((userId) => {
+                                return {
+                                    where: {
+                                        taskId_userId: { userId, taskId: id },
+                                    },
+                                    create: {
+                                        userId,
+                                        isHolder: false,
+                                    },
+                                }
+                            }),
                         },
                     },
-                    assignedUsers: assignedUsersValues,
-                },
+                })
             })
 
             res.json(result)

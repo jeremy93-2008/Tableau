@@ -102,15 +102,18 @@ export function ColumnTask(props: IColumnTaskProps) {
         [statusBoard]
     )
 
-    const [{ isOver }, drop] = useDrop(() => ({
-        accept: TaskItemType,
-        hover: onDropHoverItem,
-        drop: onDropTaskItem,
-        collect: (monitor) => ({
-            isOver: monitor.isOver(),
-            canDrop: monitor.canDrop(),
+    const [{ isOver }, drop] = useDrop(
+        () => ({
+            accept: TaskItemType,
+            hover: onDropHoverItem,
+            drop: onDropTaskItem,
+            collect: (monitor) => ({
+                isOver: monitor.isOver(),
+                canDrop: monitor.canDrop(),
+            }),
         }),
-    }))
+        [onDropHoverItem, onDropTaskItem]
+    )
 
     const onMouseEnterColumn = useCallback(() => {
         if (isHoveringColumn) return
