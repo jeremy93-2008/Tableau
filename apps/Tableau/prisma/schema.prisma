@@ -11,6 +11,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Tag {
+  id   String @id @default(cuid())
+  name String
+  color String @default("#2C7A7B")
+  taskId  String
+  task    Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
 model Link {
   id     String @id @default(cuid())
   name   String
@@ -64,6 +72,7 @@ model Task {
   checklistsGroup ChecklistGroup[]
   link            Link[]
   assignedUsers   TaskAssignedUser[]
+  tags            Tag[]
 }
 
 model Board {

@@ -1,23 +1,6 @@
 version: "3.7"
 
 services:
-  web-tableau:
-    build:
-      context: .
-      dockerfile: ./apps/Tableau/Dockerfile
-    container_name: web-tableau
-    volumes:
-      - ./apps/Tableau:/monorepo/apps/Tableau
-      - ./packages:/monorepo/packages
-      - ./apps/Tableau/.next:/monorepo/Tableau/.next
-    depends_on:
-      postgres:
-        condition: service_healthy
-    links:
-      - postgres
-    ports:
-      - "3000:3000"
-      - "9229:9229"
   postgres:
     image: postgres
     ports:

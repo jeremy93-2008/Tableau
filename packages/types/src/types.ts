@@ -4,6 +4,7 @@ import {
     Checklist,
     ChecklistGroup,
     Link,
+    Tag,
     TaskAssignedUser,
 } from '@prisma/client'
 
@@ -27,6 +28,7 @@ export type IFullTask = Task & {
     assignedUsers: IFullTaskAssignedUser[]
     checklistsGroup: IFullCheckListGroup[]
     link: Link[]
+    tags: Tag[]
 }
 
 export type IFullTaskAssignedUser = TaskAssignedUser & {

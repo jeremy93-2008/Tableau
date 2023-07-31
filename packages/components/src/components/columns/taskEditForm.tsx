@@ -27,6 +27,7 @@ import { TaskEditFormLinkField } from './components/taskEditForm/taskEditForrmLi
 import { TaskEditFormStartDueDate } from './components/taskEditForm/taskEditFormStartDueDate'
 import { TaskEditFormNotification } from './components/taskEditForm/taskEditFormNotification'
 import { useThemeMode } from 'shared-hooks'
+import { TaskEditFormTags } from './components/taskEditForm/taskEditFormTags'
 
 interface ITaskEditForm {
     task: IFullTask
@@ -102,6 +103,13 @@ export function TaskEditForm(props: ITaskEditForm) {
             >
                 {(props) => (
                     <form onSubmit={props.handleSubmit}>
+                        <Flex
+                            mb={2}
+                            flexDirection="row"
+                            justifyContent="space-between"
+                        >
+                            <TaskEditFormTags task={task} />
+                        </Flex>
                         <Flex
                             mb={2}
                             flexDirection="row"

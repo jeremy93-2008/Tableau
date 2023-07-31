@@ -93,7 +93,7 @@ export function TaskEdit(props: ITaskEditProps) {
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Edit your task</ModalHeader>
+                <ModalHeader mb={-2}>Edit your task</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody data-cy="taskEditForm">
                     <TaskEditForm
