@@ -13,13 +13,15 @@ import {
     useDisclosure,
 } from '@chakra-ui/react'
 import { RefetchBoardAtom } from 'shared-atoms'
-import { useTableauMutation } from 'shared-hooks'
+import { useTableauMutation, useTableauQuery } from 'shared-hooks'
 import { IFullTask } from 'shared-types'
 import { TaskEditFormTagsForm } from './taskEditFormTagsForm'
 import { FormModal } from '../../modal/formModal'
 import { DeleteModal } from '../../modal/deleteModal'
+import { Tag } from '@prisma/client'
 
 export interface ITagsEditFormikValues {
+    id?: string
     name: string
     color: string
     boardId: string
@@ -40,16 +42,26 @@ export function TaskEditFormTags(props: ITaskEditFormTagsProps) {
 
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
-    const { isOpen, onOpen, onClose, onToggle } = useDisclosure()
+    const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const { data: allTags, refetch: refetchTags } = useTableauQuery<Tag[]>(
+        ['api/tag/list'],
+        {
+            noLoading: true,
+        }
+    )
+
+    const [tagToEdit, setTagToEdit] = useState<ITagsEditFormikValues | null>()
 
     const initialValues: ITagsEditFormikValues = useMemo(
         () => ({
-            name: '',
-            color: '',
-            boardId: task.boardId,
-            taskId: task.id,
+            id: tagToEdit?.id ?? '',
+            name: tagToEdit?.name ?? '',
+            color: tagToEdit?.color ?? '',
+            boardId: tagToEdit?.boardId ?? task.boardId,
+            taskId: tagToEdit?.taskId ?? task.id,
         }),
-        [task]
+        [task, tagToEdit]
     )
 
     const { mutateAsync: mutateCreateAsync } = useTableauMutation(
@@ -63,21 +75,49 @@ export function TaskEditFormTags(props: ITaskEditFormTagsProps) {
         }
     )
 
+    const { mutateAsync: mutateEditAsync } = useTableauMutation(
+        (values: ITagsEditFormikValues) => {
+            return axios.post(`api/tag/edit`, values, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            })
+        }
+    )
+
     const onSubmit = useCallback(
         (values: ITagsEditFormikValues) => {
-            return mutateCreateAsync({
+            if (!tagToEdit)
+                return mutateCreateAsync({
+                    ...values,
+                }).then(() => {
+                    refetchBoards.fetch()
+                    refetchTags()
+                    onClose()
+                })
+            return mutateEditAsync({
                 ...values,
             }).then(() => {
                 refetchBoards.fetch()
+                refetchTags()
                 onClose()
             })
         },
-        [refetchBoards, onClose, mutateCreateAsync]
+        [
+            tagToEdit,
+            mutateCreateAsync,
+            mutateEditAsync,
+            refetchBoards,
+            refetchTags,
+            onClose,
+        ]
     )
 
     const [tagToDelete, setTagToDelete] = useState<
         (ITagsDeleteFormikValues & { name: string }) | null
     >(null)
+
     const {
         isOpen: isOpenDeleteModal,
         onOpen: onOpenDeleteModal,
@@ -101,38 +141,62 @@ export function TaskEditFormTags(props: ITaskEditFormTagsProps) {
                 ...values,
             }).then(() => {
                 refetchBoards.fetch()
+                refetchTags()
             })
         },
-        [refetchBoards, mutateDeleteAsync]
+        [mutateDeleteAsync, refetchBoards, refetchTags]
     )
-
     return (
         <Flex width="100%" alignItems="center" flexDirection="column" mb={1}>
             <Flex width="100%" flex={1} pl={2} mb={1}>
                 <Text mr={2}>Tags</Text>
                 <Tooltip label="Add a Tag">
                     <IconButton
-                        onClick={onOpen}
+                        onClick={() => {
+                            setTagToEdit(null)
+                            onOpen()
+                        }}
                         aria-label="Add a Tag"
                         icon={<AddIcon />}
                         size="xs"
                     />
                 </Tooltip>
                 <FormModal
-                    title={'Add Tag'}
+                    title={tagToEdit ? `Edit Tag ${tagToEdit.name}` : `Add Tag`}
                     isOpen={isOpen}
                     defaultValues={initialValues}
                     onClose={onClose}
                     onSubmit={onSubmit}
-                    validationSchema={z.object({
-                        name: z.string().min(3),
-                        color: z.string().min(3),
-                        taskId: z.string().min(3),
-                        boardId: z.string().min(3),
-                    })}
+                    validationSchema={z
+                        .object({
+                            name: z.string().min(3),
+                            color: z.string().min(3),
+                            taskId: z.string().min(3),
+                            boardId: z.string().min(3),
+                        })
+                        .refine(
+                            (val) => {
+                                return (
+                                    (tagToEdit &&
+                                        val.name === tagToEdit.name &&
+                                        val.color === tagToEdit.color) ||
+                                    !task.tags?.find(
+                                        (tag) =>
+                                            tag.name === val.name &&
+                                            tag.color === val.color
+                                    )
+                                )
+                            },
+                            {
+                                message: 'Tag already exists',
+                                path: ['already-exist-tag'],
+                            }
+                        )}
                 >
                     {({ values, onFieldChange, error }) => (
                         <TaskEditFormTagsForm
+                            allTags={allTags ?? []}
+                            task={task}
                             values={values}
                             onFieldChange={onFieldChange}
                             error={error}
@@ -150,8 +214,19 @@ export function TaskEditFormTags(props: ITaskEditFormTagsProps) {
                 {task.tags.map((tag) => (
                     <Badge
                         key={tag.name}
+                        onClick={() => {
+                            setTagToEdit({
+                                id: tag.id,
+                                name: tag.name,
+                                color: tag.color,
+                                taskId: task.id,
+                                boardId: task.boardId,
+                            })
+                            onOpen()
+                        }}
                         bgColor={tag.color}
                         borderRadius="5px"
+                        cursor="pointer"
                         mr={2}
                         px={3}
                         py={1}
@@ -159,7 +234,8 @@ export function TaskEditFormTags(props: ITaskEditFormTagsProps) {
                         <Flex justifyContent="center" alignItems="center">
                             <Text mr={2}>{tag.name}</Text>
                             <IconButton
-                                onClick={() => {
+                                onClick={(evt) => {
+                                    evt.stopPropagation()
                                     setTagToDelete({
                                         id: tag.id,
                                         boardId: task.boardId,

@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from 'react'
 import { useDrag } from 'react-dnd'
 import {
     Avatar,
+    Badge,
     Box,
     Flex,
     IconButton,
@@ -115,6 +116,27 @@ export function TaskItem(props: ITaskItemProps) {
                 py={2}
             >
                 <Box minHeight="65px">
+                    {task.tags.length > 0 && (
+                        <Flex flexWrap="wrap">
+                            {task.tags.map((tag) => (
+                                <Tooltip
+                                    key={tag.id}
+                                    label={tag.name}
+                                    aria-label={tag.name}
+                                >
+                                    <Badge
+                                        data-cy="taskTag"
+                                        mr={1}
+                                        mb={1}
+                                        variant="solid"
+                                        backgroundColor={tag.color}
+                                    >
+                                        {tag.name}
+                                    </Badge>
+                                </Tooltip>
+                            ))}
+                        </Flex>
+                    )}
                     <Tooltip label={task.name}>
                         <Text
                             data-cy="taskTitle"

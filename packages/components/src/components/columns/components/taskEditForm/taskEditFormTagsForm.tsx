@@ -1,28 +1,80 @@
-import { Flex, Text } from '@chakra-ui/react'
-import { Formik, FormikHelpers } from 'formik'
-import React, { useCallback, useMemo } from 'react'
-import { IFullTask } from 'shared-types'
-import * as Yup from 'yup'
+import { Badge, Flex, Text } from '@chakra-ui/react'
+import React, { useMemo } from 'react'
 import { TextInput } from '../../../textInput'
 import { ITagsEditFormikValues } from './taskEditFormTags'
 import { ZodIssue } from 'zod'
+import { useTableauQuery } from 'shared-hooks'
+import { Tag } from '@prisma/client'
+import { IFullTask } from 'shared-types'
 
 interface ITaskEditFormTagsFormProps {
+    allTags: Tag[]
+    task: IFullTask
     values: ITagsEditFormikValues
     onFieldChange: (field: keyof ITagsEditFormikValues, value: string) => void
     error: Record<string, ZodIssue[]>
 }
 
 export function TaskEditFormTagsForm(props: ITaskEditFormTagsFormProps) {
-    const { values, onFieldChange, error } = props
+    const { allTags, task, values, onFieldChange, error } = props
+
+    const allTagsValidated = useMemo(() => {
+        return (
+            allTags?.filter((tag) =>
+                task.tags.every(
+                    (t) => t.name !== tag.name && t.color !== tag.color
+                )
+            ) ?? []
+        )
+    }, [allTags, task.tags])
+
+    const onFillTag = (tag: Tag) => {
+        onFieldChange('name', tag.name)
+        onFieldChange('color', tag.color)
+    }
 
     return (
         <Flex flexDirection="column">
+            {allTagsValidated.length > 0 && (
+                <Flex flexDirection="column" mb={2}>
+                    <Text fontWeight="medium">Existing Tags</Text>
+                    <Flex
+                        flex={1}
+                        flexWrap="wrap"
+                        width="100%"
+                        minWidth={0}
+                        mb={1}
+                    >
+                        {allTagsValidated.map((tag) => (
+                            <Badge
+                                key={tag.id}
+                                mr={2}
+                                mt={2}
+                                cursor="pointer"
+                                bgColor={tag.color}
+                                borderRadius="5px"
+                                onClick={() => onFillTag(tag)}
+                                transition="transform .1s ease-in-out"
+                                _active={{
+                                    transform: 'scale(0.9)',
+                                }}
+                                p={1}
+                            >
+                                {tag.name}
+                            </Badge>
+                        ))}
+                    </Flex>
+                </Flex>
+            )}
+            {error?.['already-exist-tag']?.map((err) => (
+                <Text mb={1} key={err.path.join('.')} color="red.500">
+                    {err.message}
+                </Text>
+            ))}
             <Flex flexDirection="column">
                 <Text fontWeight="medium" mb={2}>
                     Color
                 </Text>
-                {/* Create circular container with specific colors*/}
                 <Flex
                     mb={2}
                     style={
