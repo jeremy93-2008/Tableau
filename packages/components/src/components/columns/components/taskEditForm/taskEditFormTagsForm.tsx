@@ -20,11 +20,18 @@ export function TaskEditFormTagsForm(props: ITaskEditFormTagsFormProps) {
 
     const allTagsValidated = useMemo(() => {
         return (
-            allTags?.filter((tag) =>
-                task.tags.every(
-                    (t) => t.name !== tag.name && t.color !== tag.color
+            allTags
+                ?.filter(
+                    (tag, idx) =>
+                        allTags.findIndex(
+                            (t) => t.name === tag.name && t.color === tag.color
+                        ) === idx
                 )
-            ) ?? []
+                .filter((tag) =>
+                    task.tags.every(
+                        (t) => t.name !== tag.name && t.color !== tag.color
+                    )
+                ) ?? []
         )
     }, [allTags, task.tags])
 
