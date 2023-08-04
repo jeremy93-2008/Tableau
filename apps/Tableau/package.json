@@ -12,8 +12,13 @@
     "prisma:studio": "dotenv -e .env -- npx prisma studio",
     "prisma:generate": "dotenv -e .env -- npx prisma generate",
     "prisma:migrate": "dotenv -e .env -- npx prisma migrate dev",
+    "prisma:reset": "dotenv -e .env -- npx prisma db push --force-reset ",
+    "prisma:seed": "dotenv -e .env -- npx prisma db seed",
     "vercel-build": "npm run prisma:generate && next build",
     "e2e": "docker compose up -d && npx prisma migrate reset --skip-seed --skip-generate --force && cypress run"
+  },
+  "prisma": {
+    "seed": "ts-node-esm --compilerOptions {\"resolveJsonModule\":true} prisma/seeder/seed.mts"
   },
   "dependencies": {
     "@azure/communication-email": "^1.0.0-beta.1",
@@ -52,20 +57,20 @@
     "shared-components": "*",
     "shared-hooks": "*",
     "shared-libs": "*",
-    "shared-utils": "*",
     "shared-types": "*",
+    "shared-utils": "*",
     "yup": "^0.32.11",
     "zod": "^3.20.6"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.10.0",
+    "@types/cypress-image-snapshot": "^3.1.6",
     "@types/node": "^18.11.18",
     "cypress": "^12.6.0",
+    "cypress-image-snapshot": "^4.0.1",
     "prettier": "^2.8.1",
     "prisma": "^4.8.0",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.4",
-    "@types/cypress-image-snapshot": "^3.1.6",
-    "cypress-image-snapshot": "^4.0.1"
+    "typescript": "^4.9.4"
   }
 }

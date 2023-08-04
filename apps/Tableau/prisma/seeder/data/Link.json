@@ -1,0 +1,23 @@
+[
+  {
+    "id": "clhwl486v0000jw08dgoh52b0",
+    "name": "Google",
+    "url": "https://www.google.es",
+    "image": "https://www.google.es/favicon.ico",
+    "taskId": "cleoh8grl0001lc084p8btjae"
+  },
+  {
+    "id": "cliyxn7d40004l50841iflida",
+    "name": "Google",
+    "url": "https://www.google.es",
+    "image": "https://www.google.es/favicon.ico",
+    "taskId": "cleohquou0000mb0810q03th1"
+  },
+  {
+    "id": "clkq4432o0000mo08op85941x",
+    "name": "Tag Example",
+    "url": "https://trello.com/b/LiFdfIR0/adin-cloud",
+    "image": "https://trello.com/b/LiFdfIR0/adin-cloud/favicon.ico",
+    "taskId": "clkq434k70007l908mvknr9wa"
+  }
+]

@@ -22,6 +22,12 @@
     "prisma:generate": {
       "cache": false
     },
+    "prisma:reset": {
+      "cache": false
+    },
+    "prisma:seed": {
+      "cache": false
+    },
     "prisma:docker:generate": {}
   }
 }

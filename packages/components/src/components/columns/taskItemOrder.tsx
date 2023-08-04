@@ -83,7 +83,7 @@ export function TaskItemOrder(props: ITaskItemWithOrderingProps) {
             flexDirection="column"
             alignItems="center"
             flex={1}
-            minH={currentTask ? '125px' : '24px'}
+            minH={currentTask ? 'fit-content' : '24px'}
             width="100%"
         >
             {isCurrentColumnDropped && (isOver || !currentTask) && (

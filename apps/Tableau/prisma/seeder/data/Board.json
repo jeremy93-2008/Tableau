@@ -1,0 +1,44 @@
+[
+  {
+    "id": "cldcxbemp0006mk08q3gmbu98",
+    "name": "Board Tableau",
+    "backgroundUrl": "",
+    "description": "A Board to develop Tableau app",
+    "userId": "cldcxac7k0000mk08xuzfuvbe"
+  },
+  {
+    "id": "cldm6fosz0001l8085m6xt5sz",
+    "name": "Tareas",
+    "backgroundUrl": "",
+    "description": "",
+    "userId": "cldm5ipq20000l908dvkik6bm"
+  },
+  {
+    "id": "cldos7tpa0008l308kntxmsax",
+    "name": "Board 1",
+    "backgroundUrl": "",
+    "description": "Test",
+    "userId": "cldos6ve20000l308pryqavwl"
+  },
+  {
+    "id": "cle7im76b0001l00811u7evfb",
+    "name": "Board Uno Shareable",
+    "backgroundUrl": "",
+    "description": "",
+    "userId": "cldrcit1x0000l008yvklteji"
+  },
+  {
+    "id": "cle7in0g90001mg08qwvsn19x",
+    "name": "Board Shareable Administrator",
+    "backgroundUrl": "",
+    "description": "",
+    "userId": "cldrcit1x0000l008yvklteji"
+  },
+  {
+    "id": "cle7ind59000dmg089s4hfuho",
+    "name": "Board Shareable ReadOnly",
+    "backgroundUrl": "",
+    "description": "",
+    "userId": "cldrcit1x0000l008yvklteji"
+  }
+]

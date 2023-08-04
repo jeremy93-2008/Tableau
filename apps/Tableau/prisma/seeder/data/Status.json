@@ -1,0 +1,57 @@
+[
+  {
+    "id": "cldcxbemp0008mk085sialm6m",
+    "name": "To Do",
+    "isDefault": true
+  },
+  {
+    "id": "cldcxbemp000emk085ihgvz0l",
+    "name": "Done",
+    "isDefault": true
+  },
+  {
+    "id": "cldcxbemp000bmk08sw8xngbx",
+    "name": "In Progress",
+    "isDefault": true
+  },
+  {
+    "id": "cldm78gy20002me087l01bylu",
+    "name": "Columna 01",
+    "isDefault": false
+  },
+  {
+    "id": "cldm78siv0009me08r29z504l",
+    "name": "Columna 03",
+    "isDefault": false
+  },
+  {
+    "id": "cldm7fr0f000jme08grbddd7m",
+    "name": "Columna 04",
+    "isDefault": false
+  },
+  {
+    "id": "cldm7thqd0001mn08pzantesr",
+    "name": "columna 05",
+    "isDefault": false
+  },
+  {
+    "id": "cle8ra0du0001lc08itl0xsx6",
+    "name": "For Next versions",
+    "isDefault": false
+  },
+  {
+    "id": "cle8rajs50000mb08xxrhsvt6",
+    "name": "MVP Tasks Done",
+    "isDefault": false
+  },
+  {
+    "id": "cle8raukd0001mm086hhevpnm",
+    "name": "Deployed",
+    "isDefault": false
+  },
+  {
+    "id": "cle8rcjjl0001la08a002zezd",
+    "name": "When commercial",
+    "isDefault": false
+  }
+]

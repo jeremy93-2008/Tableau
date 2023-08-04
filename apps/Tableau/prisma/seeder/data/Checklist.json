@@ -1,0 +1,51 @@
+[
+  {
+    "id": "clfymynpi0000l10847rc7n1x",
+    "name": "Hola 2",
+    "checked": false,
+    "assignedUserId": "cldcxac7k0000mk08xuzfuvbe",
+    "checklistGroupId": "clfdyf3qp0000mk081s3p0v9v"
+  },
+  {
+    "id": "clfymyr2q0001l108677py0ya",
+    "name": "Adios",
+    "checked": true,
+    "assignedUserId": "cldcxac7k0000mk08xuzfuvbe",
+    "checklistGroupId": "clfdyf3qp0000mk081s3p0v9v"
+  },
+  {
+    "id": "cliyxmjgi0003l508x86yravu",
+    "name": "dos",
+    "checked": false,
+    "assignedUserId": "cldcxac7k0000mk08xuzfuvbe",
+    "checklistGroupId": "cliyxmg9o0002l5082gk9zkht"
+  },
+  {
+    "id": "cliyxm1zf0000l508ofx1viqb",
+    "name": "jopldjweigfh9r",
+    "checked": true,
+    "assignedUserId": "cldcxac7k0000mk08xuzfuvbe",
+    "checklistGroupId": "clirfy4nu0000l5081ay2osxj"
+  },
+  {
+    "id": "cliyy1xvn0008l508mc9tgtki",
+    "name": "Changing Assigned Users Selection",
+    "checked": true,
+    "assignedUserId": "cldcxac7k0000mk08xuzfuvbe",
+    "checklistGroupId": "cliyy1bh00007l508mqnkpvhq"
+  },
+  {
+    "id": "cliyy2mx90009l508rhiaf0u9",
+    "name": "Move into different column, lose assigned users",
+    "checked": true,
+    "assignedUserId": "cldcxac7k0000mk08xuzfuvbe",
+    "checklistGroupId": "cliyy1bh00007l508mqnkpvhq"
+  },
+  {
+    "id": "cliyxm9uu0001l508i2u4ruf9",
+    "name": "unodios",
+    "checked": false,
+    "assignedUserId": "cldcxac7k0000mk08xuzfuvbe",
+    "checklistGroupId": "clirfy4nu0000l5081ay2osxj"
+  }
+]

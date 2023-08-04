@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "docker compose up -d && turbo run prisma:generate --filter=tableau && turbo run dev --filter=tableau",
+    "db:reset": "docker compose up -d && turbo run prisma:reset --filter=tableau && turbo run prisma:seed --filter=tableau",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "workspaces": [

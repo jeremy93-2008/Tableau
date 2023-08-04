@@ -1,0 +1,92 @@
+[
+  {
+    "id": "3423212132",
+    "taskId": "clhxie4kq0000mm087et1u5xm",
+    "userId": "cldcxac7k0000mk08xuzfuvbe",
+    "isHolder": true
+  },
+  {
+    "id": "clkrkfslz0003mj08ptdbl61z",
+    "taskId": "clkq434k70007l908mvknr9wa",
+    "userId": "cldcxac7k0000mk08xuzfuvbe",
+    "isHolder": false
+  },
+  {
+    "id": "clkrkh8mo000bmj08psdqh848",
+    "taskId": "cliyxz2lb0005l408g2f4u2pr",
+    "userId": "cldcxac7k0000mk08xuzfuvbe",
+    "isHolder": false
+  },
+  {
+    "id": "clkrkzt100003mf08kcowm2vp",
+    "taskId": "clkrkksmt0000la08uascf7ud",
+    "userId": "cldcxac7k0000mk08xuzfuvbe",
+    "isHolder": false
+  },
+  {
+    "id": "clkrkzzh00006mf086dplh618",
+    "taskId": "clkrkhw7n000cmj08sefm719h",
+    "userId": "cldcxac7k0000mk08xuzfuvbe",
+    "isHolder": false
+  },
+  {
+    "id": "clkrl0jmo000fmf08b8jh2me1",
+    "taskId": "cleohr98c0001mb080ikwzh0o",
+    "userId": "cldcxac7k0000mk08xuzfuvbe",
+    "isHolder": false
+  },
+  {
+    "id": "clkrl0jmo000gmf08gbqi9z6h",
+    "taskId": "cleohr98c0001mb080ikwzh0o",
+    "userId": "cldm5ipq20000l908dvkik6bm",
+    "isHolder": false
+  },
+  {
+    "id": "clkvqcd5a000ajn08s61n7n11",
+    "taskId": "clkvqbc5v0000l10884tn9x2l",
+    "userId": "cldcxac7k0000mk08xuzfuvbe",
+    "isHolder": false
+  },
+  {
+    "id": "cliyxzi3w000al408gddqph69",
+    "taskId": "cleoib88v0000mr083ic88oad",
+    "userId": "cldcxac7k0000mk08xuzfuvbe",
+    "isHolder": false
+  },
+  {
+    "id": "cliyy05x00006l508a4pwn4nw",
+    "taskId": "cleoh8grl0001lc084p8btjae",
+    "userId": "cldcxac7k0000mk08xuzfuvbe",
+    "isHolder": false
+  },
+  {
+    "id": "cliyy46sh000cml08s9djm78z",
+    "taskId": "cliyxv9ie0002l408tvkzqeno",
+    "userId": "cldcxac7k0000mk08xuzfuvbe",
+    "isHolder": false
+  },
+  {
+    "id": "clj3igai30001l508p3x7sr71",
+    "taskId": "cliyy7u980000l808ziob7unw",
+    "userId": "cldcxac7k0000mk08xuzfuvbe",
+    "isHolder": false
+  },
+  {
+    "id": "clk7d0ted000fl8089z18dl7b",
+    "taskId": "cleohquou0000mb0810q03th1",
+    "userId": "cldcxac7k0000mk08xuzfuvbe",
+    "isHolder": false
+  },
+  {
+    "id": "clk7d0ted000hl808c75wnmdx",
+    "taskId": "cleohquou0000mb0810q03th1",
+    "userId": "cldm5ipq20000l908dvkik6bm",
+    "isHolder": false
+  },
+  {
+    "id": "clkq49vdg0008lc086rbb16ap",
+    "taskId": "clkq48lfs0000lc08cl70biq2",
+    "userId": "cldcxac7k0000mk08xuzfuvbe",
+    "isHolder": false
+  }
+]
