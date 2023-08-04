@@ -75,6 +75,7 @@ export default async function handler(
                         include: {
                             user: true,
                             assignedUsers: { include: { User: true } },
+                            tags: true,
                         },
                     })
                 )

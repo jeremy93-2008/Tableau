@@ -50,7 +50,10 @@ export function useHighlightTaskItem(
         )
 
         if (scrollLeft > window.innerWidth - 200 || scrollLeft < 0)
-            columnsContainer!.scrollTo({ left: scrollLeft, behavior: 'smooth' })
+            columnsContainer!.scrollTo({
+                left: scrollLeft - 250,
+                behavior: 'smooth',
+            })
 
         // We wait until the Scroll make is job, and after we hook the click to disable the highlight in whatever click that the user do
         window.requestAnimationFrame(() => {

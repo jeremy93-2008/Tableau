@@ -34,7 +34,7 @@ export function useHighlightFinderTask(onAfterHighlight: (task: Task) => void) {
                 if (onAfterHighlight) onAfterHighlight(task)
             })
         },
-        [data, onAfterHighlight, setSelectedBoard, setHighlightTask]
+        [data, pushBoard, setHighlightTask, onAfterHighlight]
     )
 
     return {

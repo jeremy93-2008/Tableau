@@ -104,6 +104,7 @@ export function TaskItem(props: ITaskItemProps) {
             borderRadius={10}
             width="100%"
             mb="8px"
+            pr={readonly ? 3 : 0}
             onMouseEnter={onMouseEnterTask}
             onMouseLeave={onMouseLeaveTask}
             cursor={readonly || isDisabled ? 'inherit' : 'move'}

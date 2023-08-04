@@ -8,7 +8,6 @@ import React, {
 import axios, { AxiosResponse } from 'axios'
 import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react'
 import { useTableauMutation, useThemeMode } from 'shared-hooks'
-import { Task } from '.prisma/client'
 import { TaskItem } from '../columns/taskItem'
 import { getScrollbarStyle } from 'shared-utils'
 import { SearchInput } from './searchInput'
@@ -102,7 +101,7 @@ export function Finder() {
                 flexDirection="column"
                 bgColor={bg.primary}
                 position="absolute"
-                width="35vw"
+                width="45vw"
                 minWidth="580px"
                 minHeight={0}
                 maxHeight={isOpen ? '500px' : '0'}
@@ -121,6 +120,7 @@ export function Finder() {
                     position="sticky"
                     top={0}
                     bgColor={bg.primary}
+                    zIndex={10}
                     fontWeight="medium"
                     fontSize={18}
                     px={8}
@@ -128,7 +128,12 @@ export function Finder() {
                 >
                     Tasks
                 </Text>
-                <Flex flexWrap="wrap" px={isOpen ? 5 : 0} pb={isOpen ? 3 : 0}>
+                <Flex
+                    margin="auto"
+                    flexWrap="wrap"
+                    px={isOpen ? 5 : 0}
+                    pb={isOpen ? 3 : 0}
+                >
                     {result.task.length == 0 && (
                         <Flex
                             flex={1}
@@ -149,8 +154,7 @@ export function Finder() {
                                     key={task.id}
                                     onClick={handleHighlightTask(task)}
                                     boxSizing="border-box"
-                                    width="23%"
-                                    maxWidth="150px"
+                                    width="180px"
                                     mr="2%"
                                     mb="2%"
                                 >
