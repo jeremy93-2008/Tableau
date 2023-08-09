@@ -24,6 +24,13 @@ export default async function handler(
                 where: { email: { equals: email } },
             })
 
+            if (!email)
+                return res
+                    .status(401)
+                    .send(
+                        "You're not authenticated, or your session has expired"
+                    )
+
             if (!userEntry)
                 return res
                     .status(500)
