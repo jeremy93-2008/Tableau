@@ -1,16 +1,35 @@
-import { Button } from '@chakra-ui/react'
+import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { Button } from '@chakra-ui/react'
+import { ExternalLinkIcon, SpinnerIcon } from '@chakra-ui/icons'
+import { getAnimation } from 'shared-utils'
 
 export function Signin() {
+    const [isSignLoading, setSignInLoading] = useState(false)
+    const { spiningAnimation } = getAnimation({
+        spining: { duration: '1s', timing: 'linear', iteration: 'infinite' },
+    })
     return (
         <Button
             data-cy="signIn"
             colorScheme="teal"
-            rightIcon={<ExternalLinkIcon />}
-            onClick={() =>
-                signIn('auth0', { callbackUrl: '/' }, { prompt: 'login' })
+            isDisabled={isSignLoading}
+            leftIcon={
+                isSignLoading ? (
+                    <SpinnerIcon animation={spiningAnimation} />
+                ) : (
+                    <></>
+                )
             }
+            rightIcon={isSignLoading ? <></> : <ExternalLinkIcon />}
+            onClick={() => {
+                setSignInLoading(true)
+                signIn('auth0', { callbackUrl: '/' }, { prompt: 'login' }).then(
+                    () => {
+                        setSignInLoading(false)
+                    }
+                )
+            }}
         >
             Sign in
         </Button>

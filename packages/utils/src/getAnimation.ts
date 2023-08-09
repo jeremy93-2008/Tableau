@@ -1,6 +1,17 @@
 import { keyframes } from '@chakra-ui/react'
 
-export function getAnimation() {
+interface AnimationEntry {
+    duration: string
+    timing: string
+    iteration: number | 'infinite'
+}
+
+interface Animation {
+    bounce: Partial<AnimationEntry>
+    spining: Partial<AnimationEntry>
+}
+
+export function getAnimation(params?: Partial<Animation>) {
     const bounceKeyframes = keyframes`
     0% {
       transform: rotateZ(0);
@@ -26,7 +37,15 @@ export function getAnimation() {
   `
 
     return {
-        bounceAnimation: `${bounceKeyframes} .2s 5 linear`,
-        spiningAnimation: `${spiningKeyframes} .4s linear`,
+        bounceAnimation: `${bounceKeyframes} ${
+            params?.bounce?.duration ?? '.2s'
+        } ${params?.bounce?.iteration ?? '5'} ${
+            params?.bounce?.timing ?? 'linear'
+        }`,
+        spiningAnimation: `${spiningKeyframes} ${
+            params?.spining?.duration ?? '.4s'
+        } ${params?.spining?.iteration ?? '1'} ${
+            params?.spining?.timing ?? 'linear'
+        }`,
     }
 }
