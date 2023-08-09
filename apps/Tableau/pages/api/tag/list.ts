@@ -7,7 +7,7 @@ import { z } from 'zod'
 type ISchemaParams = z.infer<typeof schema>
 
 const schema = z.object({
-    taskId: z.string().cuid().nullable(),
+    taskId: z.string().cuid().optional(),
 })
 
 export default async function handler(
