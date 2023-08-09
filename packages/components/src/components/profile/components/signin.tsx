@@ -6,9 +6,18 @@ import { getAnimation } from 'shared-utils'
 
 export function Signin() {
     const [isSignLoading, setSignInLoading] = useState(false)
+
     const { spiningAnimation } = getAnimation({
         spining: { duration: '1s', timing: 'linear', iteration: 'infinite' },
     })
+
+    const onSignIn = () => {
+        setSignInLoading(true)
+        signIn('auth0', { callbackUrl: '/' }, { prompt: 'login' }).then(() => {
+            setSignInLoading(false)
+        })
+    }
+
     return (
         <Button
             data-cy="signIn"
@@ -22,14 +31,7 @@ export function Signin() {
                 )
             }
             rightIcon={isSignLoading ? <></> : <ExternalLinkIcon />}
-            onClick={() => {
-                setSignInLoading(true)
-                signIn('auth0', { callbackUrl: '/' }, { prompt: 'login' }).then(
-                    () => {
-                        setSignInLoading(false)
-                    }
-                )
-            }}
+            onClick={onSignIn}
         >
             Sign in
         </Button>
