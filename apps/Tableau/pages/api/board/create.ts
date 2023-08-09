@@ -6,6 +6,7 @@ import { Authenticate } from '../../../server/next/auth/Authenticate'
 import { isAuthenticated } from '../../../server/next/auth/isAuthenticated'
 import { authOptions } from '../auth/[...nextauth]'
 import { Session } from 'next-auth'
+import { ErrorMessage } from 'shared-utils'
 
 type ISchemaParams = z.infer<typeof schema>
 
@@ -38,11 +39,7 @@ export default async function handler(
             })
 
             if (!email)
-                return res
-                    .status(401)
-                    .send(
-                        "You're not authenticated, or your session has expired"
-                    )
+                return res.status(401).send(ErrorMessage.Unauthenticated)
 
             if (!userEntry)
                 return res

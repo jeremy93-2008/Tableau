@@ -1,5 +1,5 @@
 export const ErrorMessage = {
-    Unauthorized: 'Unauthorized',
+    Unauthenticated: 'You are not authenticated or your session has expired',
     BadRequest: 'Bad Request - No params valid detected',
     Forbidden:
         'Your current permissions do not allow you to perform the requested action. ' +

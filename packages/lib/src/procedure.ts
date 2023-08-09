@@ -61,10 +61,17 @@ export function Procedure<TParams>(options: { req: NextApiRequest }) {
         },
         success: async (onSuccess: (params: TParams) => Promise<void>) => {
             try {
+                if (!isCheck || !isInputCorrect) {
+                    throw new Error("Can't execute success", {
+                        cause: {
+                            isCheck,
+                            isInputCorrect,
+                        },
+                    })
+                }
                 return await onSuccess(params!)
             } catch (e) {
                 const err = e as Prisma.PrismaClientKnownRequestError
-                console.log('Hay un error en el success de Procedure')
                 return new Promise((resolve, reject) =>
                     reject({
                         inputError,

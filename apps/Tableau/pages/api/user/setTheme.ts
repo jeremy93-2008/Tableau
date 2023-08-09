@@ -27,7 +27,7 @@ export default async function handler(
             )
         ).checkAsync(async (params, setError) => {
             const session = await isAuthenticated({ req, res, authOptions })
-            if (!session) return setError(401, ErrorMessage.Unauthorized)
+            if (!session) return setError(401, ErrorMessage.Unauthenticated)
             if (!params) return setError(400, ErrorMessage.BadRequest)
             return session.user.email === params!.email
         })

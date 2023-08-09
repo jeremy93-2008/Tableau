@@ -44,12 +44,12 @@ export const authOptions: AuthOptions = {
         strategy: 'database' as SessionStrategy,
 
         // Seconds - How long until an idle session expires and is no longer valid.
-        maxAge: 6000, // 1 hour
+        maxAge: 6000, // 1 hour and minutes
 
         // Seconds - Throttle how frequently to write to database to extend a session.
         // Use it to limit write operations. Set to 0 to always update the database.
         // Note: This option is ignored if using JSON Web Tokens
-        updateAge: 3000, // 30 minutes
+        updateAge: 500,
 
         // The session token is usually either a random UUID or string, however if you
         // need a more customized session token string, you can define your own generate function.

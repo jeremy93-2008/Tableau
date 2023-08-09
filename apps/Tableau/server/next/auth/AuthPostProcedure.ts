@@ -3,9 +3,8 @@ import { ZodAny } from 'zod'
 import { hasPostMethod } from './validation/hasPostMethod'
 import { isAuthenticated } from './isAuthenticated'
 import { authOptions } from '../../../pages/api/auth/[...nextauth]'
-import { ErrorMessage } from 'shared-utils'
-import { getBoardPermission, IKeyPermission, Procedure } from 'shared-libs'
-import { hasUserPermission } from './validation/hasUserPermission'
+import { Procedure } from 'shared-libs'
+import { checkValidRequest } from './services/checkValidRequest'
 
 export async function AuthPostProcedure<ISchema, ISchemaValueParams>(
     req: NextApiRequest,
@@ -20,9 +19,10 @@ export async function AuthPostProcedure<ISchema, ISchemaValueParams>(
         .checkAsync(async (params, setError) => {
             const session = await isAuthenticated({ req, res, authOptions })
 
-            if (!session) return setError(401, ErrorMessage.Unauthorized)
-            if (!params) return setError(400, ErrorMessage.BadRequest)
-
-            return true
+            return !!(await checkValidRequest({
+                session,
+                setError,
+                params,
+            }))
         })
 }
