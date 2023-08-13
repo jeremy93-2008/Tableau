@@ -55,13 +55,9 @@ export default async function handler(
                     },
                 })
 
-                if (
-                    !assignedUserIds ||
-                    (assignedUserIds && assignedUserIds.length === 0)
-                )
-                    return
+                if (!assignedUserIds) return
 
-                return await tx.task.update({
+                return tx.task.update({
                     where: {
                         id,
                     },
