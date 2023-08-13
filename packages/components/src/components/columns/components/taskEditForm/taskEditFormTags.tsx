@@ -232,21 +232,28 @@ export function TaskEditFormTags(props: ITaskEditFormTagsProps) {
                         py={1}
                     >
                         <Flex justifyContent="center" alignItems="center">
-                            <Text mr={2}>{tag.name}</Text>
-                            <IconButton
-                                onClick={(evt) => {
-                                    evt.stopPropagation()
-                                    setTagToDelete({
-                                        id: tag.id,
-                                        boardId: task.boardId,
-                                        name: tag.name,
-                                    })
-                                    onOpenDeleteModal()
-                                }}
-                                aria-label={'Delete Tag'}
-                                icon={<FaTimes />}
-                                size="xs"
-                            />
+                            <Tooltip label={`Edit Tag "${tag.name}"`}>
+                                <Text mr={2}>{tag.name}</Text>
+                            </Tooltip>
+                            <Tooltip label={`Delete Tag "${tag.name}"`}>
+                                <IconButton
+                                    onClick={(evt) => {
+                                        evt.stopPropagation()
+                                        setTagToDelete({
+                                            id: tag.id,
+                                            boardId: task.boardId,
+                                            name: tag.name,
+                                        })
+                                        onOpenDeleteModal()
+                                    }}
+                                    aria-label={'Delete Tag'}
+                                    icon={<FaTimes />}
+                                    size="xs"
+                                    _hover={{
+                                        bgColor: 'red.500',
+                                    }}
+                                />
+                            </Tooltip>
                         </Flex>
                     </Badge>
                 ))}
