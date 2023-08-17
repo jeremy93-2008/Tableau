@@ -69,6 +69,8 @@ model Task {
   order           Int                @default(1)
   estimatedTime   Int?
   elapsedTime     Int?
+  startDate       DateTime?
+  endDate         DateTime?
   checklistsGroup ChecklistGroup[]
   link            Link[]
   assignedUsers   TaskAssignedUser[]

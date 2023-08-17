@@ -127,7 +127,10 @@ export function TaskEditForm(props: ITaskEditForm) {
                                     })
                                 }}
                             />
-                            <TaskEditFormStartDueDate />
+                            <TaskEditFormStartDueDate
+                                startDate={task.startDate}
+                                endDate={task.endDate}
+                            />
                             <TaskEditFormNotification />
                         </Flex>
                         <Flex width="100%" mb={4} flexDirection="row">
