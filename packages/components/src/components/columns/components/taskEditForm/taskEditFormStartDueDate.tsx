@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import { useThemeMode } from 'shared-hooks'
+import { Calendar } from '../../../calendar'
 
 interface ITaskEditFormStartDueDateProps {
     startDate: Date | null
@@ -41,7 +42,9 @@ export function TaskEditFormStartDueDate(
                 </PopoverTrigger>
                 <PopoverContent>
                     <PopoverArrow />
-                    <PopoverBody>Body</PopoverBody>
+                    <PopoverBody>
+                        <Calendar />
+                    </PopoverBody>
                 </PopoverContent>
             </Popover>
         </Flex>
