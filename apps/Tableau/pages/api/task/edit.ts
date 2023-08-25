@@ -16,8 +16,8 @@ const schema = z.object({
     elapsedTime: z.number(),
     order: z.number(),
     estimatedTime: z.number(),
-    startDate: z.date().nullable(),
-    endDate: z.date().nullable(),
+    startDate: z.string().nullable().optional(),
+    endDate: z.string().nullable().optional(),
     assignedUserIds: z.array(z.string()).nullable(),
 })
 
@@ -76,8 +76,8 @@ export default async function handler(
                             },
                         },
                         order,
-                        startDate,
-                        endDate,
+                        startDate: startDate ? new Date(startDate) : undefined,
+                        endDate: endDate ? new Date(endDate) : undefined,
                         assignedUsers: {
                             connectOrCreate: assignedUserIds.map((userId) => {
                                 return {

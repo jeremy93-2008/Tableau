@@ -60,11 +60,13 @@ export function TaskEditForm(props: ITaskEditForm) {
             statusId: status.id,
             elapsedTime: task.elapsedTime || 0,
             estimatedTime: task.estimatedTime || 0,
-            order: task.order || 999,
+            order: task.order ?? 999,
             assignedUserIds:
                 task.assignedUsers.map(
                     (assignedUser) => assignedUser.User.id
                 ) ?? undefined,
+            startDate: task.startDate ? new Date(task.startDate) : null,
+            endDate: task.endDate ? new Date(task.endDate) : null,
         }),
         [task, status]
     )
@@ -80,6 +82,8 @@ export function TaskEditForm(props: ITaskEditForm) {
                 elapsedTime: Yup.number(),
                 estimatedTime: Yup.number(),
                 assignedUserIds: Yup.array(Yup.string()).nullable(),
+                startDate: Yup.date().nullable(),
+                endDate: Yup.date().nullable(),
             }),
         []
     )
@@ -128,8 +132,16 @@ export function TaskEditForm(props: ITaskEditForm) {
                                 }}
                             />
                             <TaskEditFormStartDueDate
-                                startDate={task.startDate}
-                                endDate={task.endDate}
+                                startDate={props.values.startDate}
+                                endDate={props.values.endDate}
+                                onChangeDate={(date: [Date?, Date?]) => {
+                                    const [startDate, endDate] = date
+                                    props.setValues({
+                                        ...props.values,
+                                        startDate,
+                                        endDate,
+                                    })
+                                }}
                             />
                             <TaskEditFormNotification />
                         </Flex>

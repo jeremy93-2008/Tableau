@@ -3,6 +3,20 @@ interface CalendarProps {
     year: number
 }
 
+export interface IUseCalendarReturn {
+    days: {
+        name: string
+        date: Date
+        isCurrentMonth: boolean
+        isToday: boolean
+    }[][]
+    numberOfDays: number
+    firstDay: Date
+    lastDay: Date
+    month: string
+    year: number
+}
+
 export function useCalendar(params: CalendarProps) {
     const { month, year } = params
     const firstDay = new Date(year, month, 1)
@@ -17,7 +31,7 @@ export function useCalendar(params: CalendarProps) {
             const date = new Date(year, month, day)
 
             return {
-                day,
+                name: date.toLocaleString('default', { weekday: 'narrow' }),
                 date,
                 isCurrentMonth: date.getMonth() === month,
                 isToday: date.toDateString() === new Date().toDateString(),
@@ -25,5 +39,15 @@ export function useCalendar(params: CalendarProps) {
         })
     })
 
-    return { days }
+    const monthName = firstDay.toLocaleString('default', { month: 'long' })
+    const yearName = firstDay.getFullYear()
+
+    return {
+        days,
+        numberOfDays,
+        firstDay,
+        lastDay,
+        month: monthName.slice(0, 1).toUpperCase() + monthName.slice(1),
+        year: yearName,
+    } as IUseCalendarReturn
 }

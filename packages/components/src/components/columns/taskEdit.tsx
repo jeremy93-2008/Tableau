@@ -26,6 +26,8 @@ export type ITaskEditFormikValues = {
     estimatedTime: number
     order: number
     assignedUserIds?: string[]
+    startDate?: Date | null
+    endDate?: Date | null
 }
 
 interface ITaskEditProps {

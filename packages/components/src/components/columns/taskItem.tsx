@@ -23,6 +23,8 @@ import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
 import { IFullTask } from 'shared-types'
 import { FaUserSlash } from 'react-icons/fa'
+import { getDateString } from './components/taskEditForm/utils/getDateString'
+import { TaskItemTags } from './components/taskItem/taskItemTags'
 
 interface ITaskItemProps {
     task: IFullTask
@@ -41,8 +43,6 @@ export function TaskItem(props: ITaskItemProps) {
     const [selectedBoard] = useAtom(BoardAtom)
 
     const taskContainer = useRef<HTMLDivElement>()
-
-    const { border } = useThemeMode()
 
     const { bounceAnimation } = getAnimation()
 
@@ -118,27 +118,7 @@ export function TaskItem(props: ITaskItemProps) {
                 py={2}
             >
                 <Box minHeight="65px">
-                    {task.tags.length > 0 && (
-                        <Flex flexWrap="wrap">
-                            {task.tags.map((tag) => (
-                                <Tooltip
-                                    key={tag.id}
-                                    label={tag.name}
-                                    aria-label={tag.name}
-                                >
-                                    <Badge
-                                        data-cy="taskTag"
-                                        mr={1}
-                                        mb={1}
-                                        variant="solid"
-                                        backgroundColor={tag.color}
-                                    >
-                                        {tag.name}
-                                    </Badge>
-                                </Tooltip>
-                            ))}
-                        </Flex>
-                    )}
+                    <TaskItemTags task={task} />
                     <Tooltip label={task.name}>
                         <Text
                             data-cy="taskTitle"
@@ -163,6 +143,13 @@ export function TaskItem(props: ITaskItemProps) {
                         <BsClock size={13} />
                         <Text ml={1}>{task.estimatedTime}</Text>
                     </Flex>
+                </Flex>
+                <Flex mt={2} justifyContent="left">
+                    <>
+                        {task.startDate &&
+                            getDateString(new Date(task.startDate))}
+                        /{task.endDate && getDateString(new Date(task.endDate))}
+                    </>
                 </Flex>
             </Flex>
             <Flex
