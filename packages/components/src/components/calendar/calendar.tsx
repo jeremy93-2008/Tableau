@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { useCalendar } from './hooks/useCalendar'
-import { Flex, IconButton, Select } from '@chakra-ui/react'
-import { FaCaretLeft, FaCaretRight } from 'react-icons/fa'
+import { Flex } from '@chakra-ui/react'
 import { months } from './constants/months'
-import { years, minYear, maxYear } from './constants/years'
+import { minYear, maxYear } from './constants/years'
 import { CalendarHeader } from './components/calendar.header'
 import { CalendarBody } from './components/calendar.body'
 

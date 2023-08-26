@@ -8,7 +8,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cleft77vm0000m508hte1fir4",
@@ -19,7 +21,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cldm7x3ax000imn0895gh9lqg",
@@ -30,7 +34,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 0
+    "order": 0,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cldxssuob0000mi08c9v78tzp",
@@ -41,7 +47,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 3
+    "order": 3,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cldm7g8js000lme08q9o0anvy",
@@ -52,7 +60,9 @@
     "userId": "cldm5ipq20000l908dvkik6bm",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cldm7up5o000cmn08c2ipihgw",
@@ -63,7 +73,9 @@
     "userId": "cldm5ipq20000l908dvkik6bm",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cldm7uuuo000dmn08ld26je55",
@@ -85,7 +97,9 @@
     "userId": "cldm5ipq20000l908dvkik6bm",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "clefohdek0000kx083gc2gt2r",
@@ -96,7 +110,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cldm7v6x5000gmn08niiysh9e",
@@ -107,7 +123,9 @@
     "userId": "cldm5ipq20000l908dvkik6bm",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cldhsd8470000ju08xbj1opou",
@@ -118,7 +136,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cldm7wl75000hmn08eiafk9j6",
@@ -129,7 +149,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cleafcumy0000mm08k3hsc39e",
@@ -140,7 +162,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 1,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "clehgt1xu0000l808hvhblhm0",
@@ -151,7 +175,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cldcxdce9000lmk08y6l14l3w",
@@ -162,7 +188,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cldcxef9l000pmk080mezr9r5",
@@ -173,7 +201,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cleohsrmj0003mb08xczgp94x",
@@ -184,7 +214,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cldm791wo000cme08oz5msqid",
@@ -195,7 +227,9 @@
     "userId": "cldm5ipq20000l908dvkik6bm",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cle7immdy0000mg0820eb93mg",
@@ -206,7 +240,9 @@
     "userId": "cldrcit1x0000l008yvklteji",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cldos8ee9000il308ltjpwf49",
@@ -217,7 +253,9 @@
     "userId": "cldos6ve20000l308pryqavwl",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cldm79bxf000eme08ohwbqhcw",
@@ -228,7 +266,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cldncvovt0000la08c3ichxd2",
@@ -239,7 +279,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cle3cocyc0000ju08nq2lkger",
@@ -250,7 +292,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cle7iogox000omg08kr19z35j",
@@ -272,7 +316,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 1
+    "order": 1,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "clduijwbd0000ld08fb49bcwl",
@@ -283,7 +329,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 0
+    "order": 0,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cldcxe42l000nmk08zdkbzwqo",
@@ -294,7 +342,9 @@
     "userId": "cldcxac7k0000mk08xuzfuvbe",
     "estimatedTime": 0,
     "elapsedTime": 0,
-    "order": 0
+    "order": 0,
+    "startDate": "2021-03-01T00:00:00.000Z",
+    "endDate": "2021-03-03T00:00:00.000Z"
   },
   {
     "id": "cldm7ak2p000gme082gl26g8j",
