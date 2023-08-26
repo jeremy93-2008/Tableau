@@ -16,6 +16,7 @@ import { getDateString } from './components/taskEditForm/utils/getDateString'
 import { TaskItemTags } from './components/taskItem/taskItemTags'
 import { TaskItemAssignedUser } from './components/taskItem/taskItemAssignedUser'
 import { TaskItemEditTaskButton } from './components/taskItem/taskItemEditTaskButton'
+import { TaskItemStartDueDate } from './components/taskItem/taskItemStartDueDate'
 
 interface ITaskItemProps {
     task: IFullTask
@@ -110,6 +111,7 @@ export function TaskItem(props: ITaskItemProps) {
             >
                 <Box minHeight="65px">
                     <TaskItemTags task={task} />
+                    <TaskItemStartDueDate task={task} />
                     <Tooltip label={task.name}>
                         <Text
                             data-cy="taskTitle"
@@ -134,13 +136,6 @@ export function TaskItem(props: ITaskItemProps) {
                         <BsClock size={13} />
                         <Text ml={1}>{task.estimatedTime}</Text>
                     </Flex>
-                </Flex>
-                <Flex mt={2} justifyContent="left">
-                    <>
-                        {task.startDate &&
-                            getDateString(new Date(task.startDate))}
-                        /{task.endDate && getDateString(new Date(task.endDate))}
-                    </>
                 </Flex>
             </Flex>
             <TaskItemEditTaskButton

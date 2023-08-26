@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { IUseCalendarReturn } from '../hooks/useCalendar'
 
 interface ICalendarBodyProps {
@@ -12,10 +12,27 @@ interface ICalendarBodyProps {
 export function CalendarBody(props: ICalendarBodyProps) {
     const { calendar, onClickDate, onHoverDate, selectedDatesRange } = props
 
-    const [
-        selectedStartDate = new Date(0, 0, 0),
-        selectedEndDate = new Date(0, 0, 0),
-    ] = selectedDatesRange ?? []
+    const [selectedStartDate, selectedEndDate] = selectedDatesRange ?? []
+
+    const getIsDaySelected = useCallback(
+        (date: Date) => {
+            if (!selectedStartDate && !selectedEndDate) return false
+            if (
+                (!selectedStartDate && selectedEndDate) ||
+                (selectedStartDate &&
+                    selectedEndDate &&
+                    selectedStartDate.getTime() > selectedEndDate.getTime())
+            )
+                return selectedEndDate.getTime() === date.getTime()
+            return (
+                selectedStartDate &&
+                selectedEndDate &&
+                selectedStartDate.getTime() <= date.getTime() &&
+                selectedEndDate.getTime() >= date.getTime()
+            )
+        },
+        [selectedStartDate, selectedEndDate]
+    )
 
     return (
         <Flex
@@ -39,9 +56,7 @@ export function CalendarBody(props: ICalendarBodyProps) {
             {calendar.days.map((day, index) => (
                 <Flex key={index}>
                     {day.map((day, index) => {
-                        const isDaySelected =
-                            selectedStartDate.getTime() <= day.date.getTime() &&
-                            selectedEndDate.getTime() >= day.date.getTime()
+                        const isDaySelected = getIsDaySelected(day.date)
                         return (
                             <Flex
                                 onClick={() => onClickDate?.(day.date)}
