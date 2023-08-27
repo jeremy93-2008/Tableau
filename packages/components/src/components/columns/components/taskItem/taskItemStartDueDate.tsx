@@ -38,7 +38,9 @@ export function TaskItemStartDueDate(props: ITaskItemStartDueDateProps) {
                     )}
                     {task.endDate && (
                         <>
-                            <Icon as={FaArrowRight} mx={1} />
+                            {task.startDate && (
+                                <Icon as={FaArrowRight} mx={1} />
+                            )}
                             <Tooltip label="Due Date">
                                 <Text fontSize="xs">
                                     {getDateString(new Date(task.endDate))}
