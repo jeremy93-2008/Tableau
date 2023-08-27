@@ -17,7 +17,7 @@ export function TaskItemStartDueDate(props: ITaskItemStartDueDateProps) {
     return (
         isDateExisting && (
             <Badge
-                width="100%"
+                width="92%"
                 my={1}
                 bgColor="blue.500"
                 borderRadius="5px"

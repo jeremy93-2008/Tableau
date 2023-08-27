@@ -154,7 +154,8 @@ export function Finder() {
                                     key={task.id}
                                     onClick={handleHighlightTask(task)}
                                     boxSizing="border-box"
-                                    width="180px"
+                                    width="fit-content"
+                                    maxW="230px"
                                     mr="2%"
                                     mb="2%"
                                 >

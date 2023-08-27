@@ -148,8 +148,8 @@ export function ColumnTask(props: IColumnTaskProps) {
             color="gray.100"
             borderRadius={10}
             flexDirection="column"
-            minW={300}
-            w={300}
+            minW={310}
+            w={310}
             ml={2}
             mr={2}
             onMouseEnter={onMouseEnterColumn}
