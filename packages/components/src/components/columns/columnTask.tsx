@@ -85,6 +85,8 @@ export function ColumnTask(props: IColumnTaskProps) {
                     task.assignedUsers.map(
                         (assignedUser) => assignedUser.User.id
                     ) ?? null,
+                startDate: task.startDate ?? null,
+                endDate: task.endDate ?? null,
             }).then(() => {
                 setDropColumnAllowed(false)
                 refetchBoards.fetch()
