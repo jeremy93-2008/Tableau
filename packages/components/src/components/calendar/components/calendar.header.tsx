@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, IconButton, Select } from '@chakra-ui/react'
+import { Flex, IconButton, Select, Tooltip } from '@chakra-ui/react'
 import { FaCaretLeft, FaCaretRight } from 'react-icons/fa'
 import { IUseCalendarReturn } from '../hooks/useCalendar'
 import { months } from '../constants/months'
@@ -17,14 +17,17 @@ export function CalendarHeader(props: ICalendarHeaderProps) {
     const { onPrev, onNext, onSelectedYear, onSelectedMonth, calendar } = props
     return (
         <Flex justifyContent="space-between" mx={2} mt={1} mb={3}>
-            <Flex alignItems="center" onClick={onPrev}>
-                <IconButton
-                    colorScheme="teal"
-                    variant="outline"
-                    aria-label={'prev'}
-                    icon={<FaCaretLeft />}
-                />
-            </Flex>
+            <Tooltip label="Previous Month">
+                <Flex alignItems="center" onClick={onPrev}>
+                    <IconButton
+                        colorScheme="teal"
+                        variant="outline"
+                        aria-label={'prev'}
+                        icon={<FaCaretLeft />}
+                    />
+                </Flex>
+            </Tooltip>
+
             <Flex justifyContent="center" alignItems="center" fontWeight="500">
                 <Select
                     size="sm"
@@ -64,14 +67,16 @@ export function CalendarHeader(props: ICalendarHeaderProps) {
                     ))}
                 </Select>
             </Flex>
-            <Flex alignItems="center" onClick={onNext}>
-                <IconButton
-                    colorScheme="teal"
-                    variant="outline"
-                    aria-label={'next'}
-                    icon={<FaCaretRight />}
-                />
-            </Flex>
+            <Tooltip label="Next Month">
+                <Flex alignItems="center" onClick={onNext}>
+                    <IconButton
+                        colorScheme="teal"
+                        variant="outline"
+                        aria-label={'next'}
+                        icon={<FaCaretRight />}
+                    />
+                </Flex>
+            </Tooltip>
         </Flex>
     )
 }

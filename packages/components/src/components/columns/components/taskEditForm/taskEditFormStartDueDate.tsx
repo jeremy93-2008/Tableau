@@ -8,6 +8,7 @@ import {
     PopoverTrigger,
     useDisclosure,
     Text,
+    Divider,
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { useToast } from '@chakra-ui/react'
@@ -31,6 +32,7 @@ export function TaskEditFormStartDueDate(
     const [selectedRangeDates, setSelectedRangeDates] = useState<
         [Date?, Date?]
     >([])
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     const onClickDate = (date: Date) => {
         if (startDate?.getTime() === date.getTime()) {
@@ -57,6 +59,7 @@ export function TaskEditFormStartDueDate(
         }
         onChangeDate?.([date, endDate])
         setSelectedRangeDates([date, endDate])
+        onClose()
     }
 
     const onHoverDate = (date: Date) => {
@@ -68,7 +71,12 @@ export function TaskEditFormStartDueDate(
         setSelectedRangeDates([date, endDate])
     }
 
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const onClearAll = () => {
+        setSelectedRangeDates([undefined, undefined])
+        onChangeDate?.([undefined, undefined])
+        onClose()
+    }
+
     const { text } = useThemeMode()
 
     useEffect(() => {
@@ -114,6 +122,26 @@ export function TaskEditFormStartDueDate(
                             onClickDate={onClickDate}
                             onHoverDate={onHoverDate}
                             selectedDatesRange={selectedRangeDates}
+                            Footer={
+                                <Flex
+                                    flexDirection="column"
+                                    my={1}
+                                    width="100%"
+                                    justifyContent="flex-end"
+                                >
+                                    <Divider />
+                                    <Flex mt={3} justifyContent="flex-end">
+                                        <Button
+                                            colorScheme="teal"
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={onClearAll}
+                                        >
+                                            Clear All
+                                        </Button>
+                                    </Flex>
+                                </Flex>
+                            }
                         />
                     </PopoverBody>
                 </PopoverContent>

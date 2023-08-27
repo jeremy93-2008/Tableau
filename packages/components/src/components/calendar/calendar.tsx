@@ -11,10 +11,11 @@ interface ICalendarProps {
     onClickDate?: (date: Date) => void
     onHoverDate?: (date: Date) => void
     selectedDatesRange?: [Date?, Date?]
+    Footer?: React.ReactNode
 }
 
 export function Calendar(props: ICalendarProps) {
-    const { date, selectedDatesRange, onClickDate, onHoverDate } = props
+    const { date, selectedDatesRange, onClickDate, onHoverDate, Footer } = props
     const [month, setMonth] = useState(date.getMonth())
     const [year, setYear] = useState(date.getFullYear())
 
@@ -61,6 +62,9 @@ export function Calendar(props: ICalendarProps) {
                 onHoverDate={onHoverDate}
                 selectedDatesRange={selectedDatesRange}
             />
+            <Flex flexDirection="column" mt={2} mx={2}>
+                {Footer && Footer}
+            </Flex>
         </Flex>
     )
 }
