@@ -96,7 +96,7 @@ export function TaskEditFormStartDueDate(
                         size="sm"
                     >
                         <>
-                            <Text width="70px">
+                            <Text width="75px">
                                 <>
                                     {startDate
                                         ? getDateString(startDate)
@@ -104,7 +104,7 @@ export function TaskEditFormStartDueDate(
                                 </>
                             </Text>
                             <Icon as={FaArrowRight} mx={2} />
-                            <Text width="70px">
+                            <Text width="75px">
                                 <>
                                     {endDate
                                         ? getDateString(endDate)
