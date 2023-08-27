@@ -76,8 +76,8 @@ export default async function handler(
                             },
                         },
                         order,
-                        startDate: startDate ? new Date(startDate) : undefined,
-                        endDate: endDate ? new Date(endDate) : undefined,
+                        startDate: startDate ? new Date(startDate) : null,
+                        endDate: endDate ? new Date(endDate) : null,
                         assignedUsers: {
                             connectOrCreate: assignedUserIds.map((userId) => {
                                 return {

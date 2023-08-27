@@ -28,26 +28,33 @@ export function TaskEditFormStartDueDate(
 ) {
     const { startDate, endDate, onChangeDate } = props
 
-    const toast = useToast()
-
     const [selectedRangeDates, setSelectedRangeDates] = useState<
         [Date?, Date?]
     >([])
 
     const onClickDate = (date: Date) => {
+        if (startDate?.getTime() === date.getTime()) {
+            onChangeDate?.([undefined, endDate ?? undefined])
+            setSelectedRangeDates([undefined, endDate ?? undefined])
+            return
+        }
+
+        if (endDate?.getTime() === date.getTime()) {
+            onChangeDate?.([startDate ?? undefined, undefined])
+            setSelectedRangeDates([startDate ?? undefined, undefined])
+            return
+        }
+
         if (!endDate || (startDate && endDate)) {
             onChangeDate?.([undefined, date])
             setSelectedRangeDates([undefined, date])
             return
         }
-        if (date.getTime() > endDate.getTime())
-            return toast({
-                title: 'Start date cannot be after due date',
-                status: 'error',
-                duration: 3000,
-                isClosable: true,
-                position: 'top',
-            })
+        if (date.getTime() > endDate.getTime()) {
+            onChangeDate?.([undefined, date])
+            setSelectedRangeDates([undefined, date])
+            return
+        }
         onChangeDate?.([date, endDate])
         setSelectedRangeDates([date, endDate])
     }
@@ -103,7 +110,7 @@ export function TaskEditFormStartDueDate(
                     <PopoverArrow />
                     <PopoverBody>
                         <Calendar
-                            date={startDate ?? new Date()}
+                            date={startDate ?? endDate ?? new Date()}
                             onClickDate={onClickDate}
                             onHoverDate={onHoverDate}
                             selectedDatesRange={selectedRangeDates}
