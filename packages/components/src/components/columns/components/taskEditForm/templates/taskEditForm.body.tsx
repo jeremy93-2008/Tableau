@@ -20,21 +20,17 @@ import { TaskEditFormDescription } from './components/taskEditForm.description'
 interface ITaskEditFormBodyProps {
     task: IFullTask
     form: FormikProps<ITaskEditFormikValues>
-    footer: {
-        onClose: () => void
-        onOpenModal: () => void
-    }
 }
 
 export function TaskEditFormBody(props: ITaskEditFormBodyProps) {
-    const { task, form, footer } = props
+    const { task, form } = props
 
     const theme = useThemeMode()
 
     return (
         <Flex width="100%" mb={4} flexDirection="row">
             <Tabs width="100%" colorScheme="teal" variant="soft-rounded">
-                <TabList width="100%" justifyContent="center" pb={2}>
+                <TabList width="100%" justifyContent="center">
                     <Tab
                         color={theme.taskEditTab.text}
                         backgroundColor={theme.taskEditTab.bg}
@@ -71,11 +67,7 @@ export function TaskEditFormBody(props: ITaskEditFormBodyProps) {
                 </TabList>
                 <TabPanels>
                     <TabPanel p={0}>
-                        <TaskEditFormDescription
-                            task={task}
-                            form={form}
-                            footer={footer}
-                        />
+                        <TaskEditFormDescription task={task} form={form} />
                     </TabPanel>
                 </TabPanels>
             </Tabs>

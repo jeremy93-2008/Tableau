@@ -32,16 +32,13 @@ export function CalendarHeader(props: ICalendarHeaderProps) {
                 <Select
                     size="sm"
                     color="teal.200"
+                    value={calendar.month}
                     onChange={onSelectedMonth}
                     mx={2}
                     border={0}
                 >
                     {months.map((month, index) => (
-                        <option
-                            key={index}
-                            selected={month.name === calendar.month}
-                            value={month.name}
-                        >
+                        <option key={index} value={month.name}>
                             {month.name}
                         </option>
                     ))}
@@ -49,6 +46,7 @@ export function CalendarHeader(props: ICalendarHeaderProps) {
                 <Select
                     size="sm"
                     color="teal.200"
+                    value={calendar.year}
                     onChange={onSelectedYear}
                     mx={2}
                     border={0}
@@ -57,11 +55,7 @@ export function CalendarHeader(props: ICalendarHeaderProps) {
                     }}
                 >
                     {years.map((year, index) => (
-                        <option
-                            key={index}
-                            selected={year === calendar.year}
-                            value={year}
-                        >
+                        <option key={index} value={year}>
                             {year}
                         </option>
                     ))}

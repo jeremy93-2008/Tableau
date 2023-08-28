@@ -1,8 +1,7 @@
 import React from 'react'
 import { FormikProps } from 'formik'
-import { Button, ButtonGroup, Flex, Text, VStack } from '@chakra-ui/react'
+import { Flex, Text, VStack } from '@chakra-ui/react'
 import { WarningIcon } from '@chakra-ui/icons'
-import { BsTrashFill } from 'react-icons/bs'
 import { IFullTask } from 'shared-types'
 import { TaskEditFormChecklistField } from '../../components/taskEditFormChecklistField'
 import { TaskEditFormLinkField } from '../../components/taskEditForrmLinkField'
@@ -12,14 +11,10 @@ import { TextInput } from '../../../../../textInput'
 interface ITaskEditFormBodyProps {
     task: IFullTask
     form: FormikProps<ITaskEditFormikValues>
-    footer: {
-        onClose: () => void
-        onOpenModal: () => void
-    }
 }
 
 export function TaskEditFormDescription(props: ITaskEditFormBodyProps) {
-    const { task, form, footer } = props
+    const { task, form } = props
     return (
         <Flex maxH="65vh" flexDirection="column">
             <Flex
@@ -88,35 +83,6 @@ export function TaskEditFormDescription(props: ITaskEditFormBodyProps) {
                     />
                 </Flex>
             </Flex>
-            <ButtonGroup
-                display="flex"
-                flex="0"
-                justifyContent="space-between"
-                mt="6"
-            >
-                <ButtonGroup display="flex" justifyContent="flex-start">
-                    <Button
-                        data-cy="buttonEditDelete"
-                        onClick={() => footer.onOpenModal()}
-                        leftIcon={<BsTrashFill />}
-                        colorScheme="red"
-                        mr={1}
-                    >
-                        Delete
-                    </Button>
-                </ButtonGroup>
-                <ButtonGroup display="flex" justifyContent="flex-end">
-                    <Button onClick={footer.onClose}>Cancel</Button>
-                    <Button
-                        data-cy="buttonEditSave"
-                        type="submit"
-                        colorScheme="teal"
-                        mr={1}
-                    >
-                        Save
-                    </Button>
-                </ButtonGroup>
-            </ButtonGroup>
         </Flex>
     )
 }

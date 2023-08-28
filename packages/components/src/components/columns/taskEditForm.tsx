@@ -1,5 +1,5 @@
 import { Formik, FormikHelpers } from 'formik'
-import { useDisclosure } from '@chakra-ui/react'
+import { Flex, useDisclosure } from '@chakra-ui/react'
 import React, { useCallback, useMemo } from 'react'
 import * as Yup from 'yup'
 import { ITaskEditFormikValues } from './taskEdit'
@@ -8,6 +8,7 @@ import { IFullStatus, IFullTask } from 'shared-types'
 import { DeleteModal } from './modal/deleteModal'
 import { TaskEditFormHeader } from './components/taskEditForm/templates/taskEditForm.header'
 import { TaskEditFormBody } from './components/taskEditForm/templates/taskEditForm.body'
+import { TaskEditFormFooter } from './components/taskEditForm/templates/taskEditForm.footer'
 
 interface ITaskEditForm {
     task: IFullTask
@@ -86,11 +87,13 @@ export function TaskEditForm(props: ITaskEditForm) {
                 {(props) => (
                     <form onSubmit={props.handleSubmit}>
                         <TaskEditFormHeader task={task} form={props} />
-                        <TaskEditFormBody
-                            task={task}
-                            form={props}
-                            footer={{ onOpenModal, onClose }}
-                        />
+                        <Flex maxH="65vh" flexDirection="column">
+                            <TaskEditFormBody task={task} form={props} />
+                            <TaskEditFormFooter
+                                onClose={onClose}
+                                onOpenModal={onOpenModal}
+                            />
+                        </Flex>
                     </form>
                 )}
             </Formik>
