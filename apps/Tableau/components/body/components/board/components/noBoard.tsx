@@ -1,8 +1,11 @@
 import React from 'react'
 import { Box, Flex, Text } from '@chakra-ui/react'
 import { SiFoodpanda } from 'react-icons/si'
+import { useSession } from 'next-auth/react'
 
 export function NoBoard() {
+    const { data: session } = useSession()
+
     return (
         <Flex
             width="100%"
@@ -25,8 +28,11 @@ export function NoBoard() {
                 w={{ base: '100%', md: '35vw' }}
                 minW={{ base: 0, md: '550px' }}
             >
-                Tip: To begin, you can create a new board by clicking on the
-                &quot;+&quot; button located on the left side.
+                {session?.user.email
+                    ? 'Tip: Cool, now that you logged, you can create a new board by clicking on the' +
+                      '"+" button located on the left side, or just selecting an existing one on the side panel on you left.'
+                    : 'Tip: To begin with, you must login first by clicking on the' +
+                      '"Sign in" button located on the top right side.'}
             </Text>
         </Flex>
     )
