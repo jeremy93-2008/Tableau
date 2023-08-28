@@ -66,6 +66,9 @@ export default async function handler(
                                     tags: {
                                         orderBy: { id: 'asc' },
                                     },
+                                    Comment: {
+                                        orderBy: { id: 'asc' },
+                                    },
                                 },
                             },
                         },

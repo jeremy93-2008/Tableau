@@ -1,21 +1,11 @@
 import React from 'react'
 import { FormikProps } from 'formik'
-import {
-    Button,
-    ButtonGroup,
-    Flex,
-    Tab,
-    TabList,
-    TabPanel,
-    TabPanels,
-    Tabs,
-    Text,
-    VStack,
-} from '@chakra-ui/react'
+import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 import { useThemeMode } from 'shared-hooks'
 import { IFullTask } from 'shared-types'
 import { ITaskEditFormikValues } from '../../../taskEdit'
 import { TaskEditFormDescription } from './components/taskEditForm.description'
+import { TaskEditFormComments } from './components/taskEditForm.comments'
 
 interface ITaskEditFormBodyProps {
     task: IFullTask
@@ -68,6 +58,9 @@ export function TaskEditFormBody(props: ITaskEditFormBodyProps) {
                 <TabPanels>
                     <TabPanel p={0}>
                         <TaskEditFormDescription task={task} form={form} />
+                    </TabPanel>
+                    <TabPanel p={0}>
+                        <TaskEditFormComments task={task} form={form} />
                     </TabPanel>
                 </TabPanels>
             </Tabs>
