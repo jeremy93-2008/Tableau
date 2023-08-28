@@ -16,8 +16,8 @@ import { RefetchBoardAtom } from 'shared-atoms'
 import { useTableauMutation, useTableauQuery } from 'shared-hooks'
 import { IFullTask } from 'shared-types'
 import { TaskEditFormTagsForm } from './taskEditFormTagsForm'
-import { FormModal } from '../../modal/formModal'
-import { DeleteModal } from '../../modal/deleteModal'
+import { FormModal } from '../../../modal/formModal'
+import { DeleteModal } from '../../../modal/deleteModal'
 import { Tag } from '@prisma/client'
 
 export interface ITagsEditFormikValues {

@@ -17,10 +17,10 @@ import {
     ICheckListEditFormikValues,
 } from './taskEditFormChecklistGroup'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
-import { SingleInputModal } from '../../modal/singleInputModal'
+import { SingleInputModal } from '../../../modal/singleInputModal'
 
 import { BsFillPencilFill, BsTrashFill } from 'react-icons/bs'
-import { DeleteModal } from '../../modal/deleteModal'
+import { DeleteModal } from '../../../modal/deleteModal'
 import { z } from 'zod'
 
 interface ITaskEditFormChecklistItemProps {

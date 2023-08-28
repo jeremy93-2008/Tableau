@@ -11,12 +11,11 @@ import {
     Divider,
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
-import { useToast } from '@chakra-ui/react'
 import { Icon } from '@chakra-ui/icons'
 import { useThemeMode } from 'shared-hooks'
 import { FaArrowRight } from 'react-icons/fa'
-import { getDateString } from './utils/getDateString'
-import { Calendar } from '../../../calendar'
+import { getDateString } from '../utils/getDateString'
+import { Calendar } from '../../../../calendar'
 
 interface ITaskEditFormStartDueDateProps {
     startDate?: Date | null

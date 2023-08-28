@@ -9,9 +9,9 @@ import {
     useDisclosure,
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
-import { FormModal } from '../../modal/formModal'
+import { FormModal } from '../../../modal/formModal'
 import { IFullTask } from 'shared-types'
-import { TextInput } from '../../../textInput'
+import { TextInput } from '../../../../textInput'
 import { TaskEditFormLinkItem } from './taskEditFormLinkItem'
 
 import { useTableauMutation } from 'shared-hooks'

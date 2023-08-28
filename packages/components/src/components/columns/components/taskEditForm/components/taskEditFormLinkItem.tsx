@@ -13,7 +13,7 @@ import {
 import React, { useCallback, useState, useEffect } from 'react'
 import { RiErrorWarningFill } from 'react-icons/ri'
 import { BsFillPencilFill, BsTrashFill } from 'react-icons/bs'
-import { DeleteModal } from '../../modal/deleteModal'
+import { DeleteModal } from '../../../modal/deleteModal'
 import { useTableauMutation } from 'shared-hooks'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 import { useSession } from 'next-auth/react'

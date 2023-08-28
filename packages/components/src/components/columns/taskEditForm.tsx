@@ -1,33 +1,13 @@
 import { Formik, FormikHelpers } from 'formik'
-import { TextInput } from '../textInput'
-import {
-    Button,
-    ButtonGroup,
-    Flex,
-    Tab,
-    TabList,
-    TabPanel,
-    TabPanels,
-    Tabs,
-    Text,
-    useDisclosure,
-    VStack,
-} from '@chakra-ui/react'
-import { WarningIcon } from '@chakra-ui/icons'
+import { useDisclosure } from '@chakra-ui/react'
 import React, { useCallback, useMemo } from 'react'
 import * as Yup from 'yup'
 import { ITaskEditFormikValues } from './taskEdit'
 import { Task } from '.prisma/client'
 import { IFullStatus, IFullTask } from 'shared-types'
-import { BsTrashFill } from 'react-icons/bs'
 import { DeleteModal } from './modal/deleteModal'
-import { TaskEditFormAssignedUser } from './components/taskEditForm/taskEditFormAssignedUser'
-import { TaskEditFormChecklistField } from './components/taskEditForm/taskEditFormChecklistField'
-import { TaskEditFormLinkField } from './components/taskEditForm/taskEditForrmLinkField'
-import { TaskEditFormStartDueDate } from './components/taskEditForm/taskEditFormStartDueDate'
-import { TaskEditFormNotification } from './components/taskEditForm/taskEditFormNotification'
-import { useThemeMode } from 'shared-hooks'
-import { TaskEditFormTags } from './components/taskEditForm/taskEditFormTags'
+import { TaskEditFormHeader } from './components/taskEditForm/templates/taskEditForm.header'
+import { TaskEditFormBody } from './components/taskEditForm/templates/taskEditForm.body'
 
 interface ITaskEditForm {
     task: IFullTask
@@ -42,8 +22,6 @@ interface ITaskEditForm {
 
 export function TaskEditForm(props: ITaskEditForm) {
     const { task, status, onTaskEditSubmit, onTaskDelete, onClose } = props
-
-    const theme = useThemeMode()
 
     const {
         isOpen: isOpenModal,
@@ -107,241 +85,12 @@ export function TaskEditForm(props: ITaskEditForm) {
             >
                 {(props) => (
                     <form onSubmit={props.handleSubmit}>
-                        <Flex
-                            mb={2}
-                            flexDirection="row"
-                            justifyContent="space-between"
-                        >
-                            <TaskEditFormTags task={task} />
-                        </Flex>
-                        <Flex
-                            mb={2}
-                            flexDirection="row"
-                            justifyContent="space-between"
-                        >
-                            <TaskEditFormAssignedUser
-                                assignedUsersIds={props.values.assignedUserIds}
-                                setAssignedUser={(
-                                    assignedUserIds: string[] | null
-                                ) => {
-                                    props.setValues({
-                                        ...props.values,
-                                        assignedUserIds:
-                                            assignedUserIds ?? undefined,
-                                    })
-                                }}
-                            />
-                            <TaskEditFormStartDueDate
-                                startDate={props.values.startDate}
-                                endDate={props.values.endDate}
-                                onChangeDate={(date: [Date?, Date?]) => {
-                                    const [startDate, endDate] = date
-                                    props.setValues({
-                                        ...props.values,
-                                        startDate,
-                                        endDate,
-                                    })
-                                }}
-                            />
-                            <TaskEditFormNotification />
-                        </Flex>
-                        <Flex width="100%" mb={4} flexDirection="row">
-                            <Tabs
-                                width="100%"
-                                colorScheme="teal"
-                                variant="soft-rounded"
-                            >
-                                <TabList
-                                    width="100%"
-                                    justifyContent="center"
-                                    pb={2}
-                                >
-                                    <Tab
-                                        color={theme.taskEditTab.text}
-                                        backgroundColor={theme.taskEditTab.bg}
-                                        height="30px"
-                                        _selected={{
-                                            color: theme.taskEditTab
-                                                .textSelected,
-                                            backgroundColor:
-                                                theme.taskEditTab.bgSelected,
-                                        }}
-                                    >
-                                        Description
-                                    </Tab>
-                                    <Tab
-                                        color={theme.taskEditTab.text}
-                                        backgroundColor={theme.taskEditTab.bg}
-                                        height="30px"
-                                        _selected={{
-                                            color: theme.taskEditTab
-                                                .textSelected,
-                                            backgroundColor:
-                                                theme.taskEditTab.bgSelected,
-                                        }}
-                                    >
-                                        Comments
-                                    </Tab>
-                                    <Tab
-                                        color={theme.taskEditTab.text}
-                                        backgroundColor={theme.taskEditTab.bg}
-                                        height="30px"
-                                        _selected={{
-                                            color: theme.taskEditTab
-                                                .textSelected,
-                                            backgroundColor:
-                                                theme.taskEditTab.bgSelected,
-                                        }}
-                                    >
-                                        History
-                                    </Tab>
-                                </TabList>
-                                <TabPanels>
-                                    <TabPanel p={0}>
-                                        <Flex
-                                            maxH="65vh"
-                                            flexDirection="column"
-                                        >
-                                            <Flex
-                                                minH={0}
-                                                flex={1}
-                                                onWheel={(evt) =>
-                                                    evt.stopPropagation()
-                                                }
-                                                overflowY="auto"
-                                                flexDirection="column"
-                                            >
-                                                <TextInput
-                                                    label="Name"
-                                                    name="name"
-                                                    value={props.values.name}
-                                                    onChange={
-                                                        props.handleChange
-                                                    }
-                                                    onBlur={props.handleBlur}
-                                                    style={
-                                                        props.errors.name
-                                                            ? {
-                                                                  backgroundColor:
-                                                                      'var(--chakra-colors-red-200)',
-                                                              }
-                                                            : {}
-                                                    }
-                                                />
-                                                {props.errors.name ? (
-                                                    <Flex
-                                                        alignItems="center"
-                                                        color="red.500"
-                                                        ml="2"
-                                                    >
-                                                        <WarningIcon />
-                                                        <Text
-                                                            fontSize="13px"
-                                                            m="1"
-                                                        >
-                                                            Task Name is
-                                                            required
-                                                        </Text>
-                                                    </Flex>
-                                                ) : null}
-                                                <VStack mb={4} />
-                                                <TextInput
-                                                    type="textarea"
-                                                    label="Description"
-                                                    name="description"
-                                                    value={
-                                                        props.values.description
-                                                    }
-                                                    onChange={
-                                                        props.handleChange
-                                                    }
-                                                    onBlur={props.handleBlur}
-                                                />
-                                                <Flex mt={4}>
-                                                    <TaskEditFormChecklistField
-                                                        task={task}
-                                                    />
-                                                </Flex>
-                                                <Flex mt={2}>
-                                                    <TaskEditFormLinkField
-                                                        task={task}
-                                                    />
-                                                </Flex>
-                                                <Flex mt={4} gap={2}>
-                                                    <TextInput
-                                                        type="number"
-                                                        min={0}
-                                                        label="Elapsed Time"
-                                                        name="elapsedTime"
-                                                        value={props.values.elapsedTime.toString()}
-                                                        onChange={
-                                                            props.handleChange
-                                                        }
-                                                        onBlur={
-                                                            props.handleBlur
-                                                        }
-                                                    />
-                                                    <TextInput
-                                                        type="number"
-                                                        min={0}
-                                                        label="Estimated Time"
-                                                        name="estimatedTime"
-                                                        value={props.values.estimatedTime.toString()}
-                                                        onChange={
-                                                            props.handleChange
-                                                        }
-                                                        onBlur={
-                                                            props.handleBlur
-                                                        }
-                                                    />
-                                                </Flex>
-                                            </Flex>
-                                            <ButtonGroup
-                                                display="flex"
-                                                flex="0"
-                                                justifyContent="space-between"
-                                                mt="6"
-                                            >
-                                                <ButtonGroup
-                                                    display="flex"
-                                                    justifyContent="flex-start"
-                                                >
-                                                    <Button
-                                                        data-cy="buttonEditDelete"
-                                                        onClick={() =>
-                                                            onOpenModal()
-                                                        }
-                                                        leftIcon={
-                                                            <BsTrashFill />
-                                                        }
-                                                        colorScheme="red"
-                                                        mr={1}
-                                                    >
-                                                        Delete
-                                                    </Button>
-                                                </ButtonGroup>
-                                                <ButtonGroup
-                                                    display="flex"
-                                                    justifyContent="flex-end"
-                                                >
-                                                    <Button onClick={onClose}>
-                                                        Cancel
-                                                    </Button>
-                                                    <Button
-                                                        data-cy="buttonEditSave"
-                                                        type="submit"
-                                                        colorScheme="teal"
-                                                        mr={1}
-                                                    >
-                                                        Save
-                                                    </Button>
-                                                </ButtonGroup>
-                                            </ButtonGroup>
-                                        </Flex>
-                                    </TabPanel>
-                                </TabPanels>
-                            </Tabs>
-                        </Flex>
+                        <TaskEditFormHeader task={task} form={props} />
+                        <TaskEditFormBody
+                            task={task}
+                            form={props}
+                            footer={{ onOpenModal, onClose }}
+                        />
                     </form>
                 )}
             </Formik>

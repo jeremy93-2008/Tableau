@@ -1,9 +1,8 @@
 import { Badge, Flex, Text } from '@chakra-ui/react'
 import React, { useMemo } from 'react'
-import { TextInput } from '../../../textInput'
+import { TextInput } from '../../../../textInput'
 import { ITagsEditFormikValues } from './taskEditFormTags'
 import { ZodIssue } from 'zod'
-import { useTableauQuery } from 'shared-hooks'
 import { Tag } from '@prisma/client'
 import { IFullTask } from 'shared-types'
 

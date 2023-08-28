@@ -13,7 +13,7 @@ import {
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
 import { useTableauQuery, useThemeMode } from 'shared-hooks'
-import { IFullBoardSharing } from '../../columnShare'
+import { IFullBoardSharing } from '../../../columnShare'
 import { TaskEditFormAssignedUserInnerButton } from './taskEditFormAssignedUserInnerButton'
 import { TaskEditFormAssignedUserList } from './taskEditFormAssignedUserList'
 import { User } from '@prisma/client'

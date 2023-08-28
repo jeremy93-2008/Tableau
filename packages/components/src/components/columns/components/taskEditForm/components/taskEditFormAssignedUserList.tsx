@@ -1,5 +1,5 @@
 import { ITaskEditFormAssignedUserProps } from './taskEditFormAssignedUser'
-import { IFullBoardSharing } from '../../columnShare'
+import { IFullBoardSharing } from '../../../columnShare'
 import { Avatar, Checkbox, Flex, Text } from '@chakra-ui/react'
 import { useThemeMode } from 'shared-hooks'
 import { User } from '@prisma/client'
