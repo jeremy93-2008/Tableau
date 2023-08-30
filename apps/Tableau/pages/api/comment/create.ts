@@ -10,8 +10,8 @@ type ISchemaParams = z.infer<typeof schema>
 const schema = z.object({
     boardId: z.string().cuid(),
     taskId: z.string().cuid(),
-    message: z.string(),
-    userId: z.string().cuid(),
+    message: z.string().trim().min(1),
+    email: z.string().email(),
 })
 
 export default async function handler(
@@ -31,7 +31,7 @@ export default async function handler(
         )
     )
         .success(async (params) => {
-            const { message, taskId, userId } = params
+            const { message, taskId, email } = params
 
             const result = await prisma.comment.create({
                 data: {
@@ -44,7 +44,7 @@ export default async function handler(
                     },
                     user: {
                         connect: {
-                            id: userId,
+                            email,
                         },
                     },
                 },

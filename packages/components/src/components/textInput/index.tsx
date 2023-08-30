@@ -65,7 +65,12 @@ export const TextInput = forwardRef<HTMLElement, ITextInputProps<string>>(
                         onChange={onChange}
                         onBlur={onBlur}
                         onKeyDown={(evt) => {
-                            if (evt.key === 'Enter' && onEnter) {
+                            if (
+                                !evt.shiftKey &&
+                                evt.key === 'Enter' &&
+                                onEnter
+                            ) {
+                                evt.preventDefault()
                                 onEnter()
                             }
                         }}

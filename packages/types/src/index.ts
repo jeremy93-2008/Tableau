@@ -5,4 +5,5 @@ export {
     type IFullTask,
     type IFullCheckListGroup,
     type IFullTaskAssignedUser,
+    type IFullComment,
 } from './types'

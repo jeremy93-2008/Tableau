@@ -59,7 +59,7 @@ export function TaskEditFormBody(props: ITaskEditFormBodyProps) {
                     <TabPanel p={0}>
                         <TaskEditFormDescription task={task} form={form} />
                     </TabPanel>
-                    <TabPanel p={0}>
+                    <TabPanel p={0} pt={3}>
                         <TaskEditFormComments task={task} form={form} />
                     </TabPanel>
                 </TabPanels>

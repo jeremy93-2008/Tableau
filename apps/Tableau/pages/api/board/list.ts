@@ -67,7 +67,10 @@ export default async function handler(
                                         orderBy: { id: 'asc' },
                                     },
                                     Comment: {
-                                        orderBy: { id: 'asc' },
+                                        orderBy: { createdAt: 'asc' },
+                                        include: {
+                                            user: true,
+                                        },
                                     },
                                 },
                             },

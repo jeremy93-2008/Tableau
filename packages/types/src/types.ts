@@ -29,7 +29,7 @@ export type IFullTask = Task & {
     checklistsGroup: IFullCheckListGroup[]
     link: Link[]
     tags: Tag[]
-    Comment: Comment[]
+    Comment: IFullComment[]
 }
 
 export type IFullTaskAssignedUser = TaskAssignedUser & {
@@ -37,3 +37,7 @@ export type IFullTaskAssignedUser = TaskAssignedUser & {
 }
 
 export type IFullCheckListGroup = ChecklistGroup & { checklists: Checklist[] }
+
+export type IFullComment = Comment & {
+    user: User
+}
