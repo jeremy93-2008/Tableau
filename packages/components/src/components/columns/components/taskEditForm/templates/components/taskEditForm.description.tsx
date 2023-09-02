@@ -11,10 +11,11 @@ import { TextInput } from '../../../../../textInput'
 interface ITaskEditFormBodyProps {
     task: IFullTask
     form: FormikProps<ITaskEditFormikValues>
+    isVisible: boolean
 }
 
 export function TaskEditFormDescription(props: ITaskEditFormBodyProps) {
-    const { task, form } = props
+    const { task, form, isVisible } = props
     return (
         <Flex maxH="65vh" flexDirection="column">
             <Flex

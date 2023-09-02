@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { FormikProps } from 'formik'
 import { Flex, useToast } from '@chakra-ui/react'
 import { useSession } from 'next-auth/react'
@@ -12,10 +12,12 @@ import { ITaskEditFormikValues } from '../../../../taskEdit'
 import axios from 'axios'
 import { useAtom } from 'jotai'
 import { flushSync } from 'react-dom'
+import { TaskEditFormButtonRefresh } from '../../components/taskEditFormButtonRefresh'
 
 interface ITaskEditFormCommentsProps {
     task: IFullTask
     form: FormikProps<ITaskEditFormikValues>
+    isVisible: boolean
 }
 
 export type ICommentCreateFormikValues = {
@@ -26,7 +28,7 @@ export type ICommentCreateFormikValues = {
 }
 
 export function TaskEditFormComments(props: ITaskEditFormCommentsProps) {
-    const { task } = props
+    const { task, isVisible } = props
 
     const [inputMessage, setInputMessage] = useState('')
 
@@ -55,6 +57,24 @@ export function TaskEditFormComments(props: ITaskEditFormCommentsProps) {
 
     const toast = useToast()
 
+    const refScrollCommentsContainer = React.useRef<HTMLDivElement>(null)
+
+    const resetScroll = useCallback(() => {
+        if (!refScrollCommentsContainer.current) return
+        refScrollCommentsContainer.current.scrollTop =
+            refScrollCommentsContainer.current.scrollHeight
+    }, [refScrollCommentsContainer])
+
+    useEffect(() => {
+        if (!isVisible) return
+        resetScroll()
+    }, [isVisible, resetScroll, task])
+
+    const onRefresh = useCallback(async () => {
+        await refetchBoards.fetch()
+        resetScroll()
+    }, [resetScroll, refetchBoards])
+
     const onSendMessage = useCallback(() => {
         if (!selectedBoard) return
         if (!inputMessage.trim()) {
@@ -74,38 +94,56 @@ export function TaskEditFormComments(props: ITaskEditFormCommentsProps) {
             message: inputMessage,
         }).then(() => {
             setInputMessage('')
-            refetchBoards.fetch()
+            onRefresh().then()
         })
     }, [
         selectedBoard,
         inputMessage,
-        toast,
         mutateAsync,
         task.id,
         session?.user.email,
-        refetchBoards,
+        toast,
+        onRefresh,
     ])
 
+    useEffect(() => {
+        const intervalFetchMessage = window.setInterval(() => {
+            onRefresh().then()
+        }, 60000)
+
+        return () => {
+            window.clearInterval(intervalFetchMessage)
+        }
+    }, [])
+
     return (
-        <Flex flexDirection="column" maxH="65vh" minH="10vw">
+        <Flex
+            id="comments-container"
+            position="relative"
+            flexDirection="column"
+            height="35vh"
+        >
+            <TaskEditFormButtonRefresh onRefresh={onRefresh} />
             <Flex
+                ref={refScrollCommentsContainer}
                 flexDirection="column"
                 flex={1}
-                maxH="35vh"
                 overflowY="auto"
                 px={3}
                 onWheel={(evt) => evt.stopPropagation()}
             >
                 <Flex flexDirection="column">
-                    {task.Comment.map((comment) => (
-                        <TaskEditFormMessage
-                            key={comment.id}
-                            comment={comment}
-                        />
-                    ))}
+                    {task.Comment.map((comment, idx) => {
+                        return (
+                            <TaskEditFormMessage
+                                key={comment.id}
+                                comment={comment}
+                            />
+                        )
+                    })}
                 </Flex>
             </Flex>
-            <Flex alignItems="flex-end" gap={2} position="relative">
+            <Flex alignItems="flex-end" gap={2} mt={2} position="relative">
                 <TaskEditFormMessageInputType
                     value={inputMessage}
                     onChange={onChangeMessage}

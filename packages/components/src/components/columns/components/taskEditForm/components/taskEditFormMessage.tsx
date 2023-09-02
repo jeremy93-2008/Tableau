@@ -27,7 +27,7 @@ export function TaskEditFormMessage(props: ITaskEditFormMessageProps) {
                 <>
                     <Tooltip label={`${comment.user.name}`}>
                         <Avatar
-                            ml={1}
+                            mr={1}
                             size="sm"
                             src={comment.user.image ?? ''}
                         />
@@ -45,7 +45,7 @@ export function TaskEditFormMessage(props: ITaskEditFormMessageProps) {
                 ml={isSameUser ? 0 : -1}
                 px={2}
                 py={1}
-                width="50%"
+                width="60%"
                 borderRadius="5px"
                 userSelect="contain"
             >

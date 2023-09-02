@@ -1,4 +1,9 @@
 import { atom } from 'jotai'
-import { noop } from '@chakra-ui/utils'
+import { QueryObserverResult } from '@tanstack/react-query'
+import { IBoardWithAllRelation } from 'shared-types'
 
-export const RefetchBoardAtom = atom<{ fetch: () => void }>({ fetch: noop })
+export const RefetchBoardAtom = atom<{
+    fetch: () => Promise<
+        QueryObserverResult<IBoardWithAllRelation[], unknown> | unknown
+    >
+}>({ fetch: () => new Promise((res) => res(undefined)) })

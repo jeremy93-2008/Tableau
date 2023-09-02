@@ -31,7 +31,7 @@ export function BoardSide() {
     })
 
     const onAfterSubmit = useCallback(() => {
-        refetch().then()
+        return refetch()
     }, [refetch])
 
     const onItemClick = useCallback(

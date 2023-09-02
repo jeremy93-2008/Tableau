@@ -7,6 +7,7 @@ import React, {
 import { FormControl, FormLabel, Input, Textarea } from '@chakra-ui/react'
 
 interface ITextInputProps<TValue> {
+    id?: string
     name: string
     label: string
     value: TValue
@@ -23,6 +24,7 @@ interface ITextInputProps<TValue> {
 export const TextInput = forwardRef<HTMLElement, ITextInputProps<string>>(
     (props, ref) => {
         const {
+            id,
             name,
             label,
             placeholder,
@@ -41,6 +43,7 @@ export const TextInput = forwardRef<HTMLElement, ITextInputProps<string>>(
                 <FormLabel htmlFor={name}>{label}</FormLabel>
                 {(!type || type === 'text') && (
                     <Input
+                        id={id}
                         ref={ref as LegacyRef<HTMLInputElement>}
                         colorScheme="teal"
                         value={value as string}
@@ -58,6 +61,7 @@ export const TextInput = forwardRef<HTMLElement, ITextInputProps<string>>(
                 )}
                 {type && type === 'textarea' && (
                     <Textarea
+                        id={id}
                         ref={ref as LegacyRef<HTMLTextAreaElement>}
                         colorScheme="teal"
                         value={value as string}
@@ -80,6 +84,7 @@ export const TextInput = forwardRef<HTMLElement, ITextInputProps<string>>(
                 )}
                 {type && type === 'number' && (
                     <Input
+                        id={id}
                         ref={ref as LegacyRef<HTMLInputElement>}
                         colorScheme="teal"
                         type="number"

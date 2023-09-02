@@ -1,4 +1,4 @@
-import React, { Ref, useEffect, useRef, useState } from 'react'
+import React, { Ref, useEffect, useRef } from 'react'
 import autosize from 'autosize'
 import { Button } from '@chakra-ui/react'
 import { IoIosSend } from 'react-icons/io'
@@ -28,6 +28,7 @@ export function TaskEditFormMessageInputType(
     return (
         <>
             <TextInput
+                id="comments-input"
                 ref={refMessage as unknown as Ref<HTMLElement>}
                 name="messagetype"
                 label="Type a message"
