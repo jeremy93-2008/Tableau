@@ -9,6 +9,7 @@ import {
     useDisclosure,
 } from '@chakra-ui/react'
 import { useNotificationQuery } from './hooks/useNotificationQuery'
+import ReactMarkdown from 'react-markdown'
 
 interface INotificationItemProps {
     notification: Notification
@@ -65,7 +66,11 @@ export function NotificationItem(props: INotificationItemProps) {
                         />
                         <Flex>
                             <AlertIcon />
-                            <Box>{notification.message}</Box>
+                            <Box>
+                                <ReactMarkdown>
+                                    {notification.message}
+                                </ReactMarkdown>
+                            </Box>
                         </Flex>
                         {notification.isRead && (
                             <Tooltip label="Remove Notification">

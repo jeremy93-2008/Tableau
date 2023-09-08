@@ -1,6 +1,7 @@
 import { useToast } from '@chakra-ui/react'
 import { useNotificationQuery } from './useNotificationQuery'
 import { useEffect } from 'react'
+import ReactMarkdown from 'react-markdown'
 
 export function useNotificationToast() {
     const toast = useToast()
@@ -31,7 +32,9 @@ export function useNotificationToast() {
                 title:
                     notification.type.slice(0, 1).toUpperCase() +
                     notification.type.slice(1),
-                description: notification.message,
+                description: (
+                    <ReactMarkdown>{notification.message}</ReactMarkdown>
+                ),
                 position: 'bottom-right',
                 status: notification.type as
                     | 'error'

@@ -4,6 +4,7 @@ import { Authenticate } from '../../../server/next/auth/Authenticate'
 import prisma from '../../../lib/prisma'
 import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { getTaskPermission } from 'shared-libs'
+import { addNotification } from '../../../server/prisma/notification/add'
 
 type ISchemaParams = z.infer<typeof schema>
 
@@ -49,6 +50,39 @@ export default async function handler(
                     },
                 },
             })
+
+            const currentUser = await prisma.user.findFirst({
+                where: {
+                    email,
+                },
+            })
+
+            const selectedTask = await prisma.task.findFirst({
+                where: {
+                    id: taskId,
+                },
+            })
+
+            const assignedUsers = await prisma.taskAssignedUser.findMany({
+                where: {
+                    taskId,
+                },
+                include: {
+                    User: true,
+                },
+            })
+
+            if (assignedUsers && assignedUsers.length > 0) {
+                await addNotification(
+                    'info',
+                    `New comment "_${message}_" of __${currentUser?.name}__ on task __${selectedTask?.name}__`,
+                    assignedUsers
+                        .map((assignedUser) => assignedUser.User.email ?? '')
+                        .filter(
+                            (email) => email && email !== currentUser?.email
+                        )
+                )
+            }
 
             res.json(result)
         })
