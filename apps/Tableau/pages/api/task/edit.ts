@@ -61,25 +61,16 @@ export default async function handler(
                 return res.status(404).json({ message: 'Task not found' })
             }
 
-            const historyRepository = new HistoryRepository()
+            const history = new HistoryRepository()
 
-            if (task.name !== name) {
-                await historyRepository.addHistory({
-                    taskId: id,
-                    type: TaskHistoryMessageCode.TaskTitle,
-                    params: [name],
-                    email: req.body.user.email as string,
-                })
-            }
-
-            if (task.description !== description) {
-                await historyRepository.addHistory({
-                    taskId: id,
-                    type: TaskHistoryMessageCode.TaskDescription,
-                    params: [description],
-                    email: req.body.user.email as string,
-                })
-            }
+            history.addHistory({
+                taskId: task.id,
+                code: TaskHistoryMessageCode.TaskDescription,
+                params: {
+                    taskName: task.name,
+                },
+                email: req.body.email,
+            })
 
             const result = await prisma.$transaction(async (tx) => {
                 await tx.task.update({

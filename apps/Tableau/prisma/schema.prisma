@@ -11,9 +11,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model HistoryParam {
+  id       String @id @default(cuid())
+  name     String
+  value    String
+  history  History[]
+}
+
 model History {
   id        String   @id @default(cuid())
-  message   String
+  messageCode   String
+  messageParams HistoryParam[]
   createdAt DateTime @default(now())
   taskId    String
   task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)

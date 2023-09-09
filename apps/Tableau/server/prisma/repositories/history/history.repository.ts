@@ -4,8 +4,8 @@ import { TaskHistoryMessageCode } from 'shared-utils/src/constants/taskHistoryMe
 
 interface AddHistory {
     taskId: string
-    type: TaskHistoryMessageCode
-    params: string[]
+    code: TaskHistoryMessageCode
+    params: Record<string, string>
     email: string
 }
 
@@ -17,10 +17,16 @@ export class HistoryRepository {
         this.historyTable = prisma.history
     }
 
-    async addHistory({ taskId, type, params, email }: AddHistory) {
+    async addHistory({ taskId, code, params, email }: AddHistory) {
         return this.historyTable.create({
             data: {
-                message: `${type},${params.join(',')}`,
+                messageCode: code,
+                messageParams: {
+                    create: Object.entries(params).map(([name, value]) => ({
+                        name,
+                        value,
+                    })),
+                },
                 task: {
                     connect: {
                         id: taskId,

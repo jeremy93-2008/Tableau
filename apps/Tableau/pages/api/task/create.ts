@@ -69,8 +69,10 @@ export default async function handler(
 
             history.addHistory({
                 taskId: result.id,
-                type: TaskHistoryMessageCode.TaskCreated,
-                params: [],
+                code: TaskHistoryMessageCode.TaskCreated,
+                params: {
+                    taskName: result.name,
+                },
                 email: session.user!.email as string,
             })
 
