@@ -72,6 +72,12 @@ export default async function handler(
                                             user: true,
                                         },
                                     },
+                                    History: {
+                                        orderBy: { createdAt: 'asc' },
+                                        include: {
+                                            user: true,
+                                        },
+                                    },
                                 },
                             },
                         },

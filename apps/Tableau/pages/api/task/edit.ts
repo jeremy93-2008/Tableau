@@ -5,6 +5,8 @@ import { z } from 'zod'
 import { getBoardIdFromTaskId } from '../../../server/prisma/getBoardIdFromTaskId'
 import { getTaskPermission } from 'shared-libs'
 import { Authenticate } from '../../../server/next/auth/Authenticate'
+import { HistoryRepository } from '../../../server/prisma/repositories/history/history.repository'
+import { TaskHistoryMessageCode } from 'shared-utils/src/constants/taskHistoryMessageCode'
 
 type ISchemaParams = z.infer<typeof schema>
 
@@ -50,6 +52,34 @@ export default async function handler(
                 endDate,
                 assignedUserIds,
             } = params
+
+            const task = await prisma.task.findUnique({
+                where: { id },
+            })
+
+            if (!task) {
+                return res.status(404).json({ message: 'Task not found' })
+            }
+
+            const historyRepository = new HistoryRepository()
+
+            if (task.name !== name) {
+                await historyRepository.addHistory({
+                    taskId: id,
+                    type: TaskHistoryMessageCode.TaskTitle,
+                    params: [name],
+                    email: req.body.user.email as string,
+                })
+            }
+
+            if (task.description !== description) {
+                await historyRepository.addHistory({
+                    taskId: id,
+                    type: TaskHistoryMessageCode.TaskDescription,
+                    params: [description],
+                    email: req.body.user.email as string,
+                })
+            }
 
             const result = await prisma.$transaction(async (tx) => {
                 await tx.task.update({

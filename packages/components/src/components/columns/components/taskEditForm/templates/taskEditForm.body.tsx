@@ -7,6 +7,7 @@ import { TaskFormEditTab } from 'shared-utils'
 import { ITaskEditFormikValues } from '../../../taskEdit'
 import { TaskEditFormDescription } from './components/taskEditForm.description'
 import { TaskEditFormComments } from './components/taskEditForm.comments'
+import { TaskEditFormHistory } from './components/taskEditForm.history'
 
 interface ITaskEditFormBodyProps {
     task: IFullTask
@@ -76,6 +77,13 @@ export function TaskEditFormBody(props: ITaskEditFormBodyProps) {
                             task={task}
                             form={form}
                             isVisible={tabIndex === TaskFormEditTab.Comments}
+                        />
+                    </TabPanel>
+                    <TabPanel p={0}>
+                        <TaskEditFormHistory
+                            task={task}
+                            form={form}
+                            isVisible={tabIndex === TaskFormEditTab.History}
                         />
                     </TabPanel>
                 </TabPanels>

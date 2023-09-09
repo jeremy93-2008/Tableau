@@ -34,7 +34,7 @@ export default async function handler(
         .success(async (params) => {
             const { message, taskId, email } = params
 
-            const result = await prisma.comment.create({
+            const result = await prisma.history.create({
                 data: {
                     message,
                     createdAt: new Date(),
@@ -50,39 +50,6 @@ export default async function handler(
                     },
                 },
             })
-
-            const currentUser = await prisma.user.findFirst({
-                where: {
-                    email,
-                },
-            })
-
-            const selectedTask = await prisma.task.findFirst({
-                where: {
-                    id: taskId,
-                },
-            })
-
-            const assignedUsers = await prisma.taskAssignedUser.findMany({
-                where: {
-                    taskId,
-                },
-                include: {
-                    User: true,
-                },
-            })
-
-            if (assignedUsers && assignedUsers.length > 0) {
-                await addNotification(
-                    'info',
-                    `New comment "_${message}_" of __${currentUser?.name}__ on task __${selectedTask?.name}__`,
-                    assignedUsers
-                        .map((assignedUser) => assignedUser.User.email ?? '')
-                        .filter(
-                            (email) => email && email !== currentUser?.email
-                        )
-                )
-            }
 
             res.json(result)
         })

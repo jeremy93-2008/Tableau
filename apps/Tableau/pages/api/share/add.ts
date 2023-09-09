@@ -8,7 +8,7 @@ import { z } from 'zod'
 import { Authenticate } from '../../../server/next/auth/Authenticate'
 import { Board } from '.prisma/client'
 import { Session } from 'next-auth'
-import { addNotification } from '../../../server/prisma/notification/add'
+import { addNotification } from '../../../server/prisma/repositories/notification/add'
 import { isAuthenticated } from '../../../server/next/auth/isAuthenticated'
 
 type ISchemaParams = z.infer<typeof schema>

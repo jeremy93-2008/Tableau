@@ -11,6 +11,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model History {
+  id        String   @id @default(cuid())
+  message   String
+  createdAt DateTime @default(now())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model Comment {
   id        String   @id @default(cuid())
   message   String
@@ -86,6 +96,7 @@ model Task {
   assignedUsers   TaskAssignedUser[]
   tags            Tag[]
   Comment         Comment[]
+  History         History[]
 }
 
 model Board {
@@ -183,6 +194,7 @@ model User {
   Notifications     Notification[]
   AssignedTasks     TaskAssignedUser[]
   Comment           Comment[]
+  History           History[]
 }
 
 model VerificationToken {

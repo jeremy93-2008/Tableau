@@ -3,6 +3,7 @@ import {
     BoardUserSharing,
     Checklist,
     ChecklistGroup,
+    History,
     Link,
     Tag,
     TaskAssignedUser,
@@ -30,6 +31,7 @@ export type IFullTask = Task & {
     link: Link[]
     tags: Tag[]
     Comment: IFullComment[]
+    History: IFullHistory[]
 }
 
 export type IFullTaskAssignedUser = TaskAssignedUser & {
@@ -39,5 +41,9 @@ export type IFullTaskAssignedUser = TaskAssignedUser & {
 export type IFullCheckListGroup = ChecklistGroup & { checklists: Checklist[] }
 
 export type IFullComment = Comment & {
+    user: User
+}
+
+export type IFullHistory = History & {
     user: User
 }

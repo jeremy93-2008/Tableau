@@ -6,6 +6,8 @@ import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptio
 import { z } from 'zod'
 import { getTaskPermission } from 'shared-libs'
 import { Authenticate } from '../../../server/next/auth/Authenticate'
+import { HistoryRepository } from '../../../server/prisma/repositories/history/history.repository'
+import { TaskHistoryMessageCode } from 'shared-utils/src/constants/taskHistoryMessageCode'
 
 type ISchemaParams = z.infer<typeof schema>
 
@@ -61,6 +63,15 @@ export default async function handler(
                         },
                     },
                 },
+            })
+
+            const history = new HistoryRepository()
+
+            history.addHistory({
+                taskId: result.id,
+                type: TaskHistoryMessageCode.TaskCreated,
+                params: [],
+                email: session.user!.email as string,
             })
 
             res.json(result)

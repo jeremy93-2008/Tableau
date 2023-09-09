@@ -114,7 +114,7 @@ export function TaskEditFormComments(props: ITaskEditFormCommentsProps) {
         return () => {
             window.clearInterval(intervalFetchMessage)
         }
-    }, [])
+    }, [onRefresh])
 
     return (
         <Flex
@@ -129,6 +129,7 @@ export function TaskEditFormComments(props: ITaskEditFormCommentsProps) {
                 flexDirection="column"
                 flex={1}
                 overflowY="auto"
+                mt={6}
                 px={3}
                 onWheel={(evt) => evt.stopPropagation()}
             >
