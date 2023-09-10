@@ -4,7 +4,7 @@ import { Authenticate } from '../../../server/next/auth/Authenticate'
 import prisma from '../../../lib/prisma'
 import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { getTaskPermission } from 'shared-libs'
-import { addNotification } from '../../../server/prisma/repositories/notification/add'
+import { NotificationRepository } from '../../../app/repositories/notification/notification.repository'
 
 type ISchemaParams = z.infer<typeof schema>
 
@@ -73,7 +73,8 @@ export default async function handler(
             })
 
             if (assignedUsers && assignedUsers.length > 0) {
-                await addNotification(
+                const notification = new NotificationRepository()
+                await notification.add(
                     'info',
                     `New comment "_${message}_" of __${currentUser?.name}__ on task __${selectedTask?.name}__`,
                     assignedUsers

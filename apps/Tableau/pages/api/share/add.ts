@@ -8,8 +8,8 @@ import { z } from 'zod'
 import { Authenticate } from '../../../server/next/auth/Authenticate'
 import { Board } from '.prisma/client'
 import { Session } from 'next-auth'
-import { addNotification } from '../../../server/prisma/repositories/notification/add'
 import { isAuthenticated } from '../../../server/next/auth/isAuthenticated'
+import { NotificationRepository } from '../../../app/repositories/notification/notification.repository'
 
 type ISchemaParams = z.infer<typeof schema>
 
@@ -71,7 +71,8 @@ export default async function handler(
                 where: { id: boardId },
             })
 
-            await addNotification(
+            const notification = new NotificationRepository()
+            await notification.add(
                 'info',
                 'You have been invited to collaborate on a board (' +
                     board?.name +

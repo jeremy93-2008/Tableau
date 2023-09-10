@@ -1,23 +1,17 @@
-import prisma from '../../../../lib/prisma'
+import prisma from '../../../lib/prisma'
 import { Prisma } from '@prisma/client'
-import { TaskHistoryMessageCode } from 'shared-utils/src/constants/taskHistoryMessageCode'
-
-interface AddHistory {
-    taskId: string
-    code: TaskHistoryMessageCode
-    params: Record<string, string>
-    email: string
-}
+import { IHistory } from './history.type'
 
 export class HistoryRepository {
     private historyTable: Prisma.HistoryDelegate<
         Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
     >
+
     constructor() {
         this.historyTable = prisma.history
     }
 
-    async addHistory({ taskId, code, params, email }: AddHistory) {
+    async add({ taskId, code, params, email }: IHistory.AddHistory) {
         return this.historyTable.create({
             data: {
                 messageCode: code,

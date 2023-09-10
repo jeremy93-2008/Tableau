@@ -1,11 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
 import { Authenticate } from '../../../server/next/auth/Authenticate'
-import prisma from '../../../lib/prisma'
 import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { getTaskPermission } from 'shared-libs'
 import { TaskHistoryMessageCode } from 'shared-utils/src/constants/taskHistoryMessageCode'
-import { HistoryRepository } from '../../../server/prisma/repositories/history/history.repository'
+import { HistoryRepository } from '../../../app/repositories/history/history.repository'
 
 type ISchemaParams = z.infer<typeof schema>
 
@@ -37,8 +36,7 @@ export default async function handler(
             const { messageCode, messageParams, taskId, email } = params
 
             const history = new HistoryRepository()
-
-            const result = history.addHistory({
+            const result = history.add({
                 taskId,
                 code: messageCode,
                 params: messageParams,

@@ -13,7 +13,7 @@ export function TaskEditFormHistory(props: ITaskEditFormCommentsProps) {
     return (
         <div>
             {task.History.map((history) => (
-                <div key={history.id}>{history.message}</div>
+                <div key={history.id}>{history.messageCode}</div>
             ))}
         </div>
     )
