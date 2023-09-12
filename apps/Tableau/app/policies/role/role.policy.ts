@@ -1,0 +1,51 @@
+import { Role } from './role.type'
+import { GatePolicy } from '../../providers/gate/gate.type'
+
+export const RolePolicy = {
+    [Role.Owner]: [
+        GatePolicy.ReadBoardList,
+        GatePolicy.ReadBoard,
+        GatePolicy.ReadTask,
+        GatePolicy.CreateBoard,
+        GatePolicy.CreateTask,
+        GatePolicy.CreateStatus,
+        GatePolicy.CreateBoardUserSharing,
+        GatePolicy.UpdateBoard,
+        GatePolicy.UpdateTask,
+        GatePolicy.UpdateStatus,
+        GatePolicy.UpdateBoardUserSharing,
+        GatePolicy.DeleteBoard,
+        GatePolicy.DeleteTask,
+        GatePolicy.DeleteStatus,
+        GatePolicy.DeleteBoardUserSharing,
+    ],
+    [Role.Administrator]: [
+        GatePolicy.ReadBoardList,
+        GatePolicy.ReadBoard,
+        GatePolicy.ReadTask,
+        GatePolicy.CreateBoard,
+        GatePolicy.CreateTask,
+        GatePolicy.CreateStatus,
+        GatePolicy.CreateBoardUserSharing,
+        GatePolicy.UpdateBoard,
+        GatePolicy.UpdateTask,
+        GatePolicy.UpdateStatus,
+        GatePolicy.UpdateBoardUserSharing,
+        GatePolicy.DeleteTask,
+        GatePolicy.DeleteStatus,
+        GatePolicy.DeleteBoardUserSharing,
+    ],
+    [Role.Collaborator]: [
+        GatePolicy.ReadBoardList,
+        GatePolicy.ReadBoard,
+        GatePolicy.ReadTask,
+        GatePolicy.CreateTask,
+        GatePolicy.UpdateTask,
+        GatePolicy.DeleteTask,
+    ],
+    [Role.Guest]: [
+        GatePolicy.ReadBoardList,
+        GatePolicy.ReadBoard,
+        GatePolicy.ReadTask,
+    ],
+}
