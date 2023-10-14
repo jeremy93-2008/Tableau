@@ -1,13 +1,13 @@
 import { Session } from 'next-auth'
 
-export namespace IGate {
+export namespace IPermission {
     export interface Attempt {
         session: Session
-        policies: GatePolicy[]
+        policies: PermissionPolicy[]
         params?: Record<string, any> & { boardId: string | undefined }
     }
     export interface Guard {
-        api: IGate.Attempt
+        api: IPermission.Attempt
         success: (result: boolean) => any
         fail: (result: boolean) => any
     }
@@ -17,7 +17,7 @@ export namespace IGate {
     }
 }
 
-export enum GatePolicy {
+export enum PermissionPolicy {
     ReadBoardList = 'read-board-list',
     ReadBoard = 'read-board',
     ReadTask = 'read-task',

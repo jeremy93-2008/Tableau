@@ -1,10 +1,13 @@
-import { GatePolicy, IGate } from './gate.type'
+import { PermissionPolicy, IPermission } from './permission.type'
 import prisma from '../../../lib/prisma'
 import { Role } from '../../policies/role/role.type'
 import { RolePolicy } from '../../policies/role/role.policy'
 
-export class GateProvider {
-    private static async getRoles({ session, boardId }: IGate.GetRoles) {
+export class PermissionProvider {
+    private static async getCurrentUserRole({
+        session,
+        boardId,
+    }: IPermission.GetRoles) {
         const currentBoard = await prisma.board.findFirst({
             where: { id: boardId },
             include: {
@@ -46,16 +49,16 @@ export class GateProvider {
         return Role.Guest
     }
 
-    static async attempt({ session, policies, params }: IGate.Attempt) {
-        if (!params || !session) return false
+    static async attempt({ session, policies, params }: IPermission.Attempt) {
+        if (!session) return false
 
         // As a user you always have access to your own boards
-        if (policies.includes(GatePolicy.ReadBoardList)) return true
+        if (policies.includes(PermissionPolicy.ReadBoardList)) return true
 
         //If not we need to have a boardId to check the policies
-        if (!params.boardId) return false
+        if (!params || !params.boardId) return false
 
-        const roleOfCurrentUserOnBoard = await this.getRoles({
+        const roleOfCurrentUserOnBoard = await this.getCurrentUserRole({
             session,
             boardId: params.boardId,
         })
@@ -68,9 +71,9 @@ export class GateProvider {
     }
 
     static async guard(
-        { session, policies, params }: IGate.Guard['api'],
-        success: IGate.Guard['success'],
-        fail?: IGate.Guard['fail']
+        { session, policies, params }: IPermission.Guard['api'],
+        success: IPermission.Guard['success'],
+        fail?: IPermission.Guard['fail']
     ) {
         const result = await this.attempt({ session, policies, params })
 
