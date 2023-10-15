@@ -9,6 +9,7 @@ import { HttpProvider } from '../../../app/providers/http/http.provider'
 import { HttpPolicy } from '../../../app/providers/http/http.type'
 import { ValidationProvider } from '../../../app/providers/validation/validation.provider'
 import { ValidationRequest } from '../../../app/providers/validation/validation.request'
+import { SecurityProvider } from '../../../app/providers/security/security.provider'
 
 const schema = z.string()
 
@@ -16,6 +17,18 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
+    await SecurityProvider.authorize(
+        {
+            api: { req, res },
+            policies: {
+                http: HttpPolicy.Post,
+                permissions: [PermissionPolicy.ReadBoardList],
+            },
+            validations: { schema },
+        },
+        (session) => {}
+    )
+
     await HttpProvider.guard({ req, res }, [HttpPolicy.Get], async () => {
         await UserProvider.guard({ req, res }, async (session) => {
             await ValidationProvider.guard(

@@ -8,18 +8,18 @@ import { PermissionProvider } from '../permission/permission.provider'
 
 export class SecurityProvider {
     static async authorize(
-        params: ISecurity.RestrictedParams,
-        callback: ISecurity.RestrictedCallback
+        params: ISecurity.AuthorizeParams,
+        callback: ISecurity.AuthorizeCallback
     ) {
-        const { api, httpVerb, schemaValidation, permissionPolicies } = params
-        return await HttpProvider.guard(api, [httpVerb], async () => {
+        const { api, policies, validations } = params
+        return await HttpProvider.guard(api, [policies.http], async () => {
             return await UserProvider.guard(api, async (session) => {
                 return await ValidationProvider.guard(
                     {
                         ...api,
-                        schema: schemaValidation,
+                        schema: validations.schema,
                         requestValue:
-                            httpVerb === HttpPolicy.Post
+                            policies.http === HttpPolicy.Post
                                 ? ValidationRequest.Body
                                 : ValidationRequest.Query,
                     },
@@ -27,7 +27,7 @@ export class SecurityProvider {
                         return await PermissionProvider.guard(
                             {
                                 session,
-                                policies: permissionPolicies,
+                                policies: policies.permissions,
                             },
                             async () => {
                                 return callback(session)
