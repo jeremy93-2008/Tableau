@@ -1,10 +1,12 @@
 import { Session } from 'next-auth'
+import { NextApiResponse } from 'next'
 
 export namespace IPermission {
     export interface Attempt {
         session: Session
         policies: PermissionPolicy[]
         params?: Record<string, any> & { boardId: string | undefined }
+        res: NextApiResponse
     }
     export interface Guard {
         api: IPermission.Attempt

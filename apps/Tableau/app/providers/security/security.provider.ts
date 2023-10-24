@@ -2,35 +2,36 @@ import { HttpProvider } from '../http/http.provider'
 import { ISecurity } from './security.type'
 import { UserProvider } from '../user/user.provider'
 import { ValidationProvider } from '../validation/validation.provider'
-import { ValidationRequest } from '../validation/validation.request'
-import { HttpPolicy } from '../http/http.type'
+import { ValidationValueType } from '../validation/validation.value.type'
 import { PermissionProvider } from '../permission/permission.provider'
 
 export class SecurityProvider {
-    static async authorize(
+    static async authorize<TSchema>(
         params: ISecurity.AuthorizeParams,
-        callback: ISecurity.AuthorizeCallback
+        callback: ISecurity.AuthorizeCallback<TSchema>
     ) {
         const { api, policies, validations } = params
         return await HttpProvider.guard(api, [policies.http], async () => {
             return await UserProvider.guard(api, async (session) => {
-                return await ValidationProvider.guard(
+                return await ValidationProvider.guard<TSchema>(
                     {
                         ...api,
-                        schema: validations.schema,
+                        schema: validations.schema as TSchema,
                         requestValue:
-                            policies.http === HttpPolicy.Post
-                                ? ValidationRequest.Body
-                                : ValidationRequest.Query,
+                            validations.valueType ?? ValidationValueType.Body,
                     },
-                    async () => {
+                    async (data) => {
                         return await PermissionProvider.guard(
                             {
                                 session,
                                 policies: policies.permissions,
+                                params: {
+                                    boardId: validations.boardId,
+                                },
+                                res: api.res,
                             },
                             async () => {
-                                return callback(session)
+                                return callback(session, data)
                             }
                         )
                     }

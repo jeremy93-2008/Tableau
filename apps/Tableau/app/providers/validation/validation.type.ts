@@ -1,16 +1,16 @@
 import { z } from 'zod'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ValidationRequest } from './validation.request'
+import { ValidationValueType } from './validation.value.type'
 
 export namespace IValidation {
-    export interface Attempt {
+    export interface Attempt<TSchema> {
         req: NextApiRequest
         res: NextApiResponse
-        requestValue: ValidationRequest
-        schema: z.Schema<any>
+        requestValue: ValidationValueType
+        schema: TSchema
     }
-    export interface Guard {
-        api: IValidation.Attempt
-        callback: (result: z.Schema<any>) => any
+    export interface Guard<TSchema> {
+        api: IValidation.Attempt<TSchema>
+        callback: (result: TSchema) => any
     }
 }
