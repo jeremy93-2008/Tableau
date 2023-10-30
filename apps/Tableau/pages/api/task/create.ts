@@ -6,7 +6,6 @@ import { HistoryRepository } from '../../../app/repositories/history/history.rep
 import { SecurityProvider } from '../../../app/providers/security/security.provider'
 import { HttpPolicy } from '../../../app/providers/http/http.type'
 import { PermissionPolicy } from '../../../app/providers/permission/permission.type'
-import { ValidationValueType } from '../../../app/providers/validation/validation.value.type'
 
 type ISchema = z.infer<typeof schema>
 
@@ -25,10 +24,10 @@ export default async function handler(
         {
             api: { req, res },
             policies: {
-                http: HttpPolicy.Get,
+                http: HttpPolicy.Post,
                 permissions: [PermissionPolicy.CreateTask],
             },
-            validations: { schema, valueType: ValidationValueType.Body },
+            validations: { schema },
         },
         async (session, params) => {
             const { boardId, statusId, description, name } = params

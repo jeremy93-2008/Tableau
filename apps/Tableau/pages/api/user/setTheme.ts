@@ -7,7 +7,7 @@ import { isAuthenticated } from '../../../server/next/auth/isAuthenticated'
 import { authOptions } from '../auth/[...nextauth]'
 import { ErrorMessage } from 'shared-utils'
 
-type ISchemaParams = z.infer<typeof schema>
+type ISchema = z.infer<typeof schema>
 
 const schema = z.object({
     email: z.string(),
@@ -20,11 +20,7 @@ export default async function handler(
 ) {
     await (
         await (
-            await Authenticate.Post<typeof schema, ISchemaParams>(
-                req,
-                res,
-                schema
-            )
+            await Authenticate.Post<typeof schema, ISchema>(req, res, schema)
         ).checkAsync(async (params, setError) => {
             const session = await isAuthenticated({ req, res, authOptions })
             if (!session) return setError(401, ErrorMessage.Unauthenticated)

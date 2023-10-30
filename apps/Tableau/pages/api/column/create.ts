@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
-import { getColumnPermission } from 'shared-libs'
-import { Authenticate } from '../../../server/next/auth/Authenticate'
+import { SecurityProvider } from '../../../app/providers/security/security.provider'
+import { HttpPolicy } from '../../../app/providers/http/http.type'
+import { PermissionPolicy } from '../../../app/providers/permission/permission.type'
 
-type ISchemaParams = z.infer<typeof schema>
+type ISchema = z.infer<typeof schema>
 
 const schema = z.object({
     id: z.string(),
@@ -18,19 +18,16 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await (
-        await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
-            req,
-            res,
-            schema,
-            {
-                boardId: req.body.id,
-                roleFn: getColumnPermission,
-                action: 'add',
-            }
-        )
-    )
-        .success(async (params) => {
+    await SecurityProvider.authorize<ISchema>(
+        {
+            api: { req, res },
+            policies: {
+                http: HttpPolicy.Post,
+                permissions: [PermissionPolicy.CreateStatus],
+            },
+            validations: { schema },
+        },
+        async (_session, params) => {
             const { id, statusName, order, isDefault } = params
 
             const result = await prisma.statusBoard.create({
@@ -49,6 +46,6 @@ export default async function handler(
             })
 
             res.json(result)
-        })
-        .catch((errors) => onCallExceptions(res, errors))
+        }
+    )
 }

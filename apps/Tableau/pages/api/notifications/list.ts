@@ -1,10 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { Authenticate } from '../../../server/next/auth/Authenticate'
 import prisma from '../../../lib/prisma'
-import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { z } from 'zod'
+import { SecurityProvider } from '../../../app/providers/security/security.provider'
+import { HttpPolicy } from '../../../app/providers/http/http.type'
+import { ValidationValueType } from '../../../app/providers/validation/validation.value.type'
 
-type ISchemaParams = z.infer<typeof schema>
+type ISchema = z.infer<typeof schema>
 
 const schema = z.object({
     email: z.string().email(),
@@ -14,10 +15,16 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await (
-        await Authenticate.Get<typeof schema, ISchemaParams>(req, res, schema)
-    )
-        .success(async (params) => {
+    await SecurityProvider.authorize<ISchema>(
+        {
+            api: { req, res },
+            policies: {
+                http: HttpPolicy.Get,
+                permissions: [],
+            },
+            validations: { schema, valueType: ValidationValueType.Query },
+        },
+        async (_session, params) => {
             const { email } = params
 
             const result = await prisma.notification.findMany({
@@ -29,6 +36,6 @@ export default async function handler(
             })
 
             res.json(result)
-        })
-        .catch((errors) => onCallExceptions(res, errors))
+        }
+    )
 }

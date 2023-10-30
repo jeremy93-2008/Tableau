@@ -8,7 +8,7 @@ import { Authenticate } from '../../../server/next/auth/Authenticate'
 import { TaskHistoryMessageCode } from 'shared-utils/src/constants/taskHistoryMessageCode'
 import { HistoryRepository } from '../../../app/repositories/history/history.repository'
 
-type ISchemaParams = z.infer<typeof schema>
+type ISchema = z.infer<typeof schema>
 
 const schema = z.object({
     id: z.string().cuid(),
@@ -28,7 +28,7 @@ export default async function handler(
     res: NextApiResponse
 ) {
     await (
-        await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
+        await Authenticate.Permission.Post<typeof schema, ISchema>(
             req,
             res,
             schema,

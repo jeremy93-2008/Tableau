@@ -7,7 +7,7 @@ import { getBoardIdFromTaskId } from '../../../server/prisma/getBoardIdFromTaskI
 import { getTaskPermission } from 'shared-libs'
 import { Authenticate } from '../../../server/next/auth/Authenticate'
 
-type ISchemaParams = z.infer<typeof schema>
+type ISchema = z.infer<typeof schema>
 
 const schema = z.array(columnMoveValidation)
 
@@ -16,7 +16,7 @@ export default async function handler(
     res: NextApiResponse
 ) {
     await (
-        await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
+        await Authenticate.Permission.Post<typeof schema, ISchema>(
             req,
             res,
             schema,

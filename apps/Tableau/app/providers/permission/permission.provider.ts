@@ -57,6 +57,9 @@ export class PermissionProvider {
     }: Omit<IPermission.Attempt, 'res'>) {
         if (!session) return false
 
+        // If policies is empty, we don't need to check anything
+        if (!policies || !policies.length) return true
+
         // As a user you always have access to your own boards
         if (
             policies.includes(PermissionPolicy.ReadBoardList) &&

@@ -12,7 +12,7 @@ type IFinderSearchResult = Record<IFinderSearchType, Task[]>
 
 type IFinderSearchType = 'task'
 
-type ISchemaParams = z.infer<typeof schema>
+type ISchema = z.infer<typeof schema>
 
 const schema = z.object({
     searchText: z.string(),
@@ -24,7 +24,7 @@ export default async function handler(
     res: NextApiResponse
 ) {
     await (
-        await Authenticate.Post<typeof schema, ISchemaParams>(req, res, schema)
+        await Authenticate.Post<typeof schema, ISchema>(req, res, schema)
     )
         .success(async (values) => {
             const session = (await isAuthenticated({

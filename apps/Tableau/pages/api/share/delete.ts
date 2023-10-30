@@ -6,7 +6,7 @@ import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptio
 import { z } from 'zod'
 import { Authenticate } from '../../../server/next/auth/Authenticate'
 
-type ISchemaParams = z.infer<typeof schema>
+type ISchema = z.infer<typeof schema>
 
 const schema = z.object({
     id: z.string().cuid(),
@@ -18,11 +18,7 @@ export default async function handler(
 ) {
     await (
         await (
-            await Authenticate.Post<typeof schema, ISchemaParams>(
-                req,
-                res,
-                schema
-            )
+            await Authenticate.Post<typeof schema, ISchema>(req, res, schema)
         ).checkAsync(async () => {
             return deleteShareablePermissionCb({
                 req,

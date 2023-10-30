@@ -4,7 +4,6 @@ import { z } from 'zod'
 import { ErrorMessage } from 'shared-utils'
 import { PermissionPolicy } from '../../../app/providers/permission/permission.type'
 import { HttpPolicy } from '../../../app/providers/http/http.type'
-import { ValidationValueType } from '../../../app/providers/validation/validation.value.type'
 import { SecurityProvider } from '../../../app/providers/security/security.provider'
 
 const schema = z.string()
@@ -20,7 +19,7 @@ export default async function handler(
                 http: HttpPolicy.Get,
                 permissions: [PermissionPolicy.ReadBoardList],
             },
-            validations: { schema, valueType: ValidationValueType.Body },
+            validations: { schema },
         },
         async (session) => {
             const email = session?.user?.email ?? ''

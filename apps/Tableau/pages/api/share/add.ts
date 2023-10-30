@@ -11,7 +11,7 @@ import { Session } from 'next-auth'
 import { isAuthenticated } from '../../../server/next/auth/isAuthenticated'
 import { NotificationRepository } from '../../../app/repositories/notification/notification.repository'
 
-type ISchemaParams = z.infer<typeof schema>
+type ISchema = z.infer<typeof schema>
 
 const schema = z.object({
     boardId: z.string().cuid(),
@@ -26,11 +26,7 @@ export default async function handler(
 ) {
     await (
         await (
-            await Authenticate.Post<typeof schema, ISchemaParams>(
-                req,
-                res,
-                schema
-            )
+            await Authenticate.Post<typeof schema, ISchema>(req, res, schema)
         ).checkAsync(async () => {
             return addShareablePermissionCb({
                 req,

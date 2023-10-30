@@ -4,7 +4,7 @@ import prisma from '../../../lib/prisma'
 import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { z } from 'zod'
 
-type ISchemaParams = z.infer<typeof schema>
+type ISchema = z.infer<typeof schema>
 
 const schema = z.object({
     taskId: z.string().cuid().optional(),
@@ -15,7 +15,7 @@ export default async function handler(
     res: NextApiResponse
 ) {
     await (
-        await Authenticate.Get<typeof schema, ISchemaParams>(req, res, schema)
+        await Authenticate.Get<typeof schema, ISchema>(req, res, schema)
     )
         .success(async (params) => {
             const result = await prisma.tag.findMany({

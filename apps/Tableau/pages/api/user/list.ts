@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { Authenticate } from '../../../server/next/auth/Authenticate'
 
-type ISchemaParams = z.infer<typeof schema>
+type ISchema = z.infer<typeof schema>
 
 const schema = z.object({})
 
@@ -13,7 +13,7 @@ export default async function handler(
     res: NextApiResponse
 ) {
     await (
-        await Authenticate.Get<typeof schema, ISchemaParams>(req, res, schema)
+        await Authenticate.Get<typeof schema, ISchema>(req, res, schema)
     )
         .success(async () => {
             const result = await prisma.user.findMany({

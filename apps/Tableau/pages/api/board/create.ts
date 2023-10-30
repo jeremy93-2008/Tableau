@@ -1,14 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
-import { Authenticate } from '../../../server/next/auth/Authenticate'
-import { isAuthenticated } from '../../../server/next/auth/isAuthenticated'
-import { authOptions } from '../auth/[...nextauth]'
-import { Session } from 'next-auth'
 import { ErrorMessage } from 'shared-utils'
+import { SecurityProvider } from '../../../app/providers/security/security.provider'
+import { HttpPolicy } from '../../../app/providers/http/http.type'
+import { PermissionPolicy } from '../../../app/providers/permission/permission.type'
 
-type ISchemaParams = z.infer<typeof schema>
+type ISchema = z.infer<typeof schema>
 
 const schema = z.object({
     name: z.string(),
@@ -20,17 +18,17 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await (
-        await Authenticate.Post<typeof schema, ISchemaParams>(req, res, schema)
-    )
-        .success(async (params) => {
+    await SecurityProvider.authorize<ISchema>(
+        {
+            api: { req, res },
+            policies: {
+                http: HttpPolicy.Post,
+                permissions: [PermissionPolicy.CreateBoard],
+            },
+            validations: { schema },
+        },
+        async (session, params) => {
             const { name, description, backgroundUrl } = params
-
-            const session = (await isAuthenticated({
-                req,
-                res,
-                authOptions,
-            })) as Session
 
             const email = session?.user?.email ?? ''
 
@@ -105,6 +103,6 @@ export default async function handler(
             })
 
             res.json(result)
-        })
-        .catch((errors) => onCallExceptions(res, errors))
+        }
+    )
 }

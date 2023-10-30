@@ -1,12 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
-import { getBoardIdFromStatusId } from '../../../server/prisma/getBoardIdFromStatusId'
-import { getColumnPermission } from 'shared-libs'
-import { Authenticate } from '../../../server/next/auth/Authenticate'
+import { SecurityProvider } from '../../../app/providers/security/security.provider'
+import { HttpPolicy } from '../../../app/providers/http/http.type'
+import { PermissionPolicy } from '../../../app/providers/permission/permission.type'
 
-type ISchemaParams = z.infer<typeof schema>
+type ISchema = z.infer<typeof schema>
 
 const schema = z.object({
     id: z.string(),
@@ -18,19 +17,16 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await (
-        await Authenticate.Permission.Post<typeof schema, ISchemaParams>(
-            req,
-            res,
-            schema,
-            {
-                boardId: await getBoardIdFromStatusId(req.body.id),
-                roleFn: getColumnPermission,
-                action: 'edit',
-            }
-        )
-    )
-        .success(async (params) => {
+    await SecurityProvider.authorize<ISchema>(
+        {
+            api: { req, res },
+            policies: {
+                http: HttpPolicy.Post,
+                permissions: [PermissionPolicy.UpdateStatus],
+            },
+            validations: { schema },
+        },
+        async (_session, params) => {
             const { id, statusName, oldStatusName } = params
             const result = await prisma.statusBoard.update({
                 where: {
@@ -55,6 +51,6 @@ export default async function handler(
                 await prisma.status.delete({ where: { name: oldStatusName } })
 
             res.json(result)
-        })
-        .catch((errors) => onCallExceptions(res, errors))
+        }
+    )
 }

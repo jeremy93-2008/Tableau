@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
-import { Authenticate } from '../../../server/next/auth/Authenticate'
 import prisma from '../../../lib/prisma'
-import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
+import { SecurityProvider } from '../../../app/providers/security/security.provider'
+import { HttpPolicy } from '../../../app/providers/http/http.type'
 
-type ISchemaParams = z.infer<typeof schema>
+type ISchema = z.infer<typeof schema>
 
 const schema = z.object({
     notifications: z.array(
@@ -18,10 +18,16 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await (
-        await Authenticate.Post<typeof schema, ISchemaParams>(req, res, schema)
-    )
-        .success(async (params) => {
+    await SecurityProvider.authorize<ISchema>(
+        {
+            api: { req, res },
+            policies: {
+                http: HttpPolicy.Post,
+                permissions: [],
+            },
+            validations: { schema },
+        },
+        async (_session, params) => {
             const { notifications } = params
 
             const result = await prisma.notification.deleteMany({
@@ -31,6 +37,6 @@ export default async function handler(
             })
 
             res.json(result)
-        })
-        .catch((errors) => onCallExceptions(res, errors))
+        }
+    )
 }
