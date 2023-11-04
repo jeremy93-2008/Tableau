@@ -2,14 +2,14 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import AWS from 'aws-sdk'
 import prisma from '../../../lib/prisma'
 import { authOptions } from '../auth/[...nextauth]'
-import { addShareablePermissionCb } from 'shared-libs'
-import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { z } from 'zod'
-import { Authenticate } from '../../../server/next/auth/Authenticate'
 import { Board } from '.prisma/client'
 import { Session } from 'next-auth'
 import { isAuthenticated } from '../../../server/next/auth/isAuthenticated'
 import { NotificationRepository } from '../../../app/repositories/notification/notification.repository'
+import { SecurityProvider } from '../../../app/providers/security/security.provider'
+import { HttpPolicy } from '../../../app/providers/http/http.type'
+import { PermissionPolicy } from '../../../app/providers/permission/permission.type'
 
 type ISchema = z.infer<typeof schema>
 
@@ -24,19 +24,16 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await (
-        await (
-            await Authenticate.Post<typeof schema, ISchema>(req, res, schema)
-        ).checkAsync(async () => {
-            return addShareablePermissionCb({
-                req,
-                res,
-                authOptions,
-                prisma,
-            })
-        })
-    )
-        .success(async (params) => {
+    await SecurityProvider.authorize<ISchema>(
+        {
+            api: { req, res },
+            policies: {
+                http: HttpPolicy.Post,
+                permissions: [PermissionPolicy.CreateBoardUserSharing],
+            },
+            validations: { schema },
+        },
+        async (_session, params) => {
             const { boardId, email, canEditSchema, canEditContent } = params
 
             const session = await isAuthenticated({ req, res, authOptions })
@@ -81,8 +78,8 @@ export default async function handler(
                 data: result,
                 isUserAlreadyHasAccount: !!isUserAlreadyHasAccount,
             })
-        })
-        .catch((errors) => onCallExceptions(res, errors))
+        }
+    )
 }
 
 async function sendCollaborationMail(

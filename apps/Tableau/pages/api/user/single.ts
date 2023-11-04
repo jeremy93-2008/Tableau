@@ -2,7 +2,10 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { z } from 'zod'
-import { Authenticate } from '../../../server/next/auth/Authenticate'
+import { SecurityProvider } from '../../../app/providers/security/security.provider'
+import { HttpPolicy } from '../../../app/providers/http/http.type'
+import { PermissionPolicy } from '../../../app/providers/permission/permission.type'
+import { ValidationValueType } from '../../../app/providers/validation/validation.value.type'
 
 type ISchema = z.infer<typeof schema>
 
@@ -15,10 +18,16 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await (
-        await Authenticate.Get<typeof schema, ISchema>(req, res, schema)
-    )
-        .success(async (params) => {
+    await SecurityProvider.authorize<ISchema>(
+        {
+            api: { req, res },
+            policies: {
+                http: HttpPolicy.Get,
+                permissions: [PermissionPolicy.ReadBoardList],
+            },
+            validations: { schema, valueType: ValidationValueType.Query },
+        },
+        async (_session, params) => {
             const result = await prisma.user.findMany({
                 where: {
                     OR: [
@@ -30,6 +39,6 @@ export default async function handler(
             })
 
             res.json(result[0])
-        })
-        .catch((errors) => onCallExceptions(res, errors))
+        }
+    ).catch((errors) => onCallExceptions(res, errors))
 }

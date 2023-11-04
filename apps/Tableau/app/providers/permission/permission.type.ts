@@ -23,6 +23,7 @@ export enum PermissionPolicy {
     ReadBoardList = 'read-board-list',
     ReadBoard = 'read-board',
     ReadTask = 'read-task',
+    ReadBoardUserSharing = 'read-board-user-sharing',
 
     CreateBoard = 'create-board',
     CreateTask = 'create-task',

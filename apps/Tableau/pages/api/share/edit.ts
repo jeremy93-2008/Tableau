@@ -1,13 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { authOptions } from '../auth/[...nextauth]'
-import { editShareablePermissionCb, Procedure } from 'shared-libs'
-import { hasPostMethod } from '../../../server/next/auth/validation/hasPostMethod'
-import { isAuthenticated } from '../../../server/next/auth/isAuthenticated'
-import { ErrorMessage } from 'shared-utils'
+import { editShareablePermissionCb } from 'shared-libs'
 import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { z } from 'zod'
 import { Authenticate } from '../../../server/next/auth/Authenticate'
+import { SecurityProvider } from '../../../app/providers/security/security.provider'
+import { HttpPolicy } from '../../../app/providers/http/http.type'
+import { PermissionPolicy } from '../../../app/providers/permission/permission.type'
 
 type ISchema = z.infer<typeof schema>
 
@@ -21,19 +21,16 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await (
-        await (
-            await Authenticate.Post<typeof schema, ISchema>(req, res, schema)
-        ).checkAsync(async () => {
-            return editShareablePermissionCb({
-                req,
-                res,
-                authOptions,
-                prisma,
-            })
-        })
-    )
-        .success(async (params) => {
+    await SecurityProvider.authorize<ISchema>(
+        {
+            api: { req, res },
+            policies: {
+                http: HttpPolicy.Post,
+                permissions: [PermissionPolicy.UpdateBoardUserSharing],
+            },
+            validations: { schema },
+        },
+        async (_session, params) => {
             const { id, canEditSchema, canEditContent } = params
             const result = await prisma.boardUserSharing.update({
                 where: { id },
@@ -44,6 +41,6 @@ export default async function handler(
             })
 
             res.json(result)
-        })
-        .catch((errors) => onCallExceptions(res, errors))
+        }
+    )
 }
