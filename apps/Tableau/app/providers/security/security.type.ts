@@ -18,7 +18,6 @@ export namespace ISecurity {
         validations: {
             schema: ZodSchema<any>
             valueType?: ValidationValueType
-            boardId?: string
         }
     }
 

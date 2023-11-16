@@ -7,9 +7,7 @@ import { PermissionPolicy } from '../../../app/providers/permission/permission.t
 
 type ISchema = z.infer<typeof schema>
 
-const schema = z.object({
-    taskId: z.string().cuid().optional(),
-})
+const schema = z.string()
 
 export default async function handler(
     req: NextApiRequest,
@@ -19,22 +17,13 @@ export default async function handler(
         {
             api: { req, res },
             policies: {
-                http: HttpPolicy.Post,
-                permissions: [PermissionPolicy.ReadTask],
+                http: HttpPolicy.Get,
+                permissions: [],
             },
             validations: { schema },
         },
         async (_session, params) => {
-            const result = await prisma.tag.findMany({
-                where: {
-                    task: {
-                        id:
-                            params && params.taskId !== null
-                                ? params.taskId
-                                : undefined,
-                    },
-                },
-            })
+            const result = await prisma.tag.findMany({})
 
             res.json(result)
         }

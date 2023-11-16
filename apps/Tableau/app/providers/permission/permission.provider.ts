@@ -55,20 +55,49 @@ export class PermissionProvider {
         policies,
         params,
     }: Omit<IPermission.Attempt, 'res'>) {
-        if (!session) return false
+        if (!session)
+            return {
+                result: false,
+                role: Role.Guest,
+                rolePolicies: RolePolicy[Role.Guest],
+                earlyReturn: true,
+                earlyReturnReason:
+                    "You don't have a session to check the policies",
+            }
 
         // If policies is empty, we don't need to check anything
-        if (!policies || !policies.length) return true
+        if (!policies || !policies.length)
+            return {
+                result: true,
+                role: Role.Guest,
+                rolePolicies: RolePolicy[Role.Guest],
+                earlyReturn: true,
+                earlyReturnReason: "You don't have any policies to check",
+            }
 
         // As a user you always have access to your own boards
         if (
             policies.includes(PermissionPolicy.ReadBoardList) &&
             policies.length === 1
         )
-            return true
+            return {
+                result: true,
+                role: Role.Owner,
+                rolePolicies: RolePolicy[Role.Owner],
+                earlyReturn: true,
+                earlyReturnReason: "ReadBoardList doesn't need a boardId",
+            }
 
         //If not we need to have a boardId to check the policies
-        if (!params || !params.boardId) return false
+        if (!params || !params.boardId)
+            return {
+                result: false,
+                role: Role.Guest,
+                rolePolicies: RolePolicy[Role.Guest],
+                earlyReturn: true,
+                earlyReturnReason:
+                    "You don't have a boardId to check the policies",
+            }
 
         const roleOfCurrentUserOnBoard = await this.getCurrentUserRole({
             session,
@@ -77,19 +106,43 @@ export class PermissionProvider {
 
         const policiesOfCurrentRole = RolePolicy[roleOfCurrentUserOnBoard]
 
-        return policies.every((policy) =>
-            policiesOfCurrentRole.includes(policy)
-        )
+        return {
+            result: policies.every((policy) =>
+                policiesOfCurrentRole.includes(policy)
+            ),
+            role: roleOfCurrentUserOnBoard,
+            rolePolicies: policiesOfCurrentRole,
+            earlyReturn: false,
+            earlyReturnReason: null,
+        }
     }
 
     static async guard(
         { session, policies, params, res }: IPermission.Guard['api'],
         success: IPermission.Guard['success']
     ) {
-        const result = await this.attempt({ session, policies, params })
+        const { result, role, rolePolicies, earlyReturnReason } =
+            await this.attempt({
+                session,
+                policies,
+                params,
+            })
 
         if (result) return success(result)
 
-        return res.status(403).send(ErrorMessage.Forbidden)
+        const errorMessageDev = `You don't have permission to access this resource. You need to have one of the following permissions: ${policies.join(
+            ', '
+        )}, and right now you have ${rolePolicies.join(
+            ', '
+        )} and you role is at least ${role}, the reason is ${earlyReturnReason} `
+
+        const errorMessageProd = ErrorMessage.Forbidden
+
+        const errorMessage =
+            process.env.NODE_ENV === 'development'
+                ? errorMessageDev
+                : errorMessageProd
+
+        return res.status(403).send(errorMessage)
     }
 }
