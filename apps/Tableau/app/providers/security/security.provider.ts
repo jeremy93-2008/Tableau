@@ -7,7 +7,7 @@ import { PermissionProvider } from '../permission/permission.provider'
 
 export class SecurityProvider {
     static async authorize<TSchema>(
-        params: ISecurity.AuthorizeParams,
+        params: ISecurity.AuthorizeParams<TSchema>,
         callback: ISecurity.AuthorizeCallback<TSchema>
     ) {
         const { api, policies, validations } = params
@@ -29,7 +29,9 @@ export class SecurityProvider {
                                 session,
                                 policies: policies.permissions,
                                 params: {
-                                    boardId: valData.boardId,
+                                    boardId: validations.getBoardId
+                                        ? validations.getBoardId(valData)
+                                        : valData.boardId,
                                 },
                                 res: api.res,
                             },

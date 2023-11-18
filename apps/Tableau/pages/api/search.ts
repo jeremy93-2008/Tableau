@@ -1,10 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../lib/prisma'
 import { Task } from '.prisma/client'
-import { authOptions } from './auth/[...nextauth]'
 import { z } from 'zod'
-import { isAuthenticated } from '../../server/next/auth/isAuthenticated'
-import { Session } from 'next-auth'
 import { SecurityProvider } from '../../app/providers/security/security.provider'
 import { HttpPolicy } from '../../app/providers/http/http.type'
 

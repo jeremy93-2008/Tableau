@@ -1,10 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
-import { authOptions } from '../auth/[...nextauth]'
-import { deleteShareablePermissionCb } from 'shared-libs'
-import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { z } from 'zod'
-import { Authenticate } from '../../../server/next/auth/Authenticate'
 import { SecurityProvider } from '../../../app/providers/security/security.provider'
 import { HttpPolicy } from '../../../app/providers/http/http.type'
 import { PermissionPolicy } from '../../../app/providers/permission/permission.type'
@@ -15,6 +11,7 @@ const schema = z.object({
     id: z.string().cuid(),
 })
 
+//TODO: Add boardId to the schema
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse

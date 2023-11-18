@@ -14,6 +14,7 @@ const schema = z.object({
     order: z.number(),
 })
 
+//TODO: Add boardId to the schema
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse

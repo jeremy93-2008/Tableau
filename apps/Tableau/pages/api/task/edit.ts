@@ -10,6 +10,7 @@ import { PermissionPolicy } from '../../../app/providers/permission/permission.t
 type ISchema = z.infer<typeof schema>
 
 const schema = z.object({
+    boardId: z.string().cuid(),
     id: z.string().cuid(),
     name: z.string(),
     description: z.string(),

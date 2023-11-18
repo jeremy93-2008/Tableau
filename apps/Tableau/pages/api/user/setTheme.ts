@@ -1,15 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
 import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
-import { Authenticate } from '../../../server/next/auth/Authenticate'
 import prisma from '../../../lib/prisma'
-import { isAuthenticated } from '../../../server/next/auth/isAuthenticated'
-import { authOptions } from '../auth/[...nextauth]'
 import { ErrorMessage } from 'shared-utils'
 import { SecurityProvider } from '../../../app/providers/security/security.provider'
 import { HttpPolicy } from '../../../app/providers/http/http.type'
-import { PermissionPolicy } from '../../../app/providers/permission/permission.type'
-import { ValidationValueType } from '../../../app/providers/validation/validation.value.type'
 
 type ISchema = z.infer<typeof schema>
 

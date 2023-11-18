@@ -23,7 +23,7 @@ export default async function handler(
             api: { req, res },
             policies: {
                 http: HttpPolicy.Post,
-                permissions: [PermissionPolicy.CreateBoard],
+                permissions: [],
             },
             validations: { schema },
         },

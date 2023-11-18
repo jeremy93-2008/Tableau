@@ -10,6 +10,7 @@ type ISchema = z.infer<typeof schema>
 
 const schema = z.array(columnMoveValidation)
 
+//TODO: Add boardId to the schema
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse

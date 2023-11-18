@@ -6,7 +6,7 @@ import { Session } from 'next-auth'
 import { ValidationValueType } from '../validation/validation.value.type'
 
 export namespace ISecurity {
-    export interface AuthorizeParams {
+    export interface AuthorizeParams<TSchema> {
         api: {
             req: NextApiRequest
             res: NextApiResponse
@@ -18,6 +18,7 @@ export namespace ISecurity {
         validations: {
             schema: ZodSchema<any>
             valueType?: ValidationValueType
+            getBoardId?: (params: TSchema) => string
         }
     }
 

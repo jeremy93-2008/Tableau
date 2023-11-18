@@ -26,7 +26,7 @@ export default async function handler(
                 http: HttpPolicy.Post,
                 permissions: [PermissionPolicy.DeleteBoard],
             },
-            validations: { schema },
+            validations: { schema, getBoardId: (params) => params.id },
         },
         async (_session, params) => {
             const board = params
