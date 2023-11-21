@@ -13,8 +13,9 @@ import * as Yup from 'yup'
 import { TextInput } from '../textInput'
 import { IFullStatus } from 'shared-types'
 import { BsTrashFill } from 'react-icons/bs'
+import { IValuesWithBoardId } from 'shared-types/src/types'
 
-export type IColumnEditFormikValues = {
+export type IColumnEditFormikValues = IValuesWithBoardId & {
     id: string
     statusName: string
     oldStatusName: string
@@ -40,6 +41,7 @@ export function ColumnEditForm(props: IColumnEditProps) {
 
     const initialValues = useMemo(
         () => ({
+            boardId: statusBoard?.boardId,
             id: statusBoard?.id,
             statusName: statusBoard.status.name,
             oldStatusName: statusBoard.status.name,
@@ -68,7 +70,7 @@ export function ColumnEditForm(props: IColumnEditProps) {
 
     return (
         <Formik
-            initialValues={initialValues}
+            initialValues={initialValues as IColumnEditFormikValues}
             validationSchema={validationSchema}
             validateOnMount
             onSubmit={onSubmit}

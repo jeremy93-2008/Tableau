@@ -1,9 +1,8 @@
 import React, { useCallback, WheelEvent } from 'react'
-import { Avatar, Button, Flex, Text } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 import { ColumnTask } from './columnTask'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
-import { BsFillPeopleFill } from 'react-icons/bs'
 import { ColumnShare } from './columnShare'
 import { useThemeMode } from 'shared-hooks'
 

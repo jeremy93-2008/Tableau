@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import { FormikHelpers } from 'formik'
-import { RefetchBoardAtom } from 'shared-atoms'
+import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 import { useTableauMutation, useThemeMode } from 'shared-hooks'
 import { ColumnEditForm, IColumnEditFormikValues } from './columnEditForm'
 import { BsFillPencilFill } from 'react-icons/bs'
@@ -43,6 +43,7 @@ export function ColumnEdit(props: IColumnEditProps) {
 
     const { bg, text } = useThemeMode()
 
+    const [selectedBoard] = useAtom(BoardAtom)
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
     const { mutateAsync } = useTableauMutation(
@@ -60,7 +61,11 @@ export function ColumnEdit(props: IColumnEditProps) {
         (values: IFullStatus) => {
             return axios.post(
                 `api/column/delete`,
-                { id: values.id, statusId: values.status.id },
+                {
+                    boardId: values.boardId,
+                    id: values.id,
+                    statusId: values.status.id,
+                },
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -147,7 +152,10 @@ export function ColumnEdit(props: IColumnEditProps) {
                 isOpen={isColumnDeleteOpen}
                 onClose={onCloseColumnDelete}
                 onSubmit={() => {
-                    onDeleteColumn(statusBoard)
+                    onDeleteColumn({
+                        ...statusBoard,
+                        boardId: selectedBoard!.id,
+                    })
                 }}
             />
         </>

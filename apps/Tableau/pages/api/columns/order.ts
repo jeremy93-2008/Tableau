@@ -1,16 +1,18 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { columnMoveValidation } from '../column/move'
+import { entityMoveValidation } from '../column/move'
 import { SecurityProvider } from '../../../app/providers/security/security.provider'
 import { HttpPolicy } from '../../../app/providers/http/http.type'
 import { PermissionPolicy } from '../../../app/providers/permission/permission.type'
 
 type ISchema = z.infer<typeof schema>
 
-const schema = z.array(columnMoveValidation)
+const schema = z.object({
+    boardId: z.string().cuid(),
+    columns: z.array(entityMoveValidation),
+})
 
-//TODO: Add boardId to the schema
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
@@ -25,7 +27,7 @@ export default async function handler(
             validations: { schema },
         },
         async (_session, params) => {
-            const orderedColumns = params
+            const orderedColumns = params.columns
             const result = await prisma.$transaction(
                 orderedColumns.map((column) => {
                     return prisma.statusBoard.update({

@@ -11,7 +11,7 @@ import { FormikHelpers } from 'formik'
 import { Task } from '.prisma/client'
 import axios from 'axios'
 import { useAtom } from 'jotai'
-import { RefetchBoardAtom } from 'shared-atoms'
+import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 import { TaskEditForm } from './taskEditForm'
 import { IFullStatus, IFullTask } from 'shared-types'
 import { useTableauMutation } from 'shared-hooks'
@@ -39,6 +39,7 @@ interface ITaskEditProps {
 
 export function TaskEdit(props: ITaskEditProps) {
     const { isOpen, onClose, status, task } = props
+    const [selectedBoard] = useAtom(BoardAtom)
     const [refetchBoards] = useAtom(RefetchBoardAtom)
 
     const { mutateAsync: mutateEditAsync } = useTableauMutation(
@@ -56,7 +57,7 @@ export function TaskEdit(props: ITaskEditProps) {
         (value: Task) => {
             return axios.post(
                 `api/task/delete`,
-                { id: value.id },
+                { boardId: selectedBoard!.id, id: value.id },
                 {
                     headers: {
                         'Content-Type': 'application/json',

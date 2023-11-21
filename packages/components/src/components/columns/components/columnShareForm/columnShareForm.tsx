@@ -24,6 +24,7 @@ import { useAtom } from 'jotai'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 
 type IShareMutationEditValue = {
+    boardId: string
     id: string
     canEditContent: boolean
     canEditSchema: boolean
@@ -86,13 +87,15 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
     const handleDeleteUserSharingPermission = useCallback(
         (userBoardShared: IFullBoardSharing) => () => {
             onDeleteModalClose()
-            mutateDeleteAsync({ id: userBoardShared.id }).then(() => {
+            mutateDeleteAsync({
+                boardId: selectedBoard.id,
+                id: userBoardShared.id,
+            }).then(() => {
                 window.setTimeout(() => {
                     refetchSharedBoard()
                     refetchBoards.fetch()
                     if (userBoardShared.user.email === session?.user.email)
                         pushReset()
-                    onClose()
                 })
             })
         },
@@ -114,6 +117,7 @@ export function ColumnShareForm(props: IColumnShareFormProps) {
                 actionMeta: ActionMeta<IOptionsMenuItem>
             ) => {
                 mutateEditAsync({
+                    boardId: selectedBoard.id,
                     id: userBoardShared.id,
                     canEditSchema: newValue!.canEditSchema,
                     canEditContent: newValue!.canEditContent,

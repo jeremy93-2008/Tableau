@@ -7,17 +7,17 @@ import { PermissionPolicy } from '../../../app/providers/permission/permission.t
 
 type ISchema = z.infer<typeof schema>
 
-export const columnMoveValidation = z.object({
+export const entityMoveValidation = z.object({
     id: z.string(),
     order: z.number(),
 })
 
 const schema = z.object({
-    currentColumn: columnMoveValidation,
-    affectedColumn: columnMoveValidation,
+    boardId: z.string().cuid(),
+    currentColumn: entityMoveValidation,
+    affectedColumn: entityMoveValidation,
 })
 
-//TODO: Add boardId to the schema
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse

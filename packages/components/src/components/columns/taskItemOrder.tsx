@@ -24,12 +24,16 @@ export function TaskItemOrder(props: ITaskItemWithOrderingProps) {
     const [isCurrentColumnDropped, setIsCurrentColumnDropped] = useState(false)
 
     const { mutateAsync } = useTableauMutation((values: Task[]) => {
-        return axios.post(`api/tasks/order`, values, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        })
+        return axios.post(
+            `api/tasks/order`,
+            { boardId: selectedBoard!.id, tasks: values },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            }
+        )
     })
 
     const orderedTasks = useMemo(() => {

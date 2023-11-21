@@ -15,9 +15,10 @@ export type IBoardWithAllRelation = Board & {
     user: User
 }
 
-export type IFullStatus = StatusBoard & {
-    status: Status
-}
+export type IFullStatus = IValuesWithBoardId &
+    StatusBoard & {
+        status: Status
+    }
 
 export type IFullBoardSharing = BoardUserSharing & {
     board: Board
@@ -46,4 +47,8 @@ export type IFullComment = Comment & {
 
 export type IFullHistory = History & {
     user: User
+}
+
+export type IValuesWithBoardId = {
+    boardId?: string
 }

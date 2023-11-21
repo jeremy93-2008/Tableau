@@ -7,6 +7,11 @@ import { useAtom } from 'jotai'
 import { BoardAtom, RefetchBoardAtom } from 'shared-atoms'
 import { useTableauMutation, useSwapEntity } from 'shared-hooks'
 
+interface IColumnTaskMoveValues {
+    boardId: string
+    columns: IFullStatus[]
+}
+
 interface IColumnTaskMoveProps {
     statusBoard: IFullStatus
     isDisabled: boolean
@@ -17,14 +22,16 @@ export function ColumnTaskMove(props: IColumnTaskMoveProps) {
     const [selectedBoard] = useAtom(BoardAtom)
     const [refetchBoard] = useAtom(RefetchBoardAtom)
 
-    const { mutateAsync } = useTableauMutation((values: IFullStatus[]) => {
-        return axios.post(`api/columns/order`, values, {
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        })
-    })
+    const { mutateAsync } = useTableauMutation(
+        (values: IColumnTaskMoveValues) => {
+            return axios.post(`api/columns/order`, values, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            })
+        }
+    )
 
     const orderedColumns = useMemo(() => {
         return selectedBoard?.Status.sort((a, b) => a.order - b.order)
@@ -58,7 +65,10 @@ export function ColumnTaskMove(props: IColumnTaskMoveProps) {
 
                 if (!newOrderedColumns) return
 
-                mutateAsync(newOrderedColumns).then(() => {
+                mutateAsync({
+                    boardId: selectedBoard!.id,
+                    columns: newOrderedColumns,
+                }).then(() => {
                     refetchBoard.fetch()
                 })
             }

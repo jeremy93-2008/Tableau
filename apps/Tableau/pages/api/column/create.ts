@@ -8,13 +8,13 @@ import { PermissionPolicy } from '../../../app/providers/permission/permission.t
 type ISchema = z.infer<typeof schema>
 
 const schema = z.object({
+    boardId: z.string().cuid(),
     id: z.string(),
     statusName: z.string(),
     isDefault: z.boolean(),
     order: z.number(),
 })
 
-//TODO: Add boardId to the schema
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse

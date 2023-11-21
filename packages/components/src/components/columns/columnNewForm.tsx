@@ -7,8 +7,9 @@ import { TextInput } from '../textInput'
 import { useAtom } from 'jotai'
 import { BoardAtom } from 'shared-atoms'
 import { IFullStatus } from 'shared-types'
+import { IValuesWithBoardId } from 'shared-types/src/types'
 
-export type IColumnNewFormikValues = {
+export type IColumnNewFormikValues = IValuesWithBoardId & {
     id: string | undefined
     statusName: string
     isDefault: boolean
@@ -35,6 +36,7 @@ export function ColumnNewForm(props: IColumnNewProps) {
 
     const initialValues = useMemo(
         () => ({
+            boardId: selectedBoard?.id,
             id: selectedBoard?.id,
             statusName: 'Status',
             isDefault: false,
@@ -66,7 +68,7 @@ export function ColumnNewForm(props: IColumnNewProps) {
 
     return (
         <Formik
-            initialValues={initialValues}
+            initialValues={initialValues as IColumnNewFormikValues}
             validationSchema={validationSchema}
             validateOnMount
             onSubmit={onSubmit}
