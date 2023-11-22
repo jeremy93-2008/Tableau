@@ -11,6 +11,7 @@ type ISchema = z.infer<typeof schema>
 
 const schema = z.object({
     boardId: z.string().cuid(),
+    email: z.string().email(),
     id: z.string().cuid(),
     name: z.string(),
     description: z.string(),
@@ -36,7 +37,7 @@ export default async function handler(
             },
             validations: { schema },
         },
-        async (_session, params) => {
+        async (session, params) => {
             const {
                 id,
                 name,
@@ -65,7 +66,7 @@ export default async function handler(
                 params: {
                     taskName: task.name,
                 },
-                email: req.body.email,
+                email: session.user.email,
             })
 
             const result = await prisma.$transaction(async (tx) => {
