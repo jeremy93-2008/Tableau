@@ -11,7 +11,6 @@ type ISchema = z.infer<typeof schema>
 
 const schema = z.object({
     boardId: z.string().cuid(),
-    email: z.string().email(),
     id: z.string().cuid(),
     name: z.string(),
     description: z.string(),
