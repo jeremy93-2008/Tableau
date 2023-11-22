@@ -48,7 +48,7 @@ export function Header() {
                 <Text
                     display={{ base: 'none', md: 'block' }}
                     ml={2}
-                    fontFamily="sans-serif"
+                    fontFamily="heading"
                 >
                     Tableau
                 </Text>

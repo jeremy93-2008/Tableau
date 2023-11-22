@@ -35,7 +35,7 @@ export function Columns() {
                 height="32px"
             >
                 <Text
-                    fontFamily="body"
+                    fontFamily="heading"
                     color={text.primary}
                     fontWeight="600"
                     fontSize="18px"
