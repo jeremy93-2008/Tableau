@@ -34,7 +34,12 @@ export function Columns() {
                 pt={3}
                 height="32px"
             >
-                <Text color={text.primary} fontWeight="medium" fontSize="18px">
+                <Text
+                    fontFamily="body"
+                    color={text.primary}
+                    fontWeight="600"
+                    fontSize="18px"
+                >
                     {selectedBoard!.name}
                 </Text>
                 <Flex alignItems="center">

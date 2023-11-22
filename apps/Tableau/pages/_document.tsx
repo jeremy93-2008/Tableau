@@ -8,6 +8,7 @@ export default function Document() {
             <title>Tableau - A Board Web App</title>
             <Head>
                 <link rel="shortcut icon" href="/favicon.svg" />
+                <link rel="preconnect" href="https://fonts.googleapis.com" />
             </Head>
             <body>
                 <ColorModeScript
