@@ -1,11 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import AWS from 'aws-sdk'
 import prisma from '../../../lib/prisma'
-import { authOptions } from '../auth/[...nextauth]'
 import { z } from 'zod'
 import { Board } from '.prisma/client'
 import { Session } from 'next-auth'
-import { isAuthenticated } from '../../../server/next/auth/isAuthenticated'
 import { NotificationRepository } from '../../../app/repositories/notification/notification.repository'
 import { SecurityProvider } from '../../../app/providers/security/security.provider'
 import { HttpPolicy } from '../../../app/providers/http/http.type'
@@ -33,10 +31,8 @@ export default async function handler(
             },
             validations: { schema },
         },
-        async (_session, params) => {
+        async (session, params) => {
             const { boardId, email, canEditSchema, canEditContent } = params
-
-            const session = await isAuthenticated({ req, res, authOptions })
 
             const isUserAlreadyHasAccount = await prisma.user.findFirst({
                 where: { email },

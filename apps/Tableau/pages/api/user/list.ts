@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { SecurityProvider } from '../../../app/providers/security/security.provider'
 import { HttpPolicy } from '../../../app/providers/http/http.type'
 import { PermissionPolicy } from '../../../app/providers/permission/permission.type'
@@ -31,5 +30,5 @@ export default async function handler(
 
             res.json(result)
         }
-    ).catch((errors) => onCallExceptions(res, errors))
+    )
 }

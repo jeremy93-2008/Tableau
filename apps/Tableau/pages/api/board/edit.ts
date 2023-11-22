@@ -25,7 +25,7 @@ export default async function handler(
                 http: HttpPolicy.Post,
                 permissions: [PermissionPolicy.UpdateBoard],
             },
-            validations: { schema, boardId: (params) => params.id },
+            validations: { schema, getBoardId: (params) => params.id },
         },
         async (_session, params) => {
             const { id, name, description, backgroundUrl } = params

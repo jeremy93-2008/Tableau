@@ -1,12 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
-import { authOptions } from '../auth/[...nextauth]'
 import { getTaskPermission } from 'shared-libs'
-import { isAuthenticated } from '../../../server/next/auth/isAuthenticated'
-import { Session } from 'next-auth'
-import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import { z } from 'zod'
-import { Authenticate } from '../../../server/next/auth/Authenticate'
 import { SecurityProvider } from '../../../app/providers/security/security.provider'
 import { HttpPolicy } from '../../../app/providers/http/http.type'
 import { ValidationValueType } from '../../../app/providers/validation/validation.value.type'
@@ -30,14 +25,8 @@ export default async function handler(
             },
             validations: { schema, valueType: ValidationValueType.Query },
         },
-        async (_session, params) => {
+        async (session, params) => {
             const { boardId } = params
-
-            const session = (await isAuthenticated({
-                req,
-                res,
-                authOptions,
-            })) as Session
 
             const boardUserOfCurrentUser =
                 await prisma.boardUserSharing.findFirst({

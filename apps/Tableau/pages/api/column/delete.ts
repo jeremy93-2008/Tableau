@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
-import { cleanOrder } from '../../../server/utils/cleanOrder'
 import { z } from 'zod'
 import { SecurityProvider } from '../../../app/providers/security/security.provider'
 import { HttpPolicy } from '../../../app/providers/http/http.type'
 import { PermissionPolicy } from '../../../app/providers/permission/permission.type'
+import { cleanOrder } from '../../../app/utils/cleanOrder'
 
 type ISchema = z.infer<typeof schema>
 

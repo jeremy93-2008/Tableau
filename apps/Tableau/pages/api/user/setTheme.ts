@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
-import { onCallExceptions } from '../../../server/next/exceptions/onCallExceptions'
 import prisma from '../../../lib/prisma'
 import { ErrorMessage } from 'shared-utils'
 import { SecurityProvider } from '../../../app/providers/security/security.provider'
@@ -40,5 +39,5 @@ export default async function handler(
 
             res.json(result)
         }
-    ).catch((errors) => onCallExceptions(res, errors))
+    )
 }

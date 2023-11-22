@@ -3,7 +3,7 @@ import Auth0Provider from 'next-auth/providers/auth0'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import prisma from '../../../lib/prisma'
 import { randomBytes, randomUUID } from 'crypto'
-import { linkNewVerifiedUserAccount } from '../../../server/prisma/linkNewVerifiedUserAccount'
+import { linkNewVerifiedUserAccount } from '../../../app/adapters/linkNewAccount'
 import { User } from '.prisma/client'
 
 declare module 'next-auth' {
