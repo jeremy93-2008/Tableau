@@ -1,13 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import AWS from 'aws-sdk'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { Board } from '.prisma/client'
-import { Session } from 'next-auth'
 import { NotificationRepository } from '../../../http/repositories/notification/notification.repository'
-import { SecurityProvider } from '../../../http/providers/security/security.provider'
 import { HttpPolicy } from '../../../http/providers/http/http.type'
 import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
+import { withMiddleware } from '../../../http/decorators/withMiddleware'
+import { SecurityMiddleware } from '../../../http/middlewares/security.middleware'
+import { IContext } from '../../../http/services/context'
 
 type ISchema = z.infer<typeof schema>
 
@@ -18,107 +17,60 @@ const schema = z.object({
     canEditContent: z.boolean(),
 })
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+async function handler(
+    _req: NextApiRequest,
+    res: NextApiResponse,
+    context: IContext
 ) {
-    await SecurityProvider.authorize<ISchema>(
-        {
-            api: { req, res },
-            policies: {
-                http: HttpPolicy.Post,
-                permissions: [PermissionPolicy.CreateBoardUserSharing],
-            },
-            validations: { schema },
-        },
-        async (session, params) => {
-            const { boardId, email, canEditSchema, canEditContent } = params
+    const { boardId, email, canEditSchema, canEditContent } =
+        context.data as ISchema
 
-            const isUserAlreadyHasAccount = await prisma.user.findFirst({
-                where: { email },
-            })
-
-            const result = await prisma.boardUserSharing.create({
-                data: {
-                    board: { connect: { id: boardId } },
-                    user: {
-                        connectOrCreate: {
-                            where: { email },
-                            create: {
-                                name: email.split('@')[0],
-                                email,
-                                image: 'to_link',
-                            },
-                        },
-                    },
-                    canEditSchema,
-                    canEditContent,
-                },
-            })
-
-            const board = await prisma.board.findFirst({
-                where: { id: boardId },
-            })
-
-            const notification = new NotificationRepository()
-            await notification.add(
-                'info',
-                'You have been invited to collaborate on a board (' +
-                    board?.name +
-                    ') by ' +
-                    (session as Session).user.name,
-                [email]
-            )
-
-            res.json({
-                data: result,
-                isUserAlreadyHasAccount: !!isUserAlreadyHasAccount,
-            })
-        }
-    )
-}
-
-async function sendCollaborationMail(
-    email: string,
-    board: Board,
-    session: Session
-) {
-    AWS.config.update({
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-        region: 'us-east-1',
+    const isUserAlreadyHasAccount = await prisma.user.findFirst({
+        where: { email },
     })
-    await new AWS.SES()
-        .sendEmail({
-            Source: `Tableau App <jeremy93-2008@hotmail.fr>`,
-            Destination: { ToAddresses: [email] },
-            Message: {
-                Subject: {
-                    Charset: 'UTF-8',
-                    Data: `Invitation to Collaborate on ${board.name} Board in Tableau App`,
-                },
-                Body: {
-                    Text: {
-                        Charset: 'UTF-8',
-                        Data: `Dear ${email},
 
-You have been invited by ${session.user!.name} to collaborate on ${
-                            board.name
-                        } in the Tableau App.
-
-Tableau App is a powerful tool that helps teams visualize, analyze and share boards and tasks.
-
-To access the board, please follow these steps:
-
-    Click on the following link: https://tableau-beta.vercel.app/
-    Log in to your Tableau account with the email that you was invite or create a new one
-    Once you are logged in, you will be able to view and edit the board.
-
-Best regards,
-Tableau Team`,
+    const result = await prisma.boardUserSharing.create({
+        data: {
+            board: { connect: { id: boardId } },
+            user: {
+                connectOrCreate: {
+                    where: { email },
+                    create: {
+                        name: email.split('@')[0],
+                        email,
+                        image: 'to_link',
                     },
                 },
             },
-        })
-        .promise()
+            canEditSchema,
+            canEditContent,
+        },
+    })
+
+    const board = await prisma.board.findFirst({
+        where: { id: boardId },
+    })
+
+    const notification = new NotificationRepository()
+    await notification.add(
+        'info',
+        'You have been invited to collaborate on a board (' +
+            board?.name +
+            ') by ' +
+            context.session?.user.name,
+        [email]
+    )
+
+    res.json({
+        data: result,
+        isUserAlreadyHasAccount: !!isUserAlreadyHasAccount,
+    })
 }
+
+export default withMiddleware(handler, [
+    SecurityMiddleware({
+        verbs: [HttpPolicy.Post],
+        policies: [PermissionPolicy.CreateBoardUserSharing],
+        schema,
+    }),
+])

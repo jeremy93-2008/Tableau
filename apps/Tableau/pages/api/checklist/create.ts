@@ -4,6 +4,9 @@ import { z } from 'zod'
 import { SecurityProvider } from '../../../http/providers/security/security.provider'
 import { HttpPolicy } from '../../../http/providers/http/http.type'
 import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
+import { withMiddleware } from '../../../http/decorators/withMiddleware'
+import { SecurityMiddleware } from '../../../http/middlewares/security.middleware'
+import { IContext } from '../../../http/services/context'
 
 type ISchema = z.infer<typeof schema>
 
@@ -14,32 +17,29 @@ const schema = z.object({
     checklistGroupId: z.string(),
 })
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+async function handler(
+    _req: NextApiRequest,
+    res: NextApiResponse,
+    context: IContext
 ) {
-    await SecurityProvider.authorize<ISchema>(
-        {
-            api: { req, res },
-            policies: {
-                http: HttpPolicy.Post,
-                permissions: [PermissionPolicy.UpdateTask],
-            },
-            validations: { schema },
+    const { name, email, checklistGroupId } = context.data as ISchema
+
+    const result = await prisma.checklist.create({
+        data: {
+            name,
+            checked: false,
+            assignedUser: { connect: { email } },
+            checklistGroup: { connect: { id: checklistGroupId } },
         },
-        async (_session, params) => {
-            const { name, email, checklistGroupId } = params
+    })
 
-            const result = await prisma.checklist.create({
-                data: {
-                    name,
-                    checked: false,
-                    assignedUser: { connect: { email } },
-                    checklistGroup: { connect: { id: checklistGroupId } },
-                },
-            })
-
-            res.json(result)
-        }
-    )
+    res.json(result)
 }
+
+export default withMiddleware(handler, [
+    SecurityMiddleware({
+        verbs: [HttpPolicy.Post],
+        policies: [PermissionPolicy.UpdateTask],
+        schema,
+    }),
+])

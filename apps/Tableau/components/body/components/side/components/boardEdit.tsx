@@ -40,12 +40,16 @@ export function BoardEdit(props: IBoardEditProps) {
 
     const { mutateAsync } = useTableauMutation(
         (values: IBoardEditFormikValues) => {
-            return axios.post(`api/board/edit`, values, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            })
+            return axios.post(
+                `api/board/edit`,
+                { ...values, boardId: values.id },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                    },
+                }
+            )
         }
     )
 

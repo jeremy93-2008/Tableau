@@ -3,12 +3,17 @@ import { getServerSession } from 'next-auth/next'
 import { ErrorMessage } from 'shared-utils'
 import { authOptions } from '../../pages/api/auth/[...nextauth]'
 import { IUser } from '../providers/user/user.type'
-import { setContextValue } from '../services/context'
+import { getContext, setContextValue } from '../services/context'
 
 export function AuthMiddleware() {
     return async (req: NextApiRequest, res: NextApiResponse) => {
         const session = await getAuthenticatedUser({ req, res })
         if (!session) {
+            if (getContext('isDebugging'))
+                console.log(
+                    'DebugMiddleware - AuthMiddleware - session:',
+                    undefined
+                )
             res.status(401).send(ErrorMessage.Unauthenticated)
             return false
         }

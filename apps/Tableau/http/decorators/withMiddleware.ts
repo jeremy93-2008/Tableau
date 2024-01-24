@@ -1,27 +1,45 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { createBasicContext, getContext, IContext } from '../services/context'
+import {
+    afterGlobalMiddlewares,
+    beforeGlobalMiddlewares,
+} from '../middlewares/globals/global.middleware'
 
-type APIRoute<ResponseData> = (
+export type APIRoute<ResponseData> = (
     req: NextApiRequest,
     res: NextApiResponse<ResponseData>,
     context: IContext
 ) => ResponseData | Promise<ResponseData>
 
-type MiddlewareFunction = (
+export type MiddlewareFunction = (
     req: NextApiRequest,
     res: NextApiResponse
 ) => boolean | Promise<boolean>
 
 export function withMiddleware<ResponseData>(
     handler: APIRoute<ResponseData>,
-    middlewares: MiddlewareFunction[]
+    middlewares: MiddlewareFunction[],
+    options?: {
+        skipGlobalMiddlewares?: boolean
+    }
 ) {
+    const { skipGlobalMiddlewares } = options || {}
+
+    let allMiddlewares = [
+        ...(!skipGlobalMiddlewares ? beforeGlobalMiddlewares : []),
+        ...middlewares,
+        ...(!skipGlobalMiddlewares ? afterGlobalMiddlewares : []),
+    ]
+
     return async (req: NextApiRequest, res: NextApiResponse<ResponseData>) => {
         createBasicContext(req, res)
 
-        for (const middleware of middlewares) {
+        for (const middleware of allMiddlewares) {
             const result = await middleware(req, res)
-            if (!result) return
+            if (!result) {
+                res.status(500).send('Internal Server Error' as ResponseData)
+                return
+            }
         }
 
         await handler(req, res, getContext())

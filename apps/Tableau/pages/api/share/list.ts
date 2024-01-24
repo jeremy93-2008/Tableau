@@ -16,7 +16,7 @@ const schema = z.object({
 })
 
 async function handler(
-    req: NextApiRequest,
+    _req: NextApiRequest,
     res: NextApiResponse,
     context: IContext
 ) {

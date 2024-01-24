@@ -4,100 +4,96 @@ import { z } from 'zod'
 import { ErrorMessage } from 'shared-utils'
 import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
 import { HttpPolicy } from '../../../http/providers/http/http.type'
-import { SecurityProvider } from '../../../http/providers/security/security.provider'
+import { withMiddleware } from '../../../http/decorators/withMiddleware'
+import { SecurityMiddleware } from '../../../http/middlewares/security.middleware'
+import { IContext } from '../../../http/services/context'
 
 const schema = z.string()
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+async function handler(
+    _req: NextApiRequest,
+    res: NextApiResponse,
+    context: IContext
 ) {
-    await SecurityProvider.authorize(
-        {
-            api: { req, res },
-            policies: {
-                http: HttpPolicy.Get,
-                permissions: [PermissionPolicy.ReadBoardList],
-            },
-            validations: { schema },
-        },
-        async (session) => {
-            const email = session?.user?.email ?? ''
-            const userEntry = await prisma.user.findFirst({
-                where: { email: { equals: email } },
-            })
+    const email = context.session?.user?.email ?? ''
+    const userEntry = await prisma.user.findFirst({
+        where: { email: { equals: email } },
+    })
 
-            if (!email)
-                return res.status(401).send(ErrorMessage.Unauthenticated)
+    if (!email) return res.status(401).send(ErrorMessage.Unauthenticated)
 
-            if (!userEntry)
-                return res
-                    .status(500)
-                    .send("The user doesn't exist in the database")
+    if (!userEntry)
+        return res.status(500).send("The user doesn't exist in the database")
 
-            const result = await prisma.boardUserSharing.findMany({
-                where: { user: { email } },
+    const result = await prisma.boardUserSharing.findMany({
+        where: { user: { email } },
+        include: {
+            board: {
                 include: {
-                    board: {
+                    Status: {
+                        include: { status: true },
+                    },
+                    user: true,
+                    Task: {
                         include: {
-                            Status: {
-                                include: { status: true },
-                            },
                             user: true,
-                            Task: {
+                            assignedUsers: {
+                                include: {
+                                    User: true,
+                                },
+                            },
+                            checklistsGroup: {
+                                include: {
+                                    checklists: {
+                                        orderBy: {
+                                            id: 'asc',
+                                        },
+                                    },
+                                },
+                                orderBy: {
+                                    id: 'asc',
+                                },
+                            },
+                            link: {
+                                orderBy: {
+                                    id: 'asc',
+                                },
+                            },
+                            tags: {
+                                orderBy: {
+                                    id: 'asc',
+                                },
+                            },
+                            Comment: {
+                                orderBy: {
+                                    createdAt: 'asc',
+                                },
                                 include: {
                                     user: true,
-                                    assignedUsers: {
-                                        include: {
-                                            User: true,
-                                        },
-                                    },
-                                    checklistsGroup: {
-                                        include: {
-                                            checklists: {
-                                                orderBy: {
-                                                    id: 'asc',
-                                                },
-                                            },
-                                        },
-                                        orderBy: {
-                                            id: 'asc',
-                                        },
-                                    },
-                                    link: {
-                                        orderBy: {
-                                            id: 'asc',
-                                        },
-                                    },
-                                    tags: {
-                                        orderBy: {
-                                            id: 'asc',
-                                        },
-                                    },
-                                    Comment: {
-                                        orderBy: {
-                                            createdAt: 'asc',
-                                        },
-                                        include: {
-                                            user: true,
-                                        },
-                                    },
-                                    History: {
-                                        orderBy: {
-                                            createdAt: 'asc',
-                                        },
-                                        include: {
-                                            user: true,
-                                        },
-                                    },
+                                },
+                            },
+                            History: {
+                                orderBy: {
+                                    createdAt: 'asc',
+                                },
+                                include: {
+                                    user: true,
                                 },
                             },
                         },
                     },
                 },
-                orderBy: { board: { name: 'desc' } },
-            })
-            res.json(result.map((r) => r.board))
-        }
-    )
+            },
+        },
+        orderBy: { board: { name: 'desc' } },
+    })
+    res.json(result.map((r) => r.board))
 }
+
+export default withMiddleware(handler, [
+    SecurityMiddleware({
+        verbs: [HttpPolicy.Get],
+        policies: [PermissionPolicy.ReadBoardList],
+        schema,
+    }),
+])

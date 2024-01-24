@@ -25,12 +25,16 @@ export function BoardDelete(props: IBoardDeleteProps) {
 
     const { mutateAsync } = useTableauMutation(
         (board: IBoardWithAllRelation) => {
-            return axios.post(`api/board/delete`, board, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            })
+            return axios.post(
+                `api/board/delete`,
+                { ...board, boardId: board.id },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                    },
+                }
+            )
         }
     )
 
