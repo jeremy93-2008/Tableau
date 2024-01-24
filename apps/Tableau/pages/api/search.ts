@@ -2,8 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../lib/prisma'
 import { Task } from '.prisma/client'
 import { z } from 'zod'
-import { SecurityProvider } from '../../app/providers/security/security.provider'
-import { HttpPolicy } from '../../app/providers/http/http.type'
+import { SecurityProvider } from '../../http/providers/security/security.provider'
+import { HttpPolicy } from '../../http/providers/http/http.type'
 
 type IFinderSearchResult = Record<IFinderSearchType, Task[]>
 

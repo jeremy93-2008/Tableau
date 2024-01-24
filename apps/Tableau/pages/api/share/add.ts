@@ -4,10 +4,10 @@ import prisma from '../../../lib/prisma'
 import { z } from 'zod'
 import { Board } from '.prisma/client'
 import { Session } from 'next-auth'
-import { NotificationRepository } from '../../../app/repositories/notification/notification.repository'
-import { SecurityProvider } from '../../../app/providers/security/security.provider'
-import { HttpPolicy } from '../../../app/providers/http/http.type'
-import { PermissionPolicy } from '../../../app/providers/permission/permission.type'
+import { NotificationRepository } from '../../../http/repositories/notification/notification.repository'
+import { SecurityProvider } from '../../../http/providers/security/security.provider'
+import { HttpPolicy } from '../../../http/providers/http/http.type'
+import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
 
 type ISchema = z.infer<typeof schema>
 

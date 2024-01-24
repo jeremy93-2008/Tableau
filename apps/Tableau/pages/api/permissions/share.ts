@@ -7,9 +7,9 @@ import {
     editShareablePermissionCb,
 } from 'shared-libs'
 import { z } from 'zod'
-import { SecurityProvider } from '../../../app/providers/security/security.provider'
-import { HttpPolicy } from '../../../app/providers/http/http.type'
-import { ValidationValueType } from '../../../app/providers/validation/validation.value.type'
+import { SecurityProvider } from '../../../http/providers/security/security.provider'
+import { HttpPolicy } from '../../../http/providers/http/http.type'
+import { ValidationValueType } from '../../../http/providers/validation/validation.value.type'
 
 type ISchema = z.infer<typeof schema>
 
