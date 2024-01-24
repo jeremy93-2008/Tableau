@@ -4,6 +4,5 @@ export const ErrorMessage = {
     Forbidden:
         'Your current permissions do not allow you to perform the requested action. ' +
         'If you believe this is an error, please contact the system administrator for assistance.',
-    NotAllowed:
-        'Error: Method Not Allowed. Please use the POST method for this request.',
+    NotAllowed: 'Error: Method Not Allowed.',
 }

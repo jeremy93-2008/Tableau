@@ -1,10 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { SecurityProvider } from '../../../http/providers/security/security.provider'
 import { HttpPolicy } from '../../../http/providers/http/http.type'
 import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
 import { ValidationValueType } from '../../../http/providers/validation/validation.value.type'
+import { IContext } from '../../../http/services/context'
+import { withMiddleware } from '../../../http/decorators/withMiddleware'
+import { SecurityMiddleware } from '../../../http/middlewares/security.middleware'
 
 type ISchema = z.infer<typeof schema>
 
@@ -13,34 +15,32 @@ const schema = z.object({
     email: z.undefined() || z.string().email(),
 })
 
-export default async function handler(
+async function handler(
     req: NextApiRequest,
-    res: NextApiResponse
+    res: NextApiResponse,
+    context: IContext
 ) {
-    await SecurityProvider.authorize<ISchema>(
-        {
-            api: { req, res },
-            policies: {
-                http: HttpPolicy.Get,
-                permissions: [PermissionPolicy.ReadBoardUserSharing],
-            },
-            validations: { schema, valueType: ValidationValueType.Query },
+    const { boardId, email } = context.data as ISchema
+
+    const result = await prisma.boardUserSharing.findMany({
+        where: {
+            boardId,
+            user: { email },
         },
-        async (_session, params) => {
-            const { boardId, email } = params
+        include: {
+            board: true,
+            user: true,
+        },
+    })
 
-            const result = await prisma.boardUserSharing.findMany({
-                where: {
-                    boardId,
-                    user: { email },
-                },
-                include: {
-                    board: true,
-                    user: true,
-                },
-            })
-
-            res.json(result)
-        }
-    )
+    res.json(result)
 }
+
+export default withMiddleware(handler, [
+    SecurityMiddleware({
+        verbs: [HttpPolicy.Get],
+        policies: [PermissionPolicy.ReadBoardUserSharing],
+        requestDataType: ValidationValueType.Query,
+        schema,
+    }),
+])

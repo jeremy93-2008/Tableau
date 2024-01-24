@@ -1,5 +1,4 @@
 import { useCallback } from 'react'
-import { structuredClone } from 'next/dist/compiled/@edge-runtime/primitives/structured-clone'
 
 export function useReorderDnDEntity<
     TData extends { id: string; order: number }
