@@ -1,5 +1,5 @@
 
-# ![Tableau Logo](./public/favicon.svg)  Tableau Kanban Board
+# ![Tableau Logo](./web/tableau-web/public/favicon.svg)  Tableau Kanban Board
 
 > [!WARNING]
 > This project is in development and it´s not ready to be use in production. To test latest features not released yet. try https://tableau-git-development-jeremy93-2008.vercel.app/#/
