@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# ![Tableau Logo](./web/tableau-web/public/favicon.svg)  Tableau Kanban Board
 
-First, run the development server:
+> [!WARNING]
+> This project is in development and it´s not ready to be use in production. To test latest features not released yet.
+>
+> Try https://tableau-git-development-jeremy93-2008.vercel.app/#/
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## Overview
+Welcome to Tableau Kanban Board, an open-source application designed to help you efficiently manage your projects using a Kanban approach. This application provides a user-friendly interface for creating and organizing tasks, visualizing workflow, and tracking progress. With additional features like Table View and Gantt Diagram, Tableau Kanban Board is a versatile tool that goes beyond traditional Kanban boards.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
+### 1. Kanban Board
+   Organize your tasks using a Kanban board with customizable columns. Move cards between columns to reflect their current status in the workflow, making it easy to visualize and manage your project's progress.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### 2. Table View
+   Switch to Table View to see a tabular representation of your tasks. This view allows for easy sorting, filtering, and editing of task details, providing a different perspective on your project data.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### 3. Gantt Diagram
+   Utilize the Gantt Diagram to create a timeline view of your project. Visualize task dependencies, durations, and milestones to better understand and plan your project timeline.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### 4. User-Friendly Interface
+   Tableau Kanban Board features an intuitive and user-friendly interface, making it easy for team members to collaborate and stay on top of their tasks. The drag-and-drop functionality allows for effortless task management.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### 5. Customization
+   Tailor the application to fit your team's unique workflow. Customize columns, task types, and other settings to ensure that Tableau Kanban Board aligns seamlessly with your project management needs.
 
-## Learn More
+### 6. Collaboration
+   Facilitate collaboration among team members by assigning tasks, leaving comments, and attaching files directly within the application. Keep communication centralized and enhance team productivity.
 
-To learn more about Next.js, take a look at the following resources:
+## Getting started
+   In current development stage, the application is not yet ready for production use. However, you can still run the application locally to test out its features.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributions
+Contributions are welcome! If you have ideas for new features, improvements, or bug fixes, please open an issue or submit a pull request. Let's build Tableau Kanban Board together!
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## License
+This project is licensed under the Mozilla Public License, making it open and free for everyone to use and contribute.
