@@ -2,7 +2,10 @@
 # ![Tableau Logo](./web/tableau-web/public/favicon.svg)  Tableau Kanban Board
 
 > [!WARNING]
-> This project is in development and it´s not ready to be use in production. To test latest features not released yet. try https://tableau-git-development-jeremy93-2008.vercel.app/#/
+> This project is in development and it´s not ready to be use in production. To test latest features not released yet.
+>
+> Try https://tableau-git-development-jeremy93-2008.vercel.app/#/
+
 ## Overview
 Welcome to Tableau Kanban Board, an open-source application designed to help you efficiently manage your projects using a Kanban approach. This application provides a user-friendly interface for creating and organizing tasks, visualizing workflow, and tracking progress. With additional features like Table View and Gantt Diagram, Tableau Kanban Board is a versatile tool that goes beyond traditional Kanban boards.
 
