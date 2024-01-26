@@ -7,8 +7,10 @@ import {
     editShareablePermissionCb,
 } from 'shared-libs'
 import { z } from 'zod'
-import { SecurityProvider } from '../../../http/providers/security/security.provider'
 import { HttpPolicy } from '../../../http/providers/http/http.type'
+import { withMiddleware } from '../../../http/decorators/withMiddleware'
+import { SecurityMiddleware } from '../../../http/middlewares/security.middleware'
+import { IContext } from '../../../http/services/context'
 import { ValidationValueType } from '../../../http/providers/validation/validation.value.type'
 
 type ISchema = z.infer<typeof schema>
@@ -18,63 +20,62 @@ const schema = z.object({
     userBoardSharing: z.string(),
 })
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+async function handler(
+    _req: NextApiRequest,
+    res: NextApiResponse,
+    context: IContext
 ) {
-    await SecurityProvider.authorize<ISchema>(
-        {
-            api: { req, res },
-            policies: {
-                http: HttpPolicy.Get,
-                permissions: [],
-            },
-            validations: { schema, valueType: ValidationValueType.Query },
+    const { boardId, userBoardSharing: userBoardSharingString } =
+        context.data as ISchema
+
+    const userBoardSharing = userBoardSharingString
+        .split(',')
+        .map((val) => ({ id: val }))
+
+    const ShareableRolesPermissions = new Map()
+
+    for (let idx = 0; idx < userBoardSharing.length; idx++) {
+        const { id } = userBoardSharing[idx]
+        const edit = await editShareablePermissionCb({
+            req: _req,
+            res,
+            authOptions,
+            prisma,
+            params: { id },
+        })
+        const remove = await deleteShareablePermissionCb({
+            req: _req,
+            res,
+            authOptions,
+            prisma,
+            params: { id },
+        })
+
+        ShareableRolesPermissions.set(id, {
+            edit,
+            delete: remove,
+        })
+    }
+
+    return res.status(200).send({
+        permissions: {
+            add: await addShareablePermissionCb({
+                req: _req,
+                res,
+                authOptions,
+                prisma,
+                params: { boardId: boardId },
+            }),
+            userBoardSharing: Array.from(ShareableRolesPermissions),
         },
-        async (_session, params) => {
-            const { boardId, userBoardSharing: userBoardSharingString } = params
-
-            const userBoardSharing = userBoardSharingString
-                .split(',')
-                .map((val) => ({ id: val }))
-
-            const ShareableRolesPermissions = new Map()
-
-            for (let idx = 0; idx < userBoardSharing.length; idx++) {
-                const { id } = userBoardSharing[idx]
-                const edit = await editShareablePermissionCb({
-                    req,
-                    res,
-                    authOptions,
-                    prisma,
-                    params: { id },
-                })
-                const remove = await deleteShareablePermissionCb({
-                    req,
-                    res,
-                    authOptions,
-                    prisma,
-                    params: { id },
-                })
-
-                ShareableRolesPermissions.set(id, {
-                    edit,
-                    delete: remove,
-                })
-            }
-
-            return res.status(200).send({
-                permissions: {
-                    add: await addShareablePermissionCb({
-                        req,
-                        res,
-                        authOptions,
-                        prisma,
-                        params: { boardId: boardId },
-                    }),
-                    userBoardSharing: Array.from(ShareableRolesPermissions),
-                },
-            })
-        }
-    )
+    })
 }
+
+export default withMiddleware(handler, [
+    SecurityMiddleware({
+        verbs: [HttpPolicy.Get],
+        policies: [],
+        requestDataType: ValidationValueType.Query,
+        schema,
+    }),
+])

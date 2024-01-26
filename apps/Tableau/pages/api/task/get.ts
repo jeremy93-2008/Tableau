@@ -5,6 +5,9 @@ import { SecurityProvider } from '../../../http/providers/security/security.prov
 import { HttpPolicy } from '../../../http/providers/http/http.type'
 import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
 import { ValidationValueType } from '../../../http/providers/validation/validation.value.type'
+import { withMiddleware } from '../../../http/decorators/withMiddleware'
+import { SecurityMiddleware } from '../../../http/middlewares/security.middleware'
+import { IContext } from '../../../http/services/context'
 
 type ISchema = z.infer<typeof schema>
 
@@ -13,29 +16,27 @@ const schema = z.object({
     id: z.string().cuid(),
 })
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+async function handler(
+    _req: NextApiRequest,
+    res: NextApiResponse,
+    context: IContext
 ) {
-    await SecurityProvider.authorize<ISchema>(
-        {
-            api: { req, res },
-            policies: {
-                http: HttpPolicy.Get,
-                permissions: [PermissionPolicy.ReadTask],
-            },
-            validations: { schema, valueType: ValidationValueType.Query },
+    const { id } = context.data as ISchema
+
+    const result = await prisma.task.findFirst({
+        where: {
+            id,
         },
-        async (_session, params) => {
-            const { id } = params
+    })
 
-            const result = await prisma.task.findFirst({
-                where: {
-                    id,
-                },
-            })
-
-            res.json(result)
-        }
-    )
+    res.json(result)
 }
+
+export default withMiddleware(handler, [
+    SecurityMiddleware({
+        verbs: [HttpPolicy.Get],
+        policies: [PermissionPolicy.ReadTask],
+        requestDataType: ValidationValueType.Query,
+        schema,
+    }),
+])

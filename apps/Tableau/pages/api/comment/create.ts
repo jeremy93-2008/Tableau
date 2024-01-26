@@ -2,9 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
 import prisma from '../../../lib/prisma'
 import { NotificationRepository } from '../../../http/repositories/notification/notification.repository'
-import { SecurityProvider } from '../../../http/providers/security/security.provider'
 import { HttpPolicy } from '../../../http/providers/http/http.type'
 import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
+import { withMiddleware } from '../../../http/decorators/withMiddleware'
+import { SecurityMiddleware } from '../../../http/middlewares/security.middleware'
+import { IContext } from '../../../http/services/context'
 
 type ISchema = z.infer<typeof schema>
 
@@ -15,74 +17,69 @@ const schema = z.object({
     email: z.string().email(),
 })
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+async function handler(
+    _req: NextApiRequest,
+    res: NextApiResponse,
+    context: IContext
 ) {
-    await SecurityProvider.authorize<ISchema>(
-        {
-            api: { req, res },
-            policies: {
-                http: HttpPolicy.Post,
-                permissions: [PermissionPolicy.UpdateTask],
-            },
-            validations: { schema },
-        },
-        async (_session, params) => {
-            const { message, taskId, email } = params
+    const { message, taskId, email } = context.data as ISchema
 
-            const result = await prisma.comment.create({
-                data: {
-                    message,
-                    createdAt: new Date(),
-                    task: {
-                        connect: {
-                            id: taskId,
-                        },
-                    },
-                    user: {
-                        connect: {
-                            email,
-                        },
-                    },
-                },
-            })
-
-            const currentUser = await prisma.user.findFirst({
-                where: {
-                    email,
-                },
-            })
-
-            const selectedTask = await prisma.task.findFirst({
-                where: {
+    const result = await prisma.comment.create({
+        data: {
+            message,
+            createdAt: new Date(),
+            task: {
+                connect: {
                     id: taskId,
                 },
-            })
-
-            const assignedUsers = await prisma.taskAssignedUser.findMany({
-                where: {
-                    taskId,
+            },
+            user: {
+                connect: {
+                    email,
                 },
-                include: {
-                    User: true,
-                },
-            })
+            },
+        },
+    })
 
-            if (assignedUsers && assignedUsers.length > 0) {
-                const notification = new NotificationRepository()
-                await notification.add(
-                    'info',
-                    `New comment "_${message}_" of __${currentUser?.name}__ on task __${selectedTask?.name}__`,
-                    assignedUsers
-                        .map((assignedUser) => assignedUser.User.email ?? '')
-                        .filter(
-                            (email) => email && email !== currentUser?.email
-                        )
-                )
-            }
+    const currentUser = await prisma.user.findFirst({
+        where: {
+            email,
+        },
+    })
 
-            res.json(result)
-        }
-    )
+    const selectedTask = await prisma.task.findFirst({
+        where: {
+            id: taskId,
+        },
+    })
+
+    const assignedUsers = await prisma.taskAssignedUser.findMany({
+        where: {
+            taskId,
+        },
+        include: {
+            User: true,
+        },
+    })
+
+    if (assignedUsers && assignedUsers.length > 0) {
+        const notification = new NotificationRepository()
+        await notification.add(
+            'info',
+            `New comment "_${message}_" of __${currentUser?.name}__ on task __${selectedTask?.name}__`,
+            assignedUsers
+                .map((assignedUser) => assignedUser.User.email ?? '')
+                .filter((email) => email && email !== currentUser?.email)
+        )
+    }
+
+    res.json(result)
 }
+
+export default withMiddleware(handler, [
+    SecurityMiddleware({
+        verbs: [HttpPolicy.Post],
+        policies: [PermissionPolicy.UpdateTask],
+        schema,
+    }),
+])

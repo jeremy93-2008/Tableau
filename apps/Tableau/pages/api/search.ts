@@ -2,8 +2,10 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../lib/prisma'
 import { Task } from '.prisma/client'
 import { z } from 'zod'
-import { SecurityProvider } from '../../http/providers/security/security.provider'
 import { HttpPolicy } from '../../http/providers/http/http.type'
+import { withMiddleware } from '../../http/decorators/withMiddleware'
+import { SecurityMiddleware } from '../../http/middlewares/security.middleware'
+import { IContext } from '../../http/services/context'
 
 type IFinderSearchResult = Record<IFinderSearchType, Task[]>
 
@@ -16,70 +18,68 @@ const schema = z.object({
     types: z.array(z.string()),
 })
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+async function handler(
+    _req: NextApiRequest,
+    res: NextApiResponse,
+    context: IContext
 ) {
-    await SecurityProvider.authorize<ISchema>(
-        {
-            api: { req, res },
-            policies: {
-                http: HttpPolicy.Post,
-                permissions: [],
-            },
-            validations: { schema },
-        },
-        async (session, values) => {
-            const result = await prisma.$transaction(
-                values.types.map((type) =>
-                    prisma[type as IFinderSearchType].findMany({
-                        where: {
+    const values = context.data as ISchema
+    const result = await prisma.$transaction(
+        values.types.map((type) =>
+            prisma[type as IFinderSearchType].findMany({
+                where: {
+                    OR: [
+                        {
+                            name: {
+                                contains: values.searchText,
+                                mode: 'insensitive',
+                            },
+                        },
+                        {
+                            description: {
+                                contains: values.searchText,
+                                mode: 'insensitive',
+                            },
+                        },
+                    ],
+                    AND: {
+                        board: {
                             OR: [
                                 {
-                                    name: {
-                                        contains: values.searchText,
-                                        mode: 'insensitive',
+                                    BoardUserSharing: {
+                                        some: {
+                                            user: {
+                                                email: context.session!.user!
+                                                    .email,
+                                            },
+                                        },
                                     },
                                 },
                                 {
-                                    description: {
-                                        contains: values.searchText,
-                                        mode: 'insensitive',
+                                    user: {
+                                        email: context.session!.user!.email,
                                     },
                                 },
                             ],
-                            AND: {
-                                board: {
-                                    OR: [
-                                        {
-                                            BoardUserSharing: {
-                                                some: {
-                                                    user: {
-                                                        email: session.user!
-                                                            .email,
-                                                    },
-                                                },
-                                            },
-                                        },
-                                        {
-                                            user: {
-                                                email: session.user!.email,
-                                            },
-                                        },
-                                    ],
-                                },
-                            },
                         },
-                        include: {
-                            user: true,
-                            assignedUsers: { include: { User: true } },
-                            tags: true,
-                        },
-                    })
-                )
-            )
-
-            res.json({ task: result[0] } as IFinderSearchResult)
-        }
+                    },
+                },
+                include: {
+                    user: true,
+                    assignedUsers: { include: { User: true } },
+                    tags: true,
+                },
+            })
+        )
     )
+
+    res.json({ task: result[0] } as IFinderSearchResult)
 }
+
+export default withMiddleware(handler, [
+    SecurityMiddleware({
+        verbs: [HttpPolicy.Post],
+        policies: [],
+        schema,
+    }),
+])

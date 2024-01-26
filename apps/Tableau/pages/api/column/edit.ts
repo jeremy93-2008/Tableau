@@ -1,9 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { SecurityProvider } from '../../../http/providers/security/security.provider'
 import { HttpPolicy } from '../../../http/providers/http/http.type'
 import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
+import { withMiddleware } from '../../../http/decorators/withMiddleware'
+import { SecurityMiddleware } from '../../../http/middlewares/security.middleware'
+import { IContext } from '../../../http/services/context'
 
 type ISchema = z.infer<typeof schema>
 
@@ -14,44 +16,41 @@ const schema = z.object({
     oldStatusName: z.string(),
 })
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+async function handler(
+    _req: NextApiRequest,
+    res: NextApiResponse,
+    context: IContext
 ) {
-    await SecurityProvider.authorize<ISchema>(
-        {
-            api: { req, res },
-            policies: {
-                http: HttpPolicy.Post,
-                permissions: [PermissionPolicy.UpdateStatus],
-            },
-            validations: { schema },
+    const { id, statusName, oldStatusName } = context.data as ISchema
+    const result = await prisma.statusBoard.update({
+        where: {
+            id,
         },
-        async (_session, params) => {
-            const { id, statusName, oldStatusName } = params
-            const result = await prisma.statusBoard.update({
-                where: {
-                    id,
+        data: {
+            status: {
+                connectOrCreate: {
+                    where: { name: statusName },
+                    create: { name: statusName, isDefault: false },
                 },
-                data: {
-                    status: {
-                        connectOrCreate: {
-                            where: { name: statusName },
-                            create: { name: statusName, isDefault: false },
-                        },
-                    },
-                },
-            })
+            },
+        },
+    })
 
-            //We check if status row based on statusName can be deleted
-            if (
-                (await prisma.statusBoard.count({
-                    where: { status: { name: oldStatusName } },
-                })) === 0
-            )
-                await prisma.status.delete({ where: { name: oldStatusName } })
-
-            res.json(result)
-        }
+    //We check if status row based on statusName can be deleted
+    if (
+        (await prisma.statusBoard.count({
+            where: { status: { name: oldStatusName } },
+        })) === 0
     )
+        await prisma.status.delete({ where: { name: oldStatusName } })
+
+    res.json(result)
 }
+
+export default withMiddleware(handler, [
+    SecurityMiddleware({
+        verbs: [HttpPolicy.Post],
+        policies: [PermissionPolicy.UpdateStatus],
+        schema,
+    }),
+])

@@ -1,10 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { SecurityProvider } from '../../../http/providers/security/security.provider'
 import { HttpPolicy } from '../../../http/providers/http/http.type'
 import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
 import { ValidationValueType } from '../../../http/providers/validation/validation.value.type'
+import { withMiddleware } from '../../../http/decorators/withMiddleware'
+import { SecurityMiddleware } from '../../../http/middlewares/security.middleware'
+import { IContext } from '../../../http/services/context'
 
 type ISchema = z.infer<typeof schema>
 
@@ -13,31 +15,27 @@ const schema = z.object({
     email: z.string().email().nullable(),
 })
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+async function handler(
+    _req: NextApiRequest,
+    res: NextApiResponse,
+    context: IContext
 ) {
-    await SecurityProvider.authorize<ISchema>(
-        {
-            api: { req, res },
-            policies: {
-                http: HttpPolicy.Get,
-                permissions: [PermissionPolicy.ReadBoardList],
-            },
-            validations: { schema, valueType: ValidationValueType.Query },
+    const params = context.data as ISchema
+    const result = await prisma.user.findMany({
+        where: {
+            OR: [{ id: params.id ?? '' }, { email: params.email ?? '' }],
         },
-        async (_session, params) => {
-            const result = await prisma.user.findMany({
-                where: {
-                    OR: [
-                        { id: params.id ?? '' },
-                        { email: params.email ?? '' },
-                    ],
-                },
-                include: { accounts: true, sessions: true },
-            })
+        include: { accounts: true, sessions: true },
+    })
 
-            res.json(result[0])
-        }
-    )
+    res.json(result[0])
 }
+
+export default withMiddleware(handler, [
+    SecurityMiddleware({
+        verbs: [HttpPolicy.Get],
+        policies: [PermissionPolicy.ReadBoardList],
+        requestDataType: ValidationValueType.Query,
+        schema,
+    }),
+])

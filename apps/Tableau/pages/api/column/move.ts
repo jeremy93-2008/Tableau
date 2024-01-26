@@ -1,9 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { SecurityProvider } from '../../../http/providers/security/security.provider'
 import { HttpPolicy } from '../../../http/providers/http/http.type'
 import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
+import { withMiddleware } from '../../../http/decorators/withMiddleware'
+import { SecurityMiddleware } from '../../../http/middlewares/security.middleware'
+import { IContext } from '../../../http/services/context'
 
 type ISchema = z.infer<typeof schema>
 
@@ -18,37 +20,34 @@ const schema = z.object({
     affectedColumn: entityMoveValidation,
 })
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+async function handler(
+    _req: NextApiRequest,
+    res: NextApiResponse,
+    context: IContext
 ) {
-    await SecurityProvider.authorize<ISchema>(
-        {
-            api: { req, res },
-            policies: {
-                http: HttpPolicy.Post,
-                permissions: [PermissionPolicy.UpdateStatus],
+    const { currentColumn, affectedColumn } = context.data as ISchema
+    const result = prisma.$transaction([
+        prisma.statusBoard.update({
+            where: { id: affectedColumn.id },
+            data: {
+                order: currentColumn.order,
             },
-            validations: { schema },
-        },
-        async (_session, params) => {
-            const { currentColumn, affectedColumn } = params
-            const result = prisma.$transaction([
-                prisma.statusBoard.update({
-                    where: { id: affectedColumn.id },
-                    data: {
-                        order: currentColumn.order,
-                    },
-                }),
-                prisma.statusBoard.update({
-                    where: { id: currentColumn.id },
-                    data: {
-                        order: affectedColumn.order,
-                    },
-                }),
-            ])
+        }),
+        prisma.statusBoard.update({
+            where: { id: currentColumn.id },
+            data: {
+                order: affectedColumn.order,
+            },
+        }),
+    ])
 
-            res.json(result)
-        }
-    )
+    res.json(result)
 }
+
+export default withMiddleware(handler, [
+    SecurityMiddleware({
+        verbs: [HttpPolicy.Post],
+        policies: [PermissionPolicy.UpdateStatus],
+        schema,
+    }),
+])

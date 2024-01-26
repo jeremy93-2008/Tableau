@@ -2,8 +2,10 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
 import prisma from '../../../lib/prisma'
 import { ErrorMessage } from 'shared-utils'
-import { SecurityProvider } from '../../../http/providers/security/security.provider'
 import { HttpPolicy } from '../../../http/providers/http/http.type'
+import { withMiddleware } from '../../../http/decorators/withMiddleware'
+import { SecurityMiddleware } from '../../../http/middlewares/security.middleware'
+import { IContext } from '../../../http/services/context'
 
 type ISchema = z.infer<typeof schema>
 
@@ -12,32 +14,30 @@ const schema = z.object({
     isDarkMode: z.boolean(),
 })
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+async function handler(
+    _req: NextApiRequest,
+    res: NextApiResponse,
+    context: IContext
 ) {
-    await SecurityProvider.authorize<ISchema>(
-        {
-            api: { req, res },
-            policies: {
-                http: HttpPolicy.Post,
-                permissions: [],
-            },
-            validations: { schema },
+    const params = context.data as ISchema
+    if (params.email !== context.session!.user?.email) {
+        return res.status(403).send(ErrorMessage.Forbidden)
+    }
+
+    const result = await prisma.user.update({
+        where: { email: params.email },
+        data: {
+            isDarkMode: params.isDarkMode,
         },
-        async (session, params) => {
-            if (params.email !== session.user?.email) {
-                return res.status(403).send(ErrorMessage.Forbidden)
-            }
+    })
 
-            const result = await prisma.user.update({
-                where: { email: params.email },
-                data: {
-                    isDarkMode: params.isDarkMode,
-                },
-            })
-
-            res.json(result)
-        }
-    )
+    res.json(result)
 }
+
+export default withMiddleware(handler, [
+    SecurityMiddleware({
+        verbs: [HttpPolicy.Post],
+        policies: [],
+        schema,
+    }),
+])

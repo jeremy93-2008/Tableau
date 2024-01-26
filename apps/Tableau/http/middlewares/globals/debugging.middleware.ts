@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getContext, setContextValue } from '../../services/context'
+import { getContext } from '../../services/context'
 
 export function DebuggingMiddleware() {
     return async (req: NextApiRequest, res: NextApiResponse) => {

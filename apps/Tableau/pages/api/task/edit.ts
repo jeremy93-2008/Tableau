@@ -3,9 +3,11 @@ import prisma from '../../../lib/prisma'
 import { z } from 'zod'
 import { TaskHistoryMessageCode } from 'shared-utils/src/constants/taskHistoryMessageCode'
 import { HistoryRepository } from '../../../http/repositories/history/history.repository'
-import { SecurityProvider } from '../../../http/providers/security/security.provider'
 import { HttpPolicy } from '../../../http/providers/http/http.type'
 import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
+import { withMiddleware } from '../../../http/decorators/withMiddleware'
+import { SecurityMiddleware } from '../../../http/middlewares/security.middleware'
+import { IContext } from '../../../http/services/context'
 
 type ISchema = z.infer<typeof schema>
 
@@ -23,96 +25,93 @@ const schema = z.object({
     assignedUserIds: z.array(z.string()).nullable(),
 })
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+async function handler(
+    _req: NextApiRequest,
+    res: NextApiResponse,
+    context: IContext
 ) {
-    await SecurityProvider.authorize<ISchema>(
-        {
-            api: { req, res },
-            policies: {
-                http: HttpPolicy.Post,
-                permissions: [PermissionPolicy.UpdateTask],
-            },
-            validations: { schema },
+    const {
+        id,
+        name,
+        description,
+        elapsedTime,
+        estimatedTime,
+        statusId,
+        order,
+        startDate,
+        endDate,
+        assignedUserIds,
+    } = context.data as ISchema
+
+    const task = await prisma.task.findUnique({
+        where: { id },
+    })
+
+    if (!task) {
+        return res.status(404).json({ message: 'Task not found' })
+    }
+
+    const history = new HistoryRepository()
+    history.add({
+        taskId: task.id,
+        code: TaskHistoryMessageCode.TaskDescription,
+        params: {
+            taskName: task.name,
         },
-        async (session, params) => {
-            const {
+        email: context.session!.user.email,
+    })
+
+    const result = await prisma.$transaction(async (tx) => {
+        await tx.task.update({
+            where: { id },
+            data: {
+                assignedUsers: { deleteMany: { taskId: id } },
+            },
+        })
+
+        if (!assignedUserIds) return
+
+        return tx.task.update({
+            where: {
                 id,
+            },
+            data: {
                 name,
                 description,
-                elapsedTime,
-                estimatedTime,
-                statusId,
-                order,
-                startDate,
-                endDate,
-                assignedUserIds,
-            } = params
-
-            const task = await prisma.task.findUnique({
-                where: { id },
-            })
-
-            if (!task) {
-                return res.status(404).json({ message: 'Task not found' })
-            }
-
-            const history = new HistoryRepository()
-            history.add({
-                taskId: task.id,
-                code: TaskHistoryMessageCode.TaskDescription,
-                params: {
-                    taskName: task.name,
+                elapsedTime: elapsedTime,
+                estimatedTime: estimatedTime,
+                status: {
+                    connect: {
+                        id: statusId,
+                    },
                 },
-                email: session.user.email,
-            })
-
-            const result = await prisma.$transaction(async (tx) => {
-                await tx.task.update({
-                    where: { id },
-                    data: {
-                        assignedUsers: { deleteMany: { taskId: id } },
-                    },
-                })
-
-                if (!assignedUserIds) return
-
-                return tx.task.update({
-                    where: {
-                        id,
-                    },
-                    data: {
-                        name,
-                        description,
-                        elapsedTime: elapsedTime,
-                        estimatedTime: estimatedTime,
-                        status: {
-                            connect: {
-                                id: statusId,
+                order,
+                startDate: startDate ? new Date(startDate) : null,
+                endDate: endDate ? new Date(endDate) : null,
+                assignedUsers: {
+                    connectOrCreate: assignedUserIds.map((userId) => {
+                        return {
+                            where: {
+                                taskId_userId: { userId, taskId: id },
                             },
-                        },
-                        order,
-                        startDate: startDate ? new Date(startDate) : null,
-                        endDate: endDate ? new Date(endDate) : null,
-                        assignedUsers: {
-                            connectOrCreate: assignedUserIds.map((userId) => {
-                                return {
-                                    where: {
-                                        taskId_userId: { userId, taskId: id },
-                                    },
-                                    create: {
-                                        userId,
-                                        isHolder: false,
-                                    },
-                                }
-                            }),
-                        },
-                    },
-                })
-            })
+                            create: {
+                                userId,
+                                isHolder: false,
+                            },
+                        }
+                    }),
+                },
+            },
+        })
+    })
 
-            res.json(result)
-        }
-    )
+    res.json(result)
 }
+
+export default withMiddleware(handler, [
+    SecurityMiddleware({
+        verbs: [HttpPolicy.Post],
+        policies: [PermissionPolicy.UpdateTask],
+        schema,
+    }),
+])
