@@ -1,9 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { createBasicContext, getContext, IContext } from '../services/context'
-import {
-    afterGlobalMiddlewares,
-    beforeGlobalMiddlewares,
-} from '../middlewares/globals/global.middleware'
+import { beforeGlobalMiddlewares } from '../middlewares/globals/before.global.middleware'
+import { afterGlobalMiddlewares } from '../middlewares/globals/after.global.middleware'
 
 export type APIRoute<ResponseData> = (
     req: NextApiRequest,

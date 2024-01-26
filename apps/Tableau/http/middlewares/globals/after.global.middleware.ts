@@ -1,7 +1,5 @@
 import { MiddlewareFunction } from '../../decorators/withMiddleware'
-import { DebuggingMiddleware } from './debugging.middleware'
-
-export const beforeGlobalMiddlewares: MiddlewareFunction[] = []
+import { DebuggingMiddleware } from './middlewares/debugging.middleware'
 
 export const afterGlobalMiddlewares: MiddlewareFunction[] = [
     DebuggingMiddleware(),
