@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { TaskHistoryMessageCode } from 'shared-utils/src/constants/taskHistoryMessageCode'
-import { HistoryRepository } from '../../../http/repositories/history/history.repository'
 import { HttpPolicy } from '../../../http/providers/http/http.type'
 import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
 import { withMiddleware } from '../../../http/decorators/withMiddleware'
@@ -50,16 +48,6 @@ async function handler(
                 },
             },
         },
-    })
-
-    const history = new HistoryRepository()
-    history.add({
-        taskId: result.id,
-        code: TaskHistoryMessageCode.TaskCreated,
-        params: {
-            taskName: result.name,
-        },
-        email: context.session!.user!.email as string,
     })
 
     res.json(result)

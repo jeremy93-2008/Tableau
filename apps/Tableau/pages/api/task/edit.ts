@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { TaskHistoryMessageCode } from 'shared-utils/src/constants/taskHistoryMessageCode'
-import { HistoryRepository } from '../../../http/repositories/history/history.repository'
 import { HttpPolicy } from '../../../http/providers/http/http.type'
 import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
 import { withMiddleware } from '../../../http/decorators/withMiddleware'
@@ -50,16 +48,6 @@ async function handler(
     if (!task) {
         return res.status(404).json({ message: 'Task not found' })
     }
-
-    const history = new HistoryRepository()
-    history.add({
-        taskId: task.id,
-        code: TaskHistoryMessageCode.TaskDescription,
-        params: {
-            taskName: task.name,
-        },
-        email: context.session!.user.email,
-    })
 
     const result = await prisma.$transaction(async (tx) => {
         await tx.task.update({

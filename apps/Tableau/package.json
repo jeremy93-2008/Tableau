@@ -18,7 +18,7 @@
     "e2e": "docker compose up -d && npx prisma migrate reset --skip-seed --skip-generate --force && cypress run"
   },
   "prisma": {
-    "seed": "ts-node-esm --compilerOptions {\"resolveJsonModule\":true} prisma/seeder/seed.mts"
+    "seed": "npx tsx prisma/seeder/seed.mts"
   },
   "dependencies": {
     "@azure/communication-email": "^1.0.0-beta.1",
