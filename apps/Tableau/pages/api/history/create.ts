@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
 import { TaskHistoryMessageCode } from 'shared-utils/src/constants/taskHistoryMessageCode'
-import { HistoryRepository } from '../../../http/repositories/history/history.repository'
+import { History } from '../../../http/repositories/history/history.repository'
 import { HttpPolicy } from '../../../http/providers/http/http.type'
 import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
 import { withMiddleware } from '../../../http/decorators/withMiddleware'
@@ -26,8 +26,7 @@ async function handler(
     const { messageCode, messageParams, taskId, email } =
         context.data as ISchema
 
-    const history = new HistoryRepository()
-    const result = history.add({
+    const result = History.add({
         taskId,
         code: messageCode,
         params: messageParams,
