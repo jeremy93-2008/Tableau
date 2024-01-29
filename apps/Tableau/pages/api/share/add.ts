@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { NotificationRepository } from '../../../http/repositories/notification/notification.repository'
+import { Notification } from '../../../http/repositories/notification/notification.repository'
 import { HttpPolicy } from '../../../http/providers/http/http.type'
 import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
 import { withMiddleware } from '../../../http/decorators/withMiddleware'
@@ -51,8 +51,7 @@ async function handler(
         where: { id: boardId },
     })
 
-    const notification = new NotificationRepository()
-    await notification.add(
+    await Notification.add(
         'info',
         'You have been invited to collaborate on a board (' +
             board?.name +

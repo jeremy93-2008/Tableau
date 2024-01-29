@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
 import prisma from '../../../lib/prisma'
-import { NotificationRepository } from '../../../http/repositories/notification/notification.repository'
+import { Notification } from '../../../http/repositories/notification/notification.repository'
 import { HttpPolicy } from '../../../http/providers/http/http.type'
 import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
 import { withMiddleware } from '../../../http/decorators/withMiddleware'
@@ -63,8 +63,7 @@ async function handler(
     })
 
     if (assignedUsers && assignedUsers.length > 0) {
-        const notification = new NotificationRepository()
-        await notification.add(
+        await Notification.add(
             'info',
             `New comment "_${message}_" of __${currentUser?.name}__ on task __${selectedTask?.name}__`,
             assignedUsers

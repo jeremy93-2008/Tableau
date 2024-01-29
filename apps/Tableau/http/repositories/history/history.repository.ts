@@ -2,17 +2,14 @@ import prisma from '../../../lib/prisma'
 import { Prisma } from '@prisma/client'
 import { IHistory } from './history.type'
 
-export class HistoryRepository {
-    private historyTable: Prisma.HistoryDelegate<
-        Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
-    >
-
-    constructor() {
-        this.historyTable = prisma.history
-    }
-
-    async add({ taskId, code, params, email }: IHistory.AddHistory) {
-        return this.historyTable.create({
+export class History {
+    public static async add({
+        taskId,
+        code,
+        params,
+        email,
+    }: IHistory.AddHistory) {
+        return prisma.history.create({
             data: {
                 messageCode: code,
                 messageParams: {

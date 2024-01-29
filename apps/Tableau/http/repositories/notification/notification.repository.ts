@@ -1,20 +1,13 @@
 import { Prisma } from '@prisma/client'
 import prisma from '../../../lib/prisma'
 
-export class NotificationRepository {
-    private notificationTable: Prisma.NotificationDelegate<
-        Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
-    >
-    constructor() {
-        this.notificationTable = prisma.notification
-    }
-
-    async add(
+export class Notification {
+    public static async add(
         type: 'error' | 'warning' | 'info' | 'success',
         message: string,
         emails: string[]
     ) {
-        return this.notificationTable.create({
+        return prisma.notification.create({
             data: {
                 message,
                 type,
