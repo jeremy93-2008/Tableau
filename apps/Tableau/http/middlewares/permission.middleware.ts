@@ -2,15 +2,15 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { ErrorMessage } from 'shared-utils'
 import { getContext } from '../services/context'
 import prisma from '../../lib/prisma'
-import { Role } from '../policies/role/role.type'
+import { Role } from '../enums/role.enum'
 import { Session } from 'next-auth'
-import { PermissionPolicy } from '../providers/permission/permission.type'
+import { PermissionPolicy } from '../enums/permission.enum'
 import { RolePolicy } from '../policies/role/role.policy'
-import { ValidationValueType } from '../providers/validation/validation.value.type'
+import { ValidationPolicy } from '../enums/validationPolicy'
 
 export function PermissionMiddleware(
     policies: PermissionPolicy[],
-    requestDataType: ValidationValueType
+    requestDataType: ValidationPolicy
 ) {
     return async (req: NextApiRequest, res: NextApiResponse) => {
         const session = getContext('session') as Session | undefined

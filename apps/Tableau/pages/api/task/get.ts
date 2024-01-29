@@ -1,10 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { SecurityProvider } from '../../../http/providers/security/security.provider'
-import { HttpPolicy } from '../../../http/providers/http/http.type'
-import { PermissionPolicy } from '../../../http/providers/permission/permission.type'
-import { ValidationValueType } from '../../../http/providers/validation/validation.value.type'
+import { HttpPolicy } from '../../../http/enums/http.enum'
+import { PermissionPolicy } from '../../../http/enums/permission.enum'
+import { ValidationPolicy } from '../../../http/enums/validationPolicy'
 import { withMiddleware } from '../../../http/decorators/withMiddleware'
 import { SecurityMiddleware } from '../../../http/middlewares/security.middleware'
 import { IContext } from '../../../http/services/context'
@@ -36,7 +35,7 @@ export default withMiddleware(handler, [
     SecurityMiddleware({
         verbs: [HttpPolicy.Get],
         policies: [PermissionPolicy.ReadTask],
-        requestDataType: ValidationValueType.Query,
+        requestDataType: ValidationPolicy.Query,
         schema,
     }),
 ])

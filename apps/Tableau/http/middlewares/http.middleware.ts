@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ErrorMessage } from 'shared-utils'
-import { HttpPolicy } from '../providers/http/http.type'
+import { HttpPolicy } from '../enums/http.enum'
 
 export function HttpMiddleware(verbs: HttpPolicy[]) {
     return (req: NextApiRequest, res: NextApiResponse) => {

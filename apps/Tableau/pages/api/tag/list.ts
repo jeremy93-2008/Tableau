@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma'
 import { z } from 'zod'
-import { HttpPolicy } from '../../../http/providers/http/http.type'
+import { HttpPolicy } from '../../../http/enums/http.enum'
 import { withMiddleware } from '../../../http/decorators/withMiddleware'
 import { SecurityMiddleware } from '../../../http/middlewares/security.middleware'
 import { IContext } from '../../../http/services/context'

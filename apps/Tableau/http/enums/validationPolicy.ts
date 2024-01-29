@@ -1,4 +1,4 @@
-export enum ValidationValueType {
+export enum ValidationPolicy {
     Body = 'body',
     Query = 'query',
 }

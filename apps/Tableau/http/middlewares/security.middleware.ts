@@ -1,6 +1,6 @@
-import { PermissionPolicy } from '../providers/permission/permission.type'
-import { ValidationValueType } from '../providers/validation/validation.value.type'
-import { HttpPolicy } from '../providers/http/http.type'
+import { PermissionPolicy } from '../enums/permission.enum'
+import { ValidationPolicy } from '../enums/validationPolicy'
+import { HttpPolicy } from '../enums/http.enum'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { HttpMiddleware } from './http.middleware'
 import { PermissionMiddleware } from './permission.middleware'
@@ -10,7 +10,7 @@ import { AuthMiddleware } from './auth.middleware'
 interface ISecurityMiddleware<TSchema> {
     verbs: HttpPolicy[]
     policies: PermissionPolicy[]
-    requestDataType?: ValidationValueType
+    requestDataType?: ValidationPolicy
     schema: TSchema
 }
 
@@ -24,11 +24,11 @@ export function SecurityMiddleware<TSchema>(
             (await AuthMiddleware()(req, res)) &&
             (await PermissionMiddleware(
                 policies,
-                requestDataType ?? ValidationValueType.Body
+                requestDataType ?? ValidationPolicy.Body
             )(req, res)) &&
             (await ValidationMiddleware(
                 schema,
-                requestDataType ?? ValidationValueType.Body
+                requestDataType ?? ValidationPolicy.Body
             )(req, res))
         )
     }

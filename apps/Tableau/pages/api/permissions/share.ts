@@ -7,11 +7,11 @@ import {
     editShareablePermissionCb,
 } from 'shared-libs'
 import { z } from 'zod'
-import { HttpPolicy } from '../../../http/providers/http/http.type'
+import { HttpPolicy } from '../../../http/enums/http.enum'
 import { withMiddleware } from '../../../http/decorators/withMiddleware'
 import { SecurityMiddleware } from '../../../http/middlewares/security.middleware'
 import { IContext } from '../../../http/services/context'
-import { ValidationValueType } from '../../../http/providers/validation/validation.value.type'
+import { ValidationPolicy } from '../../../http/enums/validationPolicy'
 
 type ISchema = z.infer<typeof schema>
 
@@ -75,7 +75,7 @@ export default withMiddleware(handler, [
     SecurityMiddleware({
         verbs: [HttpPolicy.Get],
         policies: [],
-        requestDataType: ValidationValueType.Query,
+        requestDataType: ValidationPolicy.Query,
         schema,
     }),
 ])

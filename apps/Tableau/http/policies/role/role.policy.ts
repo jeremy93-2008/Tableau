@@ -1,5 +1,5 @@
-import { Role } from './role.type'
-import { PermissionPolicy } from '../../providers/permission/permission.type'
+import { Role } from '../../enums/role.enum'
+import { PermissionPolicy } from '../../enums/permission.enum'
 
 export const RolePolicy = {
     [Role.Owner]: [

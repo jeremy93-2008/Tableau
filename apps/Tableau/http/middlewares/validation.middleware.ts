@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { SafeParseError, z } from 'zod'
-import { ValidationValueType } from '../providers/validation/validation.value.type'
+import { ValidationPolicy } from '../enums/validationPolicy'
 import { ErrorMessage } from 'shared-utils'
 import { setContextValue } from '../services/context'
 
 export function ValidationMiddleware<TSchema>(
     schema: TSchema,
-    requestDataType: ValidationValueType
+    requestDataType: ValidationPolicy
 ) {
     return async (req: NextApiRequest, res: NextApiResponse) => {
         const result = validateData(req, res, requestDataType, schema)
@@ -32,7 +32,7 @@ export function ValidationMiddleware<TSchema>(
 function validateData<TSchema>(
     req: NextApiRequest,
     res: NextApiResponse,
-    requestDataType: ValidationValueType,
+    requestDataType: ValidationPolicy,
     schema: TSchema
 ) {
     if (!req || !res) return { success: false }

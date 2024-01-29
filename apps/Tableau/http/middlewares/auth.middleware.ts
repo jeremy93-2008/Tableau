@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth/next'
 import { ErrorMessage } from 'shared-utils'
 import { authOptions } from '../../pages/api/auth/[...nextauth]'
-import { IUser } from '../providers/user/user.type'
+import { IUser } from '../enums/user/user.type'
 import { getContext, setContextValue } from '../services/context'
 
 export function AuthMiddleware() {
