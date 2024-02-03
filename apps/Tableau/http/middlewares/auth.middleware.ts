@@ -2,8 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth/next'
 import { ErrorMessage } from 'shared-utils'
 import { authOptions } from '../../pages/api/auth/[...nextauth]'
-import { IUser } from '../enums/user/user.type'
 import { getContext, setContextValue } from '../services/context'
+import { type IGetAuthenticatedUserParams } from '../typing/auth.typing'
 
 export function AuthMiddleware() {
     return async (req: NextApiRequest, res: NextApiResponse) => {
@@ -22,6 +22,6 @@ export function AuthMiddleware() {
     }
 }
 
-async function getAuthenticatedUser({ req, res }: IUser.Attempt) {
+async function getAuthenticatedUser({ req, res }: IGetAuthenticatedUserParams) {
     return await getServerSession(req, res, authOptions)
 }
